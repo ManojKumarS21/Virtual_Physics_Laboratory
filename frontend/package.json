@@ -1,0 +1,32 @@
+{
+    "name": "phy-frontend",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@react-three/drei": "latest",
+        "@react-three/fiber": "latest",
+        "framer-motion": "latest",
+        "lucide-react": "latest",
+        "next": "latest",
+        "react": "latest",
+        "react-dom": "latest",
+        "three": "^0.160.0",
+        "zustand": "latest"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.2.1",
+        "@types/node": "latest",
+        "@types/react": "latest",
+        "@types/react-dom": "latest",
+        "@types/three": "latest",
+        "autoprefixer": "^10.4.27",
+        "postcss": "^8.5.8",
+        "tailwindcss": "^4.2.1",
+        "typescript": "latest"
+    }
+}
