@@ -32,12 +32,12 @@ export default function Terminal({ id, instrumentId, position }: { id: string, i
 
     // Color logic
     let color = '#555555'; // default
-    if (isConnected) color = '#22c55e'; // green = connected
+    if (isHovered) color = '#3b82f6'; // blue = hover
     if (isPendingTarget) color = '#f59e0b'; // orange = can connect here
     if (isActive) color = '#facc15'; // yellow = selected
-    if (isHovered && !isActive) color = '#3b82f6'; // blue = hover
+    if (isConnected) color = '#22c55e'; // green = connected (highest priority)
 
-    const emissive = isActive ? '#facc15' : isPendingTarget ? '#f59e0b' : '#000000';
+    const emissive = isActive ? '#facc15' : isPendingTarget ? '#f59e0b' : (isConnected ? '#22c55e' : '#000000');
 
     return (
         <group
@@ -49,7 +49,7 @@ export default function Terminal({ id, instrumentId, position }: { id: string, i
             onPointerOut={(e) => { e.stopPropagation(); setIsHovered(false); }}
         >
             {/* Terminal sphere */}
-            <mesh>
+            <mesh userData={{ isFunctional: true }}>
                 <sphereGeometry args={[0.12, 16, 16]} />
                 <meshStandardMaterial
                     color={color}
@@ -60,9 +60,9 @@ export default function Terminal({ id, instrumentId, position }: { id: string, i
                 />
             </mesh>
 
-            {/* Invisible Hit Area - Much larger to make connecting easy */}
-            <mesh>
-                <boxGeometry args={[0.4, 0.4, 0.4]} />
+            {/* Invisible Hit Area - Moderate size to make connecting easy without blocking the whole model */}
+            <mesh userData={{ isFunctional: true }}>
+                <sphereGeometry args={[0.2, 8, 8]} />
                 <meshBasicMaterial transparent opacity={0} depthWrite={false} />
             </mesh>
 

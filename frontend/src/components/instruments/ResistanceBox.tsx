@@ -5,7 +5,7 @@ import { Float, Text } from '@react-three/drei';
 
 const PEG_VALUES = [1, 2, 2, 5, 10, 20, 20, 50, 100, 500]; // 10 pegs
 
-export default function ResistanceBox({ id }: { id: string }) {
+export default function ResistanceBox({ id, isGhost }: { id: string, isGhost?: boolean }) {
     const updateValue = useLabStore((state: any) => state.updateInstrumentValue);
     const instrumentValues = useLabStore((state: any) => state.instrumentValues);
 
@@ -31,7 +31,7 @@ export default function ResistanceBox({ id }: { id: string }) {
     return (
         <group>
             {/* Box Body - Realistic Wood */}
-            <mesh castShadow receiveShadow>
+            <mesh castShadow receiveShadow userData={{ isFunctional: true }}>
                 <boxGeometry args={[2, 0.8, 1.4]} />
                 <meshStandardMaterial color="#3d2b1f" roughness={0.8} />
             </mesh>
@@ -51,9 +51,9 @@ export default function ResistanceBox({ id }: { id: string }) {
                 const isRemoved = getPegStatus(idx);
 
                 return (
-                    <group key={idx} position={[x, 0.41, z]} onClick={(e) => { e.stopPropagation(); togglePeg(idx); }}>
+                    <group key={idx} position={[x, 0.41, z]} onClick={(e) => { if (!isGhost) { e.stopPropagation(); togglePeg(idx); } }} userData={{ isFunctional: true }}>
                         {/* Hole (dark circle) */}
-                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
+                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]} userData={{ isFunctional: true }}>
                             <circleGeometry args={[0.06, 16]} />
                             <meshBasicMaterial color="#111111" />
                         </mesh>
@@ -69,14 +69,14 @@ export default function ResistanceBox({ id }: { id: string }) {
                         </Text>
 
                         {/* The Peg */}
-                        <group position={[0, isRemoved ? 0.4 : 0.05, 0]}>
+                        <group position={[0, isRemoved ? 0.4 : 0.05, 0]} userData={{ isFunctional: true }}>
                             {/* Peg Top Handle */}
-                            <mesh>
+                            <mesh userData={{ isFunctional: true }}>
                                 <cylinderGeometry args={[0.08, 0.06, 0.15, 16]} />
-                                <meshStandardMaterial color="#d4af37" metalness={1} roughness={0.1} />
+                                <meshStandardMaterial color="#111111" roughness={0.5} />
                             </mesh>
                             {/* Peg Pin */}
-                            <mesh position={[0, -0.1, 0]}>
+                            <mesh position={[0, -0.1, 0]} userData={{ isFunctional: true }}>
                                 <cylinderGeometry args={[0.04, 0.04, 0.2, 16]} />
                                 <meshStandardMaterial color="#b8860b" metalness={0.8} />
                             </mesh>
@@ -88,13 +88,17 @@ export default function ResistanceBox({ id }: { id: string }) {
             {/* Total Resistance HUD Label on Device */}
             <group position={[0, 0.8, 0]}>
                 <Text fontSize={0.12} color="white" outlineColor="black" outlineWidth={0.01}>
-                    Total R: {totalR} Ω
+                    {isGhost ? "Placement Preview" : `Total R: ${totalR} Ω`}
                 </Text>
             </group>
 
             {/* Terminals */}
-            <Terminal id={`${id}_t1`} instrumentId={id} position={[-0.9, 0, 0.8]} />
-            <Terminal id={`${id}_t2`} instrumentId={id} position={[0.9, 0, 0.8]} />
+            {!isGhost && (
+                <>
+                    <Terminal id={`${id}_t1`} instrumentId={id} position={[-0.9, 0, 0.8]} />
+                    <Terminal id={`${id}_t2`} instrumentId={id} position={[0.9, 0, 0.8]} />
+                </>
+            )}
         </group>
     );
 }

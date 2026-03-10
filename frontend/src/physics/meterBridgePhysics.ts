@@ -17,11 +17,11 @@ interface MeterBridgeParams {
 export function calculateGalvanometerDeflection(params: MeterBridgeParams): number {
     const { R, X, voltage, jockeyPos } = params;
 
-    if (jockeyPos <= 0) return -1;
-    if (jockeyPos >= 100) return 1;
+    if (jockeyPos <= 0.1) return 1;
+    if (jockeyPos >= 99.9) return -1;
 
     // Resistance of wire segments
-    const l = jockeyPos;
+    const l = Math.max(0.1, Math.min(99.9, jockeyPos));
     const l_rem = 100 - l;
 
     // Ratio comparison

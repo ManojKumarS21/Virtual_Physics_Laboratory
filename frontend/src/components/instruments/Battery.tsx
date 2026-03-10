@@ -2,19 +2,20 @@ import { MeshTransmissionMaterial } from '@react-three/drei';
 import Terminal from '../terminals/Terminal';
 import { useLabStore } from '../../hooks/useLabStore';
 
-export default function Battery({ id }: { id: string }) {
+export default function Battery({ id, isGhost }: { id: string, isGhost?: boolean }) {
     const value = useLabStore((state: any) => state.instrumentValues[id] || 2);
     const updateValue = useLabStore((state: any) => state.updateInstrumentValue);
 
     const toggleVoltage = () => {
+        if (isGhost) return;
         const next = value >= 6 ? 2 : value + 2;
         updateValue(id, next);
     };
 
     return (
-        <group onClick={(e) => { e.stopPropagation(); toggleVoltage(); }}>
+        <group onClick={(e) => { if (!isGhost) { e.stopPropagation(); toggleVoltage(); } }}>
             {/* Glass Jar */}
-            <mesh position={[0, 0.45, 0]}>
+            <mesh position={[0, 0.45, 0]} userData={{ isFunctional: true }}>
                 <cylinderGeometry args={[0.5, 0.48, 0.9, 32]} />
                 <MeshTransmissionMaterial
                     backside
@@ -53,12 +54,12 @@ export default function Battery({ id }: { id: string }) {
                     <meshStandardMaterial color="#8b5a2b" roughness={0.9} />
                 </mesh>
                 {/* Carbon Rod */}
-                <mesh position={[0, 0.1, 0]}>
+                <mesh position={[0, 0.1, 0]} userData={{ isFunctional: true }}>
                     <cylinderGeometry args={[0.06, 0.06, 0.9, 16]} />
                     <meshStandardMaterial color="#222222" roughness={0.8} />
                 </mesh>
                 {/* Brass Terminal Cap */}
-                <mesh position={[0, 0.55, 0]}>
+                <mesh position={[0, 0.55, 0]} userData={{ isFunctional: true }}>
                     <cylinderGeometry args={[0.08, 0.08, 0.15, 16]} />
                     <meshStandardMaterial color="#d4af37" metalness={1} roughness={0.1} />
                 </mesh>
@@ -78,8 +79,12 @@ export default function Battery({ id }: { id: string }) {
             </group>
 
             {/* Terminals (Placed on brass caps) */}
-            <Terminal id={`${id}_pos`} instrumentId={id} position={[0, 1.1, 0]} />
-            <Terminal id={`${id}_neg`} instrumentId={id} position={[0.3, 1.0, 0]} />
+            {!isGhost && (
+                <>
+                    <Terminal id={`${id}_pos`} instrumentId={id} position={[0, 1.1, 0]} />
+                    <Terminal id={`${id}_neg`} instrumentId={id} position={[0.3, 1.0, 0]} />
+                </>
+            )}
 
             {/* Label Base */}
             <mesh position={[0, 0.05, 0]}>

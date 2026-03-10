@@ -46,9 +46,15 @@ const AVAILABLE_INSTRUMENTS = [
         image: '/assets/instruments/meter_bridge.png',
         color: 'orange',
         terminals: [
-            { id: 'left', position: [-4.7, 0.1, 0] as [number, number, number] },
-            { id: 'mid', position: [0, 0.1, 0] as [number, number, number] },
-            { id: 'right', position: [4.7, 0.1, 0] as [number, number, number] },
+            { id: 'A1', position: [-5.1, 0.3, 0.6] as [number, number, number] },
+            { id: 'A2', position: [-5.1, 0.3, -0.6] as [number, number, number] },
+            { id: 'L1', position: [-3.1, 0.3, -0.6] as [number, number, number] },
+            { id: 'L2', position: [-1.9, 0.3, -0.6] as [number, number, number] },
+            { id: 'D', position: [0, 0.3, -0.6] as [number, number, number] },
+            { id: 'R1', position: [1.9, 0.3, -0.6] as [number, number, number] },
+            { id: 'R2', position: [3.1, 0.3, -0.6] as [number, number, number] },
+            { id: 'C1', position: [5.1, 0.3, 0.6] as [number, number, number] },
+            { id: 'C2', position: [5.1, 0.3, -0.6] as [number, number, number] },
         ]
     },
     {
@@ -93,7 +99,7 @@ const colorMap: Record<string, string> = {
 
 export default function Shelf() {
     const [isOpen, setIsOpen] = useState(true);
-    const { addInstrument, placedInstruments, removeInstrument, isHoldingWire, setHoldingWire } = useLabStore((s: any) => s);
+    const { addInstrument, placedInstruments, removeInstrument, isHoldingWire, setHoldingWire, setHeldInstrument } = useLabStore((s: any) => s);
 
     const handleSpawn = (inst: typeof AVAILABLE_INSTRUMENTS[0]) => {
         if (inst.type === 'wire') {
@@ -103,24 +109,22 @@ export default function Shelf() {
 
         const instrumentId = Math.random().toString(36).substring(7);
 
-        // Randomize position slightly to prevent stacking
-        // Base height is 2.05 (just above table)
-        // Table size is roughly 12x6
-        const randomX = (Math.random() - 0.5) * 6; // ±3
-        const randomZ = (Math.random() - 0.5) * 2; // ±1
-        const position: [number, number, number] = [randomX, 2.05, randomZ];
-
         const terminals = inst.terminals.map(t => ({
             ...t,
             id: `${instrumentId}_${t.id}`,
             instrumentId
         }));
 
-        addInstrument(inst.type, inst.name, terminals, instrumentId, position);
+        setHeldInstrument({
+            id: instrumentId,
+            type: inst.type,
+            name: inst.name,
+            terminals
+        });
     };
 
     return (
-        <div className="ml-3 mt-2">
+        <div className="ml-3 mt-2 pointer-events-auto">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -128,16 +132,16 @@ export default function Shelf() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: -320, opacity: 0 }}
                         transition={{ type: 'spring', damping: 20 }}
-                        className="bg-black/70 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl w-58 overflow-hidden"
+                        className="bg-[#0a2538]/80 backdrop-blur-2xl border border-[#2bb3a1]/20 rounded-2xl shadow-[0_0_30px_rgba(10,37,56,0.6)] w-58 overflow-hidden"
                         style={{ width: 220 }}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2bb3a1]/20">
                             <div>
-                                <p className="text-[10px] text-white/40 uppercase tracking-widest">Lab Shelf</p>
+                                <p className="text-[10px] text-[#2bb3a1]/50 uppercase tracking-widest pl-1">Lab Shelf</p>
                                 <p className="text-sm font-bold text-white">Instruments</p>
                             </div>
-                            <button onClick={() => setIsOpen(false)} className="text-white/30 hover:text-white transition-colors">
+                            <button onClick={() => setIsOpen(false)} className="text-[#2bb3a1]/40 hover:text-[#e5e744] hover:bg-[#2bb3a1]/10 p-1.5 rounded-lg transition-all">
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
@@ -145,20 +149,24 @@ export default function Shelf() {
                         {/* Available */}
                         <div className="p-3 space-y-1.5 overflow-y-auto max-h-[400px]">
                             {AVAILABLE_INSTRUMENTS.map((inst) => {
-                                const colorCls = colorMap[inst.color];
                                 const isSelected = inst.type === 'wire' && isHoldingWire;
+                                // Using SKITECH Teal for base items, Yellow when selected
+                                const colorCls = isSelected
+                                    ? 'ring-2 ring-[#e5e744]/60 scale-[1.02] bg-[#e5e744]/20 border-[#e5e744]/50 shadow-[0_0_15px_rgba(229,231,68,0.2)]'
+                                    : 'bg-[#2bb3a1]/10 text-white border-[#2bb3a1]/20 hover:bg-[#2bb3a1]/20 hover:border-[#2bb3a1]/40';
+
                                 return (
                                     <div
                                         key={inst.type}
-                                        onClick={() => handleSpawn(inst)}
-                                        className={`flex items-center gap-3 p-2 rounded-xl border cursor-pointer transition-all ${isSelected ? 'ring-2 ring-red-500 scale-[1.02] bg-red-500/30' : colorCls}`}
+                                        onPointerDown={() => handleSpawn(inst)}
+                                        className={`flex items-center gap-3 p-2 rounded-xl border cursor-pointer transition-all ${colorCls}`}
                                     >
-                                        <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-black/40 border border-white/10">
-                                            <img src={inst.image} alt={inst.name} className="w-full h-full object-cover" />
+                                        <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-[#0a2538]/60 border border-[#2bb3a1]/20">
+                                            <img src={inst.image} alt={inst.name} className="w-full h-full object-cover opacity-90" />
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="text-xs font-bold truncate tracking-tight">{inst.name}</p>
-                                            <p className="text-[9px] opacity-60 truncate leading-tight">
+                                            <p className={`text-xs font-bold truncate tracking-tight ${isSelected ? 'text-[#e5e744]' : 'text-white'}`}>{inst.name}</p>
+                                            <p className={`text-[9px] truncate leading-tight ${isSelected ? 'text-[#e5e744]/80' : 'text-[#2bb3a1]/60'}`}>
                                                 {inst.type === 'wire' && isHoldingWire ? 'Holding Wire...' : inst.desc}
                                             </p>
                                         </div>
@@ -169,15 +177,15 @@ export default function Shelf() {
 
                         {/* Placed Instruments */}
                         {placedInstruments.length > 0 && (
-                            <div className="border-t border-white/10 px-3 py-2">
-                                <p className="text-[10px] text-white/30 uppercase tracking-widest mb-2">On Table</p>
+                            <div className="border-t border-[#2bb3a1]/20 px-4 py-3 bg-[#0a2538]/40">
+                                <p className="text-[10px] text-[#2bb3a1]/50 uppercase tracking-widest pl-1 mb-2">On Table</p>
                                 <div className="space-y-1">
                                     {placedInstruments.map((inst: any) => (
-                                        <div key={inst.id} className="flex items-center justify-between">
-                                            <span className="text-[11px] text-white/60">{inst.name}</span>
+                                        <div key={inst.id} className="flex items-center justify-between group">
+                                            <span className="text-[11px] font-medium text-white/50 group-hover:text-white transition-colors">{inst.name}</span>
                                             <button
                                                 onClick={() => removeInstrument(inst.id)}
-                                                className="text-red-500/50 hover:text-red-400 transition-colors"
+                                                className="text-white/20 hover:text-[#e5e744] hover:bg-white/5 p-1 rounded transition-colors"
                                             >
                                                 <X className="w-3 h-3" />
                                             </button>
@@ -187,8 +195,8 @@ export default function Shelf() {
                             </div>
                         )}
 
-                        <div className="px-4 py-2 border-t border-white/10">
-                            <p className="text-[9px] text-white/20 text-center">Click to place · Drag to position</p>
+                        <div className="px-4 py-3 border-t border-[#2bb3a1]/20 bg-[#2bb3a1]/5">
+                            <p className="text-[9px] text-[#2bb3a1]/40 text-center uppercase tracking-widest font-bold">Click to place · Drag to position</p>
                         </div>
                     </motion.div>
                 )}
@@ -197,7 +205,7 @@ export default function Shelf() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-black/70 backdrop-blur-xl p-3 rounded-xl border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all"
+                    className="bg-[#0a2538]/80 backdrop-blur-xl p-3 rounded-xl border border-[#2bb3a1]/30 text-[#2bb3a1]/60 hover:text-[#e5e744] hover:border-[#e5e744]/50 hover:bg-[#2bb3a1]/20 transition-all shadow-[0_0_20px_rgba(43,179,161,0.1)]"
                 >
                     <Box className="w-5 h-5" />
                 </button>

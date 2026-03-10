@@ -38,9 +38,14 @@ interface LabState {
     deflection: number;
     instrumentValues: Record<string, number>;
     observations: Observation[];
+    currentL: number; // Current balance length (0-100) or -1 if no contact
     isLocked: boolean;
     isStaticMode: boolean;
     isHoldingWire: boolean;
+    heldInstrument: { id: string, type: string, name: string, terminals: any[] } | null;
+    setHeldInstrument: (inst: { id: string, type: string, name: string, terminals: any[] } | null) => void;
+    simulationError: string | null;
+    setSimulationError: (error: string | null) => void;
     setHoldingWire: (val: boolean) => void;
     toggleStaticMode: () => void;
     addInstrument: (type: string, name: string, terminals: Terminal[], id: string, position: [number, number, number]) => void;
@@ -50,10 +55,12 @@ interface LabState {
     updateInstrumentValue: (id: string, value: number) => void;
     setActiveTerminal: (id: string | null) => void;
     addConnection: (from: string, to: string) => void;
+    undoConnection: () => void;
     setDeflection: (val: number) => void;
     addObservation: (obs: Observation) => void;
     clearObservations: () => void;
     toggleLock: () => void;
+    setCurrentL: (l: number) => void;
 }
 
 export const useLabStore = create<LabState>((set) => ({
@@ -63,9 +70,14 @@ export const useLabStore = create<LabState>((set) => ({
     deflection: 0,
     instrumentValues: {},
     observations: [],
+    currentL: -1,
     isLocked: false,
     isStaticMode: false,
     isHoldingWire: false,
+    heldInstrument: null,
+    setHeldInstrument: (inst) => set({ heldInstrument: inst }),
+    simulationError: null,
+    setSimulationError: (error) => set({ simulationError: error }),
     setHoldingWire: (val) => set({ isHoldingWire: val }),
     toggleStaticMode: () => set((state) => ({ isStaticMode: !state.isStaticMode })),
     toggleLock: () => set((state) => ({ isLocked: !state.isLocked })),
@@ -114,6 +126,9 @@ export const useLabStore = create<LabState>((set) => ({
             activeTerminal: null
         };
     }),
+    undoConnection: () => set((state) => ({
+        connections: state.connections.slice(0, -1)
+    })),
     setDeflection: (val) => set({ deflection: val }),
     updateInstrumentValue: (id, value) => set((state) => ({
         instrumentValues: { ...state.instrumentValues, [id]: value }
@@ -122,4 +137,5 @@ export const useLabStore = create<LabState>((set) => ({
         observations: [...state.observations, obs]
     })),
     clearObservations: () => set({ observations: [] }),
+    setCurrentL: (l: number) => set({ currentL: l }),
 }));

@@ -33,11 +33,20 @@ export default function Wire({ fromId, toId }: { fromId: string, toId: string })
 
         if (!fromPos || !toPos) return null;
 
-        // Create a curve with a "sag" for cable look
+        // Calculate distance between terminals
+        const dx = toPos[0] - fromPos[0];
+        const dy = toPos[1] - fromPos[1];
+        const dz = toPos[2] - fromPos[2];
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+        // Create a realistic arch "on the table"
+        // Arch height depends on distance, ensuring it looks natural
+        const archHeight = Math.max(0.3, dist * 0.4);
+
         const midPoint = [
-            (fromPos[0] + toPos[0]) / 2,
-            Math.min(fromPos[1], toPos[1]) - 0.5, // Sag down
-            (fromPos[2] + toPos[2]) / 2,
+            (fromPos[0] + toPos[0]) / 2 + (Math.random() - 0.5) * 0.1, // Slight random offset for realism
+            Math.max(fromPos[1], toPos[1]) + archHeight, // Arch UP
+            (fromPos[2] + toPos[2]) / 2 + (Math.random() - 0.5) * 0.1, // Slight random offset
         ];
 
         return [
@@ -49,31 +58,32 @@ export default function Wire({ fromId, toId }: { fromId: string, toId: string })
 
     if (!points) return null;
 
-    const color = useMemo(() => {
-        const colors = ['#cc0000', '#0000cc', '#007700', '#dddd00', '#660066', '#ff6600'];
-        const hash = (fromId + toId).split('').reduce((a, b) => {
-            a = ((a << 5) - a) + b.charCodeAt(0);
-            return a & a;
-        }, 0);
-        return colors[Math.abs(hash) % colors.length];
-    }, [fromId, toId]);
+    const color = "#ffffff"; // Clean white as requested
 
     const curve = new THREE.CatmullRomCurve3(points);
 
     return (
         <group>
-            <mesh>
-                <tubeGeometry args={[curve, 20, 0.03, 8, false]} />
-                <meshStandardMaterial color={color} roughness={0.3} metalness={0.2} />
+            {/* Main Wire - Thicker and matte for realism */}
+            <mesh castShadow>
+                <tubeGeometry args={[curve, 32, 0.02, 8, false]} />
+                <meshStandardMaterial
+                    color={color}
+                    roughness={0.7}
+                    metalness={0.1}
+                    emissive="#ffffff"
+                    emissiveIntensity={0.05} // Slight glow to make it pop on the dark table
+                />
             </mesh>
-            {/* Connector heads */}
+
+            {/* Connector heads - more refined look */}
             <mesh position={points[0]}>
-                <sphereGeometry args={[0.08, 16, 16]} />
-                <meshStandardMaterial color="#333333" />
+                <sphereGeometry args={[0.07, 16, 16]} />
+                <meshStandardMaterial color="#222222" roughness={0.5} metalness={0.8} />
             </mesh>
             <mesh position={points[points.length - 1]}>
-                <sphereGeometry args={[0.08, 16, 16]} />
-                <meshStandardMaterial color="#333333" />
+                <sphereGeometry args={[0.07, 16, 16]} />
+                <meshStandardMaterial color="#222222" roughness={0.5} metalness={0.8} />
             </mesh>
         </group>
     );
