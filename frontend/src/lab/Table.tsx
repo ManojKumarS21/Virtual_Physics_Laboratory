@@ -32,11 +32,11 @@ export default function Table({ position }: { position: [number, number, number]
             castShadow
             onPointerUp={handlePlacement}
         >
-            {/* Table Top - Thick Solid Wood Finish */}
+            {/* Table Top - Warmer Teak Wooden Finish */}
             <mesh position={[0, 1.9, 0]} receiveShadow castShadow>
                 <boxGeometry args={[12, 0.3, 6]} /> {/* Slightly thicker */}
                 <meshStandardMaterial
-                    color="#5C4033" // Dark glossy wood
+                    color="#795548" // Warm Teak wood
                     roughness={0.4} // Slightly glossy
                     metalness={0.1}
                 />
