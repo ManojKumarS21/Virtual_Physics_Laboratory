@@ -3,7 +3,7 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useLabStore } from '../../hooks/useLabStore';
 import * as THREE from 'three';
-import { useThree } from '@react-three/fiber';
+import { useThree, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 
 export default function InstrumentContainer({
@@ -24,12 +24,27 @@ export default function InstrumentContainer({
     const updateInstrument = useLabStore((state) => state.updateInstrument);
     const isLocked = useLabStore((state) => state.isLocked);
     const isStaticMode = useLabStore((state) => state.isStaticMode);
+    const tourHighlightedIds = useLabStore((state) => state.tourHighlightedIds);
+    const isTourHighlighted = tourHighlightedIds.includes(id);
+
     const groupRef = useRef<THREE.Group>(null);
+    const highlightRef = useRef<THREE.Mesh>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const dragStartX = useRef(0);
     const posStartX = useRef(0);
-    const { raycaster, gl } = useThree();
+    const { raycaster, gl, clock } = useThree();
+
+    // Pulse effect for tour highlight
+    useFrame(() => {
+        if (highlightRef.current && isTourHighlighted) {
+            const scale = 1 + Math.sin(clock.elapsedTime * 4) * 0.05;
+            highlightRef.current.scale.set(scale, scale, 1);
+            if (highlightRef.current.material instanceof THREE.MeshBasicMaterial) {
+                highlightRef.current.material.opacity = 0.4 + Math.sin(clock.elapsedTime * 4) * 0.2;
+            }
+        }
+    });
 
     // Fix: Ensure all instruments are raycastable
     useEffect(() => {
@@ -119,6 +134,20 @@ export default function InstrumentContainer({
                     <ringGeometry args={[0.5, 0.55, 32]} />
                     <meshBasicMaterial color={isDragging ? "#3b82f6" : "#ffffff"} transparent opacity={0.5} />
                 </mesh>
+            )}
+
+            {/* Tour Highlight */}
+            {isTourHighlighted && (
+                <group position={[0, -0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <mesh ref={highlightRef}>
+                        <ringGeometry args={[0.55, 0.7, 32]} />
+                        <meshBasicMaterial color="#2bb3a1" transparent opacity={0.4} />
+                    </mesh>
+                    <mesh>
+                        <ringGeometry args={[0.55, 0.6, 32]} />
+                        <meshBasicMaterial color="#2bb3a1" transparent opacity={0.2} />
+                    </mesh>
+                </group>
             )}
 
             {/* Hover Label (Tooltip) */}

@@ -26,6 +26,7 @@ export default function Galvanometer({ id, isGhost }: { id: string, isGhost?: bo
     const currentPosition = useRef(0);
     const velocity = useRef(0);
     const needleGroupRef = useRef<THREE.Group>(null);
+    const setVisualDeflection = useLabStore(s => s.setVisualDeflection);
 
     useFrame(() => {
         if (!needleGroupRef.current) return;
@@ -42,6 +43,9 @@ export default function Galvanometer({ id, isGhost }: { id: string, isGhost?: bo
         const rotationAngle = -(currentPosition.current / MAX_DEFLECTION) * (Math.PI / 4.5);
 
         needleGroupRef.current.rotation.z = rotationAngle;
+        
+        // Sync to global store for 2D monitor parity
+        setVisualDeflection(currentPosition.current / MAX_DEFLECTION);
     });
 
     return (

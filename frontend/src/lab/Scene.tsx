@@ -109,23 +109,64 @@ function ClassroomWindow({ position }: { position: [number, number, number] }) {
     );
 }
 
+function CameraHandler({ onAnimationComplete }: { onAnimationComplete: () => void }) {
+    const { camera } = useThree();
+    const currentScreen = useLabStore(s => s.currentScreen);
+    const isAnimatingRef = useRef(false);
+    const lastScreenRef = useRef(currentScreen);
+    
+    const targets = {
+        WELCOME: { pos: [0, 40, 60] },
+        FRONT: { pos: [0, 15, 25] },
+        TOUR: { pos: [0, 8, 12] },
+        PRACTICE: { pos: [0, 8, 12] },
+        WORKOUT: { pos: [0, 8, 12] }
+    };
+
+    useEffect(() => {
+        if (currentScreen !== lastScreenRef.current) {
+            isAnimatingRef.current = true;
+            lastScreenRef.current = currentScreen;
+        }
+    }, [currentScreen]);
+
+    useFrame((state, delta) => {
+        if (!isAnimatingRef.current) return;
+
+        const target = targets[currentScreen];
+        const targetPos = new THREE.Vector3(...target.pos);
+        
+        camera.position.lerp(targetPos, delta * 2.5);
+        
+        if (camera.position.distanceTo(targetPos) < 0.1) {
+            camera.position.copy(targetPos);
+            isAnimatingRef.current = false;
+            onAnimationComplete();
+        }
+    });
+
+    return null;
+}
+
 export default function Scene() {
-    const { placedInstruments, connections, isLocked, heldInstrument } = useLabStore();
-    usePhysicsEngine(); // Start physics loop
+    const { placedInstruments, connections, isLocked, heldInstrument, currentScreen } = useLabStore();
+    const [isCameraAnimating, setIsCameraAnimating] = useState(true);
+    usePhysicsEngine();
 
     return (
-        <div className="w-full h-full bg-[#fdfbf7]"> {/* Realistic light classroom wall color */}
+        <div className="w-full h-full bg-[#fdfbf7]"> 
             <Canvas shadows gl={{ antialias: true, preserveDrawingBuffer: true }}>
                 <Suspense fallback={null}>
                     <Environment preset="apartment" />
-                    <PerspectiveCamera makeDefault position={[0, 8, 12]} fov={45} />
+                    <PerspectiveCamera makeDefault fov={45} />
+                    <CameraHandler onAnimationComplete={() => setIsCameraAnimating(false)} />
                     <OrbitControls
                         minPolarAngle={Math.PI / 6}
                         maxPolarAngle={Math.PI / 2.2}
                         minDistance={5}
                         maxDistance={25}
                         makeDefault
-                        enabled={!isLocked && !heldInstrument}
+                        enabled={!isCameraAnimating && !isLocked && !heldInstrument && (currentScreen === 'PRACTICE' || currentScreen === 'TOUR' || currentScreen === 'WORKOUT')}
                     />
 
                     {/* Soft Indoor Ambient Lighting */}

@@ -1,11 +1,25 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { useLabStore } from '../../hooks/useLabStore';
 
 export default function Wire({ fromId, toId }: { fromId: string, toId: string }) {
     const placedInstruments = useLabStore((state) => state.placedInstruments);
+    const [drawProgress, setDrawProgress] = useState(0);
+
+    useEffect(() => {
+        let start: number;
+        const duration = 800; // ms
+
+        const animate = (time: number) => {
+            if (!start) start = time;
+            const progress = Math.min(1, (time - start) / duration);
+            setDrawProgress(progress);
+            if (progress < 1) requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+    }, []);
 
     const points = useMemo(() => {
         // Find terminal world positions
@@ -33,20 +47,17 @@ export default function Wire({ fromId, toId }: { fromId: string, toId: string })
 
         if (!fromPos || !toPos) return null;
 
-        // Calculate distance between terminals
         const dx = toPos[0] - fromPos[0];
         const dy = toPos[1] - fromPos[1];
         const dz = toPos[2] - fromPos[2];
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-        // Create a realistic arch "on the table"
-        // Arch height depends on distance, ensuring it looks natural
         const archHeight = Math.max(0.3, dist * 0.4);
 
         const midPoint = [
-            (fromPos[0] + toPos[0]) / 2 + (Math.random() - 0.5) * 0.1, // Slight random offset for realism
-            Math.max(fromPos[1], toPos[1]) + archHeight, // Arch UP
-            (fromPos[2] + toPos[2]) / 2 + (Math.random() - 0.5) * 0.1, // Slight random offset
+            (fromPos[0] + toPos[0]) / 2,
+            Math.max(fromPos[1], toPos[1]) + archHeight,
+            (fromPos[2] + toPos[2]) / 2,
         ];
 
         return [
@@ -56,35 +67,50 @@ export default function Wire({ fromId, toId }: { fromId: string, toId: string })
         ];
     }, [fromId, toId, placedInstruments]);
 
-    if (!points) return null;
+    const curve = useMemo(() => {
+        if (!points) return null;
+        return new THREE.CatmullRomCurve3(points);
+    }, [points]);
 
-    const color = "#ffffff"; // Clean white as requested
+    const partialCurve = useMemo(() => {
+        if (!curve || drawProgress === 0) return null;
+        if (drawProgress === 1) return curve;
+        
+        // Create a sub-curve for animation
+        const points = curve.getPoints(50);
+        const slicedPoints = points.slice(0, Math.ceil(points.length * drawProgress));
+        if (slicedPoints.length < 2) return null;
+        return new THREE.CatmullRomCurve3(slicedPoints);
+    }, [curve, drawProgress]);
 
-    const curve = new THREE.CatmullRomCurve3(points);
+    if (!partialCurve) return null;
+
+    const color = "#ffffff";
 
     return (
         <group>
-            {/* Main Wire - Thicker and matte for realism */}
             <mesh castShadow>
-                <tubeGeometry args={[curve, 32, 0.02, 8, false]} />
+                <tubeGeometry args={[partialCurve, 32, 0.02, 8, false]} />
                 <meshStandardMaterial
                     color={color}
                     roughness={0.7}
                     metalness={0.1}
                     emissive="#ffffff"
-                    emissiveIntensity={0.05} // Slight glow to make it pop on the dark table
+                    emissiveIntensity={0.05}
                 />
             </mesh>
 
-            {/* Connector heads - more refined look */}
-            <mesh position={points[0]}>
+            {/* Connector heads */}
+            <mesh position={points![0]}>
                 <sphereGeometry args={[0.07, 16, 16]} />
                 <meshStandardMaterial color="#222222" roughness={0.5} metalness={0.8} />
             </mesh>
-            <mesh position={points[points.length - 1]}>
-                <sphereGeometry args={[0.07, 16, 16]} />
-                <meshStandardMaterial color="#222222" roughness={0.5} metalness={0.8} />
-            </mesh>
+            {drawProgress > 0.95 && (
+                <mesh position={points![points!.length - 1]}>
+                    <sphereGeometry args={[0.07, 16, 16]} />
+                    <meshStandardMaterial color="#222222" roughness={0.5} metalness={0.8} />
+                </mesh>
+            )}
         </group>
     );
 }

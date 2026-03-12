@@ -5,12 +5,14 @@ export default function LabHUD() {
     const placedInstruments = useLabStore(s => s.placedInstruments);
     const connections = useLabStore(s => s.connections);
     const undoConnection = useLabStore(s => s.undoConnection);
+    const undoInstrument = useLabStore(s => s.undoInstrument);
     const instrumentValues = useLabStore(s => s.instrumentValues);
     const deflection = useLabStore(s => s.deflection);
     const observations = useLabStore(s => s.observations);
     const currentL = useLabStore(s => s.currentL);
     const addObservation = useLabStore(s => s.addObservation);
     const clearObservations = useLabStore(s => s.clearObservations);
+    const currentScreen = useLabStore(s => s.currentScreen);
 
     const isLocked = useLabStore(s => s.isLocked);
     const toggleLock = useLabStore(s => s.toggleLock);
@@ -168,21 +170,35 @@ export default function LabHUD() {
 
                     {/* Save + Mean X */}
                     <div className="flex-shrink-0 flex items-center gap-2.5 px-4 border-r border-[#2bb3a1]/20">
-                        <button
-                            onClick={() => undoConnection()}
-                            disabled={connections.length === 0}
-                            className="flex items-center justify-center w-8 h-8 bg-[#0a2538]/50 hover:bg-[#2bb3a1]/20 disabled:opacity-20 text-white rounded-lg transition-all border border-[#2bb3a1]/30"
-                            title="Undo"
-                        >
-                            <RotateCcw className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                            onClick={saveObservation}
-                            disabled={!plugClosed || l <= 0}
-                            className="flex items-center gap-2 bg-[#e5e744] hover:bg-white disabled:opacity-25 disabled:bg-[#e5e744]/50 text-[#0a2538] text-xs font-extrabold px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#e5e744]/20"
-                        >
-                            <Save className="w-3.5 h-3.5" /> Save
-                        </button>
+                        {currentScreen !== 'WORKOUT' && (
+                            <>
+                                <button
+                                    onClick={() => undoInstrument()}
+                                    disabled={placedInstruments.filter(i => !i.isFixed).length === 0}
+                                    className="flex items-center justify-center w-8 h-8 bg-[#0a2538]/50 hover:bg-[#2bb3a1]/20 disabled:opacity-20 text-white rounded-lg transition-all border border-[#2bb3a1]/30"
+                                    title="Undo Instrument Placement"
+                                >
+                                    <span className="text-[10px] font-bold">I</span>
+                                    <RotateCcw className="w-3 h-3 absolute bottom-1 right-1 opacity-70" />
+                                </button>
+                                <button
+                                    onClick={() => undoConnection()}
+                                    disabled={connections.length === 0}
+                                    className="flex items-center justify-center w-8 h-8 bg-[#0a2538]/50 hover:bg-[#2bb3a1]/20 disabled:opacity-20 text-white rounded-lg transition-all border border-[#2bb3a1]/30 relative"
+                                    title="Undo Wire Connection"
+                                >
+                                    <span className="text-[10px] font-bold">W</span>
+                                    <RotateCcw className="w-3 h-3 absolute bottom-1 right-1 opacity-70" />
+                                </button>
+                                <button
+                                    onClick={saveObservation}
+                                    disabled={!plugClosed || l <= 0}
+                                    className="flex items-center gap-2 bg-[#e5e744] hover:bg-white disabled:opacity-25 disabled:bg-[#e5e744]/50 text-[#0a2538] text-xs font-extrabold px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#e5e744]/20"
+                                >
+                                    <Save className="w-3.5 h-3.5" /> Save
+                                </button>
+                            </>
+                        )}
                         {observations.length > 0 && (
                             <div className="text-center min-w-[50px] border-l border-[#2bb3a1]/20 pl-2">
                                 <p className="text-[8px] text-[#2bb3a1]/60 uppercase">Mean X</p>
