@@ -245,7 +245,18 @@ export default function GuidedTour() {
             const targetLang = language === 'te' ? 'te-IN' : (language === 'hi' ? 'hi-IN' : (language === 'mr' ? 'mr-IN' : 'en-IN'));
             
             // Find voices for the target language and prioritize ones that look "male"
-            const langVoices = voices.filter(v => v.lang.startsWith(targetLang));
+            let langVoices = voices.filter(v => v.lang.replace('_', '-').startsWith(targetLang));
+            
+            // Fallback to any voice for the language prefix
+            if (langVoices.length === 0) {
+                langVoices = voices.filter(v => v.lang.startsWith(targetLang.split('-')[0]));
+            }
+
+            // Final fallback to any English voice
+            if (langVoices.length === 0 && targetLang.startsWith('en')) {
+                langVoices = voices.filter(v => v.lang.startsWith('en'));
+            }
+
             const maleVoice = langVoices.find(v => 
                 v.name.toLowerCase().includes('male') || 
                 v.name.toLowerCase().includes('david') || 
@@ -253,16 +264,17 @@ export default function GuidedTour() {
                 v.name.toLowerCase().includes('stefan') ||
                 v.name.toLowerCase().includes('ravi') ||
                 v.name.toLowerCase().includes('prakash') ||
-                v.name.toLowerCase().includes('prabhat')
+                v.name.toLowerCase().includes('prabhat') ||
+                v.name.toLowerCase().includes('google')
             );
             const voice = maleVoice || langVoices[0];
             
             if (voice) {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.voice = voice;
-                utterance.lang = targetLang;
-                utterance.rate = 1.0; // Slightly faster for clarity
-                utterance.pitch = 0.9; // Adjusted for clear male tone
+                utterance.lang = voice.lang;
+                utterance.rate = 1.0; 
+                utterance.pitch = 0.9; 
                 utterance.onend = () => {
                     if (useLabStore.getState().tourState.isActive) {
                         setHasFinishedNarration(true);

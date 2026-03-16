@@ -24,6 +24,7 @@ export default function Home() {
         setMounted(true);
     }, []);
 
+    const [showQR, setShowQR] = useState(false);
     const showInterface = currentScreen === 'TOUR' || currentScreen === 'PRACTICE' || currentScreen === 'WORKOUT';
 
     return (
@@ -65,12 +66,62 @@ export default function Home() {
                                 {isStaticMode ? 'STATIC MODE' : 'EDIT MODE'}
                             </span>
                         </button>
-                        <span className="px-3 py-1.5 bg-[#0a2538]/80 backdrop-blur-md text-[#2bb3a1] text-[10px] tracking-wider font-bold rounded-full border border-[#2bb3a1]/30 shadow-[0_0_10px_rgba(43,179,161,0.1)]">
+                        <button
+                            onClick={() => setShowQR(true)}
+                            className="pointer-events-auto px-3 py-1.5 bg-[#0a2538]/80 backdrop-blur-md text-[#2bb3a1] text-[10px] tracking-wider font-bold rounded-full border border-[#2bb3a1]/30 shadow-[0_0_10px_rgba(43,179,161,0.1)] hover:bg-[#2bb3a1]/10 transition-all hover:scale-105 active:scale-95"
+                        >
                             XR READY
-                        </span>
+                        </button>
                     </div>
                 </div>
             )}
+
+            {/* AR QR Modal */}
+            {showQR && (
+                <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
+                    <div className="relative max-w-sm w-full bg-[#0a2538]/90 border border-[#2bb3a1]/40 rounded-[2.5rem] p-8 text-center shadow-[0_0_50px_rgba(43,179,161,0.2)] animate-in fade-in zoom-in duration-300">
+                        <button 
+                            onClick={() => setShowQR(false)}
+                            className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+                        >
+                            <span className="text-xl">×</span>
+                        </button>
+
+                        <div className="mb-6 mx-auto w-16 h-16 bg-[#2bb3a1]/10 rounded-2xl flex items-center justify-center border border-[#2bb3a1]/20 group">
+                            <svg className="w-8 h-8 text-[#2bb3a1] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                            </svg>
+                        </div>
+
+                        <h2 className="text-2xl font-bold text-white mb-2">Experience AR</h2>
+                        <p className="text-white/60 text-sm mb-8">Scan to open the laboratory in your physical space with WebXR</p>
+                        
+                        <div className="relative aspect-square w-full max-w-[240px] mx-auto mb-8 bg-white rounded-3xl p-6 border border-white/10 overflow-hidden group">
+                           <img 
+                                src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=http://192.168.0.201:3000" 
+                                alt="AR QR Code" 
+                                className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                           />
+                           {/* Scanning line animation */}
+                           <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#2bb3a1]/50 shadow-[0_0_15px_#2bb3a1] animate-[scan_3s_ease-in-out_infinite] pointer-events-none" />
+                        </div>
+
+                        <button
+                            onClick={() => setShowQR(false)}
+                            className="w-full py-4 bg-[#2bb3a1] hover:bg-[#2bb3a1]/90 text-black font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#2bb3a1]/20"
+                        >
+                            CLOSE PREVIEW
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <style jsx global>{`
+                @keyframes scan {
+                    0%, 100% { top: 5%; }
+                    50% { top: 95%; }
+                }
+            `}</style>
 
             {/* Left Panel - Lab Shelf */}
             {showInterface && currentScreen !== 'WORKOUT' && (

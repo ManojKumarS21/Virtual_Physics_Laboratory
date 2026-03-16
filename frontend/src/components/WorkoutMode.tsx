@@ -64,8 +64,8 @@ const WORKOUT_CONTENT: Record<string, Record<string, string>> = {
         step6: "Connect the Galvanometer to the central terminal of the Meter Bridge.",
         step7: "Connect the Jockey to the other terminal of the Galvanometer.",
         complete: "Workout Complete! Great! All connections are correct. You are ready to perform the experiment.",
-        correct: "Correct Connection",
-        wrong: "Wrong Connection"
+        correct: "correct connection",
+        wrong: "wrong connection"
     },
     hi: {
         step1: "बैटरी के पॉजिटिव को मीटर ब्रिज (A1 या A2) से जोड़ें।",
@@ -76,8 +76,8 @@ const WORKOUT_CONTENT: Record<string, Record<string, string>> = {
         step6: "गैल्वेनोमीटर को मीटर ब्रिज के केंद्रीय टर्मिनल से जोड़ें।",
         step7: "जॉकी को गैल्वेनोमीटर के दूसरे टर्मिनल से जोड़ें।",
         complete: "वर्कआउट पूरा हुआ! बहुत बढ़िया! सभी कनेक्शन सही हैं। अब आप प्रयोग करने के लिए तैयार हैं।",
-        correct: "सही कनेक्शन",
-        wrong: "गलत कनेक्शन"
+        correct: "कनेक्शन सही है",
+        wrong: "कनेक्शन गलत है"
     },
     te: {
         step1: "బ్యాటరీ పాజిటివ్‌ను మీటర్ బ్రిడ్జ్ (A1 లేదా A2)కి కనెక్ట్ చేయండి.",
@@ -88,8 +88,8 @@ const WORKOUT_CONTENT: Record<string, Record<string, string>> = {
         step6: "గాల్వనోమీటర్‌ను మీటర్ బ్రిడ్జ్ యొక్క సెంట్రల్ టెర్మినల్‌కు కనెక్ట్ చేయండి.",
         step7: "జోకానీని గాల్వనోమీటర్ యొక్క మరొక టెర్మినల్‌కు కనెక్ట్ చేయండి.",
         complete: "వర్కౌట్ పూర్తయింది! గ్రేట్! అన్ని కనెక్షన్‌లు సరైనవి. మీరు ప్రయోగాన్ని నిర్వహించడానికి సిద్ధంగా ఉన్నారు.",
-        correct: "సరైన కనెక్షన్",
-        wrong: "తప్పు కనెక్షన్"
+        correct: "కనెక్షన్ సరైనది",
+        wrong: "కనెక్షన్ తప్పు"
     },
     mr: {
         step1: "बॅटरीचा पॉझिटिव्ह मीटर ब्रिजला (A1 किंवा A2) जोडा.",
@@ -100,8 +100,8 @@ const WORKOUT_CONTENT: Record<string, Record<string, string>> = {
         step6: "गॅल्व्हानोमीटर मीटर ब्रिजच्या मध्यवर्ती टर्मिनलला जोडा.",
         step7: "जॉकी गॅल्व्हानोमीटरच्या दुसऱ्या टर्मिनलला जोडा.",
         complete: "वर्कआउट पूर्ण झाले! खूप छान! सर्व कनेक्शन अचूक आहेत. आपण प्रयोग करण्यासाठी तयार आहात.",
-        correct: "योग्य कनेक्शन",
-        wrong: "चुकीचे कनेक्शन"
+        correct: "कनेक्शन बरोबर आहे",
+        wrong: "कनेक्शन चुकीचे आहे"
     }
 };
 
@@ -156,7 +156,18 @@ export default function WorkoutMode() {
             const targetLang = language === 'te' ? 'te-IN' : (language === 'hi' ? 'hi-IN' : (language === 'mr' ? 'mr-IN' : 'en-IN'));
             
             // Find voices for the target language and prioritize ones that look "male"
-            const langVoices = voices.filter(v => v.lang.startsWith(targetLang));
+            let langVoices = voices.filter(v => v.lang.replace('_', '-').startsWith(targetLang));
+            
+            // Fallback to any voice for the language prefix (e.g., 'en', 'hi')
+            if (langVoices.length === 0) {
+                langVoices = voices.filter(v => v.lang.startsWith(targetLang.split('-')[0]));
+            }
+
+            // Final fallback to any English voice if still empty and we were looking for English-ish
+            if (langVoices.length === 0 && targetLang.startsWith('en')) {
+                langVoices = voices.filter(v => v.lang.startsWith('en'));
+            }
+
             const maleVoice = langVoices.find(v => 
                 v.name.toLowerCase().includes('male') || 
                 v.name.toLowerCase().includes('david') || 
@@ -164,16 +175,17 @@ export default function WorkoutMode() {
                 v.name.toLowerCase().includes('stefan') ||
                 v.name.toLowerCase().includes('ravi') ||
                 v.name.toLowerCase().includes('prakash') ||
-                v.name.toLowerCase().includes('prabhat')
+                v.name.toLowerCase().includes('prabhat') ||
+                v.name.toLowerCase().includes('google')
             );
             const voice = maleVoice || langVoices[0];
             
             if (voice) {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.voice = voice;
-                utterance.lang = targetLang;
-                utterance.rate = 1.0; // Slightly faster for clarity
-                utterance.pitch = 0.9; // Adjusted for a clear male tone
+                utterance.lang = voice.lang; // Use the actual voice's lang
+                utterance.rate = 1.0; 
+                utterance.pitch = 0.9; 
                 window.speechSynthesis.speak(utterance);
             } else {
                 const playAudio = async () => {
@@ -218,7 +230,7 @@ export default function WorkoutMode() {
         setFeedback({ type, message });
         
         // Voice feedback for success/wrong
-        speak(type === 'success' ? WORKOUT_CONTENT[language].correct : WORKOUT_CONTENT[language].wrong);
+        speak(message.replace(' ✓', '').replace(' ✗', ''));
         
         if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
         feedbackTimerRef.current = setTimeout(() => {
@@ -242,7 +254,7 @@ export default function WorkoutMode() {
             );
 
             if (matches) {
-                showFeedback('success', 'Correct Connection ✓');
+                showFeedback('success', 'correct connection ✓');
                 
                 if (stepIndex < WORKOUT_STEPS.length) {
                     setTimeout(() => {
@@ -259,7 +271,7 @@ export default function WorkoutMode() {
 
             } else {
                 // Invalid connection
-                showFeedback('error', 'Wrong Connection ✗');
+                showFeedback('error', 'wrong connection ✗');
                 setTimeout(() => {
                     undoConnection(); // Remove the wrong wire after brief delay
                     setHoldingWire(true); // Re-equip immediately so they can try again
