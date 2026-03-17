@@ -8,29 +8,29 @@ import Image from 'next/image';
 export default function Home() {
     return (
         <main className="relative w-full h-screen overflow-hidden bg-[#2d3032] flex items-center justify-center p-6 select-none font-sans">
+            {/* Amypo Branding - Top Left */}
+            <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+                className="absolute top-8 left-8 md:top-10 md:left-10 z-50 pointer-events-auto"
+            >
+                <Image 
+                    src="/amypo_technologies_logo.png" 
+                    alt="Amypo Technologies" 
+                    width={240} 
+                    height={64} 
+                    className="h-auto w-[160px] md:w-[220px] object-contain drop-shadow-xl"
+                    priority
+                />
+            </motion.div>
+
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
                 className="relative z-10 w-full max-w-5xl flex flex-col items-center"
             >
-                {/* Amypo Branding */}
-                <motion.div 
-                    initial={{ y: -20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 0.8 }}
-                    className="mb-12 relative"
-                >
-                    <Image 
-                        src="/amypo_technologies_logo.png" 
-                        alt="Amypo Technologies" 
-                        width={300} 
-                        height={80} 
-                        className="h-auto w-full max-w-[280px] md:max-w-[320px] object-contain drop-shadow-xl"
-                        priority
-                    />
-                </motion.div>
-
                 {/* Main Interaction Realm */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl">
                     
