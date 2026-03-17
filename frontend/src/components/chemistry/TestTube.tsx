@@ -281,7 +281,7 @@ export const TestTube: React.FC<{ tubeId: string }> = ({ tubeId }) => {
                 const holder = stateFiber.scene.getObjectByName("apparatus_holder");
                 if (holder) {
                     groupRef.current.position.copy(holder.position);
-                    groupRef.current.position.y -= 0.245;
+                    groupRef.current.position.y -= 0.22;
                 }
             } else if (!isDragging) {
                 const RACK_X_MIN = 0.95;

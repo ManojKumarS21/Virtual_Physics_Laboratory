@@ -100,21 +100,35 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
     const apparatus = state.apparatus?.[id];
     const initialPos = apparatus?.position || defaultPos || [0, 0, 0];
 
-    // Initialize position from state
+    // Observe state position and animate towards it if not dragging
     useEffect(() => {
-        if (groupRef.current) {
-            groupRef.current.position.set(initialPos[0], initialPos[1], initialPos[2]);
-            currentPos.current.set(initialPos[0], initialPos[1], initialPos[2]);
+        if (!groupRef.current || !initialPos) return;
+        if (draggingRef.current) return; // Don't fight manual dragging
+
+        const newTarget = new THREE.Vector3(...initialPos);
+        const dist = currentPos.current.distanceTo(newTarget);
+
+        if (dist > 0.001) {
+            // Check for huge jumps (e.g., reset or teleport to home)
+            if (dist > 5) {
+                currentPos.current.copy(newTarget);
+                groupRef.current.position.copy(newTarget);
+                targetPos.current = null;
+            } else {
+                // Smoothly lerp towards the new state position
+                targetPos.current = newTarget;
+            }
         }
-    }, [id]); // Only re-sync on ID change or mount
+    }, [id, initialPos]); // Triggers when state position array ref changes
 
     useFrame((_, delta) => {
         if (!groupRef.current) return;
 
         if (targetPos.current) {
+            const isTourActive = state.tourState.isActive;
             const lerpFactor = draggingRef.current
                 ? 0.45   // smoother motion
-                : 0.15;  // smoother settle
+                : isTourActive ? 0.95 : 0.15;  // near-instant sync during tour, smooth settle otherwise
 
             currentPos.current.lerp(targetPos.current, lerpFactor);
             groupRef.current.position.copy(currentPos.current);
@@ -231,7 +245,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
                 // 1. Magnetic Attraction to Tubes (Requirement 1)
                 if (!state.holderAttachedId) {
                     for (const tube of state.testTubes) {
-                        const tubeNeckY = tube.position[1] + 0.245;
+                        const tubeNeckY = tube.position[1] + 0.22;
                         const dx = rx - grabOffset.current.x - tube.position[0];
                         const dz = rz - grabOffset.current.z - tube.position[2];
                         const dist = Math.sqrt(dx * dx + dz * dz);
@@ -251,7 +265,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
 
                 if (distRackSq < 0.36 && !hoveredContainerPos) {
                     const distRack = Math.sqrt(distRackSq);
-                    const alignmentLevel = 1.075 + yOffset;
+                    const alignmentLevel = 1.05 + yOffset;
                     finalY = Math.max(finalY, 1.06 + yOffset);
 
                     if (!state.holderAttachedId) {
@@ -275,7 +289,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
                 // instead of the rack top surface.
                 const isOverRack = rx_h > 0.95 && rx_h < 2.45 && rz_h > -0.25 && rz_h < 0.25;
                 const tubeFloor = isOverRack ? RACK_Y : baseHeight;
-                finalY = Math.max(finalY, tubeFloor + 0.25 + yOffset);
+                finalY = Math.max(finalY, tubeFloor + 0.22 + yOffset);
             }
 
             // Snapping to bottles/tubes while dragging
@@ -448,7 +462,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
                         if (!isOccupied) {
                             targetPos.current.x = bestX;
                             targetPos.current.z = RACK_Z;
-                            targetPos.current.y = (isTube ? RACK_Y : 1.075) + yOffset;
+                            targetPos.current.y = (isTube ? RACK_Y : 1.05) + yOffset;
                             setSnapTarget({ type: "rack", index: RACK_SLOTS.indexOf(bestX) });
                         }
                     }
@@ -485,7 +499,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
                 if (distRS < 0.15 && !isOccupied) {
                     const weight = Math.max(0, 1 - distRS / 0.15);
                     const snapPos = new THREE.Vector3(clampX, clampY + yOffset, clampZ);
-                    if (isHolderAttached) snapPos.y += 0.245;
+                    if (isHolderAttached) snapPos.y += 0.22;
 
                     targetPos.current.lerp(snapPos, weight * 0.8);
 
@@ -509,9 +523,9 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
                 if (id === "holder" && !state.holderAttachedId && attachedTubeId) {
                     const tubePos = state.apparatus[attachedTubeId].position;
                     // Proximity check between holder "rim" position and tube neck
-                    // Holder rim = currentPos - 0.245
-                    const holderRimY = targetPos.current.y - 0.245;
-                    const dyRim = Math.abs(holderRimY - (clampY + 0.245)); // Tube neck is around 0.245 above clamp center
+                    // Holder rim = currentPos - 0.22
+                    const holderRimY = targetPos.current.y - 0.22;
+                    const dyRim = Math.abs(holderRimY - (clampY + 0.22)); // Tube neck is around 0.22 above clamp center
 
                     if (distRS < 0.1 && dyRim < 0.05) {
                         attachHolder(attachedTubeId);
@@ -572,7 +586,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
             const rz_h = dropZ;
             const isOverRack = rx_h > 0.95 && rx_h < 2.45 && rz_h > -0.25 && rz_h < 0.25;
             const sLevel = isOverRack ? RACK_Y : (dropSurface ? dropSurface.y : BENCH_TOP);
-            dropY = Math.max(dropY, sLevel + 0.25 + yOffset);
+            dropY = Math.max(dropY, sLevel + 0.22 + yOffset);
         }
 
         let dropPos = new THREE.Vector3(

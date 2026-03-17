@@ -39,50 +39,40 @@ export const Spatula: React.FC = () => {
 
     // Detect nearby targets during drag for labels and auto-actions
     useFrame((state_gl, delta) => {
-        if (!isDragging) {
-            setNearbyTarget(null);
-            setTiltFactor(THREE.MathUtils.lerp(tiltFactor, 0, 5 * delta));
-            if (groupRef.current) {
-                groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, Math.PI / 2, 5 * delta);
-            }
-            // Tour/State-driven rotation support
-            const stateRotation = state.apparatus["spatula"]?.rotation;
-            if (stateRotation && groupRef.current) {
-                groupRef.current.rotation.set(...stateRotation);
-            }
-            // Fade out particles
-            for (let i = 0; i < particleCount; i++) particleLives[i] = 0;
-            return;
-        }
-
         const pos = groupRef.current.position;
         const tipX = pos.x + TIP_OFFSET;
         const tipZ = pos.z;
 
+        // Apply orientation from state/tour OR dragging
+        if (isDragging) {
+            groupRef.current.rotation.z = Math.PI / 2 + (tiltFactor * 0.85);
+        } else {
+            const stateRotation = state.apparatus["spatula"]?.rotation;
+            if (stateRotation && groupRef.current) {
+                groupRef.current.rotation.set(...stateRotation);
+            }
+        }
+
+        const currentZRot = groupRef.current.rotation.z;
+        const currentTilt = currentZRot - Math.PI / 2;
+
         let foundTarget = false;
 
-        // Check tubes
+        // Check tubes for salt dropping (DRAG or TOUR)
         for (const tube of state.testTubes) {
             const dx = tipX - tube.position[0];
             const dz = tipZ - tube.position[2];
 
             if (Math.sqrt(dx * dx + dz * dz) < 0.144) {
-                setNearbyTarget(tube.id);
-                foundTarget = true;
-
                 const TEST_TUBE_MOUTH_HEIGHT = tube.position[1] + 0.22;
-                const targetHeight = TEST_TUBE_MOUTH_HEIGHT + 0.03;
+                const distToMouthY = Math.abs(pos.y - (TEST_TUBE_MOUTH_HEIGHT + 0.05));
 
-                // Requirement 3 & 4: Smooth lift and align tip to mouth
-                const pos = groupRef.current.position;
-                if (state.heldSalt) {
-                    pos.y = THREE.MathUtils.lerp(pos.y, targetHeight, 6 * delta);
-                }
+                if (distToMouthY < 0.2) {
+                    setNearbyTarget(tube.id);
+                    foundTarget = true;
 
-                if (state.heldSalt) {
-                    setTiltFactor(THREE.MathUtils.lerp(tiltFactor, 1, 4 * delta));
-                    // Requirement 5: Tilt happens above the mouth
-                    if (tiltFactor > 0.85 && !dropCooldown.current) {
+                    // Trigger particles if tilted enough
+                    if (state.heldSalt && currentTilt > 0.6) {
                         // Spawn particles at tip
                         let spawned = 0;
                         for (let i = 0; i < particleCount && spawned < 2; i++) {
@@ -95,20 +85,21 @@ export const Spatula: React.FC = () => {
                             }
                         }
 
-                        // Requirement 6: Logic update to transfer state
-                        const activeCount = particleLives.filter(l => l > 0).length;
-                        if (activeCount > 15) { 
-                            addSalt(tube.id, state.heldSalt);
-                            dropCooldown.current = true;
-                            setTimeout(() => { dropCooldown.current = false; }, 2000);
+                        // Logical transfer during drag only (Tour handles its own addSalt)
+                        if (isDragging && !dropCooldown.current) {
+                            const activeCount = particleLives.filter(l => l > 0).length;
+                            if (activeCount > 15) { 
+                                addSalt(tube.id, state.heldSalt);
+                                dropCooldown.current = true;
+                                setTimeout(() => { dropCooldown.current = false; }, 2000);
+                            }
                         }
                     }
                 }
-                break;
             }
         }
 
-        if (!foundTarget) {
+        if (isDragging && !foundTarget) {
             setTiltFactor(THREE.MathUtils.lerp(tiltFactor, 0, 5 * delta));
             // Check salt dishes
             for (const appId in state.apparatus) {
@@ -127,10 +118,15 @@ export const Spatula: React.FC = () => {
             }
         }
 
-        if (!foundTarget) setNearbyTarget(null);
-
-        // Apply orientation
-        groupRef.current.rotation.z = Math.PI / 2 + (tiltFactor * 0.85);
+        if (!foundTarget) {
+            setNearbyTarget(null);
+            if (!isDragging) {
+                // Fade out particles if not near a target or not tilted
+                for (let i = 0; i < particleCount; i++) {
+                    if (particleLives[i] > 0) particleLives[i] -= delta * 2;
+                }
+            }
+        }
 
         // Requirement 6: Prevent workbench penetration (clamp)
         const MIN_HEIGHT = 0.012;

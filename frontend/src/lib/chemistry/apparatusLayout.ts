@@ -52,7 +52,7 @@ export const DEFAULT_APPARATUS_LAYOUT: Record<string, ApparatusLayoutItem> = {
     "tt5": { id: "tt5", type: "tube", position: [2.07, 0.83, 0.0], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: "rack" },
     "tt6": { id: "tt6", type: "tube", position: [2.32, 0.83, 0.0], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: "rack" },
 
-    "funnel": { id: "funnel", type: "funnel", position: [0.8, 0.78, 0.5], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "funnel": { id: "funnel", type: "funnel", position: [1.3, 0.78, 0.65], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "holder": { id: "holder", type: "holder", position: [1.2, 0.78, 0.4], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
     // Salts
@@ -75,8 +75,9 @@ export const DEFAULT_APPARATUS_LAYOUT: Record<string, ApparatusLayoutItem> = {
     "salt_K": { id: "salt_K", type: "salt", position: [-0.5, 0.78, 0.55], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
     "filterPaper": { id: "filterPaper", type: "paper", position: [-0.2, 0.78, 0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "candle": { id: "candle", type: "candle", position: [0.55, 0.78, 0.55], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "candle": { id: "candle", type: "candle", position: [1.6, 0.78, 0.65], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "retortStand": { id: "retortStand", type: "stand", position: [1.0, 0.78, -0.2], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "washBottle": { id: "washBottle", type: "washBottle", position: [0.8, 0.78, 0.6], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "washBottle": { id: "washBottle", type: "washBottle", position: [1.9, 0.78, 0.65], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "testTubeRack": { id: "testTubeRack", type: "rack", position: [1.7, 0.78, 0.0], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: false, holder: null },
+    "sink": { id: "sink", type: "sink", position: [-1.9, 0.58, -0.40], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: false, holder: null },
 };

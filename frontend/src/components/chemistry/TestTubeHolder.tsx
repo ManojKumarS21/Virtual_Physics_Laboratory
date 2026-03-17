@@ -76,7 +76,7 @@ export const TestTubeHolder: React.FC = () => {
             if (tube) {
                 groupRef.current.position.set(
                     tube.position[0],
-                    tube.position[1] + 0.34,
+                    tube.position[1] + 0.22,
                     tube.position[2]
                 );
             }
@@ -108,7 +108,7 @@ export const TestTubeHolder: React.FC = () => {
 
                     const assist = new THREE.Vector3(
                         tube.position[0],
-                        tube.position[1] + 0.34,
+                        tube.position[1] + 0.22,
                         tube.position[2]
                     );
 

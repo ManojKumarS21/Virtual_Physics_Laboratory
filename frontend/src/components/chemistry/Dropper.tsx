@@ -75,6 +75,14 @@ export const Dropper: React.FC = () => {
     const squeezeCountRef = useRef(0);
     const [feedback, setFeedback] = useState<string | null>(null);
 
+    // Sync bulb animation with global state (for tour support)
+    React.useEffect(() => {
+        if (state.lastSqueezeTime > 0) {
+            squeezeStartRef.current = performance.now() / 1000;
+            squeezeCountRef.current = 0;
+        }
+    }, [state.lastSqueezeTime]);
+
     const [lockedTubeId, setLockedTubeId] = useState<string | null>(null);
     const [lockedBottleId, setLockedBottleId] = useState<string | null>(null);
     const activeTubeIdRef = useRef<string | null>(null);
