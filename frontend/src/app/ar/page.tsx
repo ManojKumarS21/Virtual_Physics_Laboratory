@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from 'react';
 import ARScene from '../../components/ARScene';
 import { useLabStore } from '../../hooks/useLabStore';
 import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ARPage() {

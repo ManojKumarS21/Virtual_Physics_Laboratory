@@ -26,7 +26,7 @@ app.post('/experiment/start', (req, res) => {
 
 app.post('/experiment/record', (req, res) => {
     const { trial, R, l } = req.body;
-    
+
     // Meter Bridge formula: X = R * (100 - l) / l
     if (!l || l === 0) {
         return res.status(400).json({ success: false, error: 'Invalid balance length' });
@@ -35,7 +35,7 @@ app.post('/experiment/record', (req, res) => {
     const X = R * (100 - l) / l;
     const observation = { trial, R, l, X: parseFloat(X.toFixed(2)) };
     observations.push(observation);
-    
+
     res.json({ success: true, observation });
 });
 
@@ -46,9 +46,9 @@ app.get('/experiment/results', (req, res) => {
 
     const sumX = observations.reduce((acc, obs) => acc + obs.X, 0);
     const meanX = sumX / observations.length;
-    
+
     // Assuming a true value for error calculation (can be passed from frontend or defined)
-    const trueValue = observations[0].trueValue || meanX; 
+    const trueValue = observations[0].trueValue || meanX;
     const percentageError = Math.abs((meanX - trueValue) / trueValue) * 100;
 
     res.json({

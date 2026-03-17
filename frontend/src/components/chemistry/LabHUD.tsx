@@ -259,7 +259,7 @@ export const LabHUD: React.FC = () => {
                     }}>
                         <div style={{
                             width: "350px",
-                            background: "rgba(45, 48, 50, 0.85)",
+                            background: "rgba(10, 15, 25, 0.85)",
                             backdropFilter: "blur(12px)",
                             border: "1px solid rgba(255,255,255,0.15)",
                             borderRadius: "16px",
@@ -302,7 +302,7 @@ export const LabHUD: React.FC = () => {
                                 top: "20px",
                                 width: "32px",
                                 height: "48px",
-                                background: "rgba(45, 48, 50, 0.85)",
+                                background: "rgba(10, 15, 25, 0.85)",
                                 border: "1px solid rgba(255,255,255,0.15)",
                                 borderLeft: "none",
                                 borderRadius: "0 12px 12px 0",
@@ -329,7 +329,7 @@ export const LabHUD: React.FC = () => {
                     }}>
                         <div style={{
                             width: "350px",
-                            background: "rgba(45, 48, 50, 0.85)",
+                            background: "rgba(10, 15, 25, 0.85)",
                             backdropFilter: "blur(12px)",
                             border: "1px solid rgba(255,255,255,0.15)",
                             borderRadius: "16px",
@@ -410,7 +410,7 @@ export const LabHUD: React.FC = () => {
                                 top: "20px",
                                 width: "32px",
                                 height: "48px",
-                                background: "rgba(45, 48, 50, 0.85)",
+                                background: "rgba(10, 15, 25, 0.85)",
                                 border: "1px solid rgba(255,255,255,0.15)",
                                 borderLeft: "none",
                                 borderRadius: "0 12px 12px 0",

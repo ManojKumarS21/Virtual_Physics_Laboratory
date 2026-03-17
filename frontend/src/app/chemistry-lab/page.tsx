@@ -3,13 +3,17 @@
 import { LabScene } from "@/components/chemistry/LabScene";
 import { LabHUD } from "@/components/chemistry/LabHUD";
 import { LabProvider } from "@/lib/chemistry/LabContext";
+import ChemistryWelcomeScreen from "@/components/chemistry/ChemistryWelcomeScreen";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ChemistryLabPage() {
   return (
     <LabProvider>
       <main className="relative w-full h-screen overflow-hidden bg-[#2d3032]">
+        <ChemistryWelcomeScreen />
         {/* Back button */}
         <Link
           href="/"

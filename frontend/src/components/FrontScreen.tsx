@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Play, FlaskConical, BookOpen } from 'lucide-react';
+import { Play, FlaskConical, BookOpen, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import { useLabStore } from '../hooks/useLabStore';
 import { initWorkoutInstruments } from '../components/WorkoutMode';
 
@@ -30,6 +31,18 @@ export default function FrontScreen() {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            {/* Back button */}
+            <Link
+                href="/"
+                className="absolute top-8 left-8 md:top-10 md:left-10 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl
+                    bg-[#404446]/90 backdrop-blur-md border border-white/10
+                    text-white/70 hover:text-white hover:bg-white/10
+                    transition-all duration-300 text-sm font-bold pointer-events-auto shadow-lg"
+            >
+                <ArrowLeft className="w-5 h-5" />
+                Back
+            </Link>
+
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}

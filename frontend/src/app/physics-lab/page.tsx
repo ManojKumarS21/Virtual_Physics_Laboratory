@@ -23,6 +23,10 @@ export default function Home() {
 
     useEffect(() => {
         setMounted(true);
+        // Reset lab state on mount to ensure welcome animation plays
+        const store = useLabStore.getState();
+        store.resetLab();
+        store.setScreen('WELCOME');
     }, []);
 
     const [showQR, setShowQR] = useState(false);
