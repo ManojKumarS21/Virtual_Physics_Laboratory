@@ -1,5 +1,0 @@
-﻿src/components/ARScene.tsx(19,5): error TS2353: Object literal may only specify known properties, and 'sessionInit' does not exist in type 'XRStoreOptions'.
-src/components/ARScene.tsx(129,13): error TS2339: Property 'isPresenter' does not exist on type 'Readonly<{ body?: XRBody; session?: XRSession; mediaBinding?: XRMediaBinding; originReferenceSpace?: XRReferenceSpace; origin?: Object3D<Object3DEventMap>; ... 8 more ...; emulator?: XRDevice; } & WithRecord<...>>'.
-src/lib/useLabTextures.ts(107,38): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'Uint8Array<ArrayBuffer>'.
-  Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
-    Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength

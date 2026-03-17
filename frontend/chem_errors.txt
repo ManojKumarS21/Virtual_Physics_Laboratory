@@ -1,1 +1,0 @@
-﻿src/components/chemistry/RoomEnvironment.tsx(477,85): error TS2322: Type '{ args: [number, number, number, number]; rotation: any; }' is not assignable to type 'Mutable<Overwrite<Partial<Overwrite<CylinderGeometry, MathProps<CylinderGeometry> & ReactProps<CylinderGeometry>>>, Omit<...>>>'.
