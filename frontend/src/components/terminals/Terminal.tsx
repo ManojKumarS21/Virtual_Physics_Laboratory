@@ -12,7 +12,7 @@ export default function Terminal({ id, instrumentId, position }: { id: string, i
     const isPendingTarget = !!activeTerminal && activeTerminal !== id;
 
     const handleClick = (e: any) => {
-        e.stopPropagation();
+        e.stopPropagation?.();
 
         // If not holding a wire, show a hint or do nothing
         if (!isHoldingWire && !activeTerminal) {
@@ -43,10 +43,10 @@ export default function Terminal({ id, instrumentId, position }: { id: string, i
         <group
             position={position}
             onClick={handleClick}
-            onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => e.stopPropagation()}
-            onPointerOver={(e) => { e.stopPropagation(); setIsHovered(true); }}
-            onPointerOut={(e) => { e.stopPropagation(); setIsHovered(false); }}
+            onPointerDown={(e) => e.stopPropagation?.()}
+            onPointerUp={(e) => e.stopPropagation?.()}
+            onPointerOver={(e) => { e.stopPropagation?.(); setIsHovered(true); }}
+            onPointerOut={(e) => { e.stopPropagation?.(); setIsHovered(false); }}
         >
             {/* Terminal sphere */}
             <mesh userData={{ isFunctional: true }}>

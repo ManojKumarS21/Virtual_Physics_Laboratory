@@ -72,8 +72,8 @@ interface LabState {
     toggleVoice: () => void;
 
     // Screen State
-    currentScreen: 'WELCOME' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT';
-    setScreen: (screen: 'WELCOME' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT') => void;
+    currentScreen: 'WELCOME' | 'SUBJECT_SELECTION' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT';
+    setScreen: (screen: 'WELCOME' | 'SUBJECT_SELECTION' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT') => void;
 
     tourState: {
         isActive: boolean;
@@ -93,6 +93,14 @@ interface LabState {
     setWorkoutState: (updates: Partial<LabState['workoutState']>) => void;
     
     resetLab: () => void;
+    
+    // AR State
+    arPlacementTrigger: boolean;
+    setArPlacementTrigger: (val: boolean) => void;
+    isARPlaced: boolean;
+    setIsARPlaced: (val: boolean) => void;
+    isXRPresenting: boolean;
+    setIsXRPresenting: (val: boolean) => void;
 }
 
 export const useLabStore = create<LabState>((set) => ({
@@ -244,4 +252,12 @@ export const useLabStore = create<LabState>((set) => ({
         tourState: { ...state.tourState, isActive: false, stepIndex: 0, isPaused: false },
         workoutState: { ...state.workoutState, isActive: false, stepIndex: 1 }
     })),
+
+    // AR Actions
+    arPlacementTrigger: false,
+    setArPlacementTrigger: (val: boolean) => set({ arPlacementTrigger: val }),
+    isARPlaced: false,
+    setIsARPlaced: (val: boolean) => set({ isARPlaced: val }),
+    isXRPresenting: false,
+    setIsXRPresenting: (val: boolean) => set({ isXRPresenting: val }),
 }));

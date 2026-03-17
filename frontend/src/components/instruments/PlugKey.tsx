@@ -10,7 +10,7 @@ export default function PlugKey({ id, isGhost }: { id: string, isGhost?: boolean
     };
 
     return (
-        <group onClick={(e) => { if (!isGhost) { e.stopPropagation(); toggleKey(); } }}>
+        <group onClick={(e) => { if (!isGhost) { e.stopPropagation?.(); toggleKey(); } }}>
             {/* Ebonite Base (Black textured) */}
             <mesh castShadow receiveShadow userData={{ isFunctional: true }}>
                 <boxGeometry args={[1.2, 0.25, 0.9]} />

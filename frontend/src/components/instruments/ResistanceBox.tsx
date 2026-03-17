@@ -51,7 +51,7 @@ export default function ResistanceBox({ id, isGhost }: { id: string, isGhost?: b
                 const isRemoved = getPegStatus(idx);
 
                 return (
-                    <group key={idx} position={[x, 0.41, z]} onClick={(e) => { if (!isGhost) { e.stopPropagation(); togglePeg(idx); } }} userData={{ isFunctional: true }}>
+                    <group key={idx} position={[x, 0.41, z]} onClick={(e) => { if (!isGhost) { e.stopPropagation?.(); togglePeg(idx); } }} userData={{ isFunctional: true }}>
                         {/* Hole (dark circle) */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]} userData={{ isFunctional: true }}>
                             <circleGeometry args={[0.06, 16]} />

@@ -14,6 +14,8 @@ import MeterBridge from '../components/instruments/MeterBridge';
 import PlugKey from '../components/instruments/PlugKey';
 import Jockey from '../components/instruments/Jockey';
 import Wire from '../components/wires/Wire';
+import { Paper, Book, NoticeBoard } from './FurnitureProps';
+import Chair from './Chair';
 import { usePhysicsEngine } from '../hooks/usePhysicsEngine';
 
 const COMPONENT_MAP: Record<string, React.FC<any>> = {
@@ -295,6 +297,30 @@ export default function Scene() {
                     {/* --- EXPERIMENT TABLE --- */}
 
                     <Table position={[0, 0, 0]} />
+
+                    {/* --- SIDE FURNITURE --- */}
+                    
+                    {/* Left Side Table and Chair */}
+                    <group position={[-15, 0, 5]}>
+                        <Table position={[0, 0, 0]} />
+                        <Chair position={[0, 0, 4]} rotation={[0, 0, 0]} />
+                        <Book position={[-1, 2.1, 0]} rotation={[0, 0.5, 0]} color="#ef4444" />
+                        <Paper position={[1, 2.06, 0.5]} rotation={[-Math.PI / 2, 0, 0.2]} />
+                        <Paper position={[1.2, 2.06, -0.3]} rotation={[-Math.PI / 2, 0, -0.1]} />
+                    </group>
+
+                    {/* Right Side Table and Chair */}
+                    <group position={[15, 0, 5]}>
+                        <Table position={[0, 0, 0]} />
+                        <Chair position={[0, 0, 4]} rotation={[0, 0, 0]} />
+                        <Book position={[1, 2.1, -0.5]} rotation={[0, -0.3, 0]} color="#10b981" />
+                        <Book position={[1, 2.2, -0.5]} rotation={[0, 0.1, 0]} color="#6366f1" />
+                        <Paper position={[-1, 2.06, 0.2]} rotation={[-Math.PI / 2, 0, 0.5]} />
+                    </group>
+
+                    {/* Additional Notice Board on Back Wall */}
+                    <NoticeBoard position={[-22, 12, -29.7]} />
+                    <NoticeBoard position={[22, 12, -29.7]} />
 
                     {placedInstruments.map((inst) => {
                         const InstrumentComponent = COMPONENT_MAP[inst.type];

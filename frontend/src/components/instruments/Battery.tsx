@@ -13,7 +13,7 @@ export default function Battery({ id, isGhost }: { id: string, isGhost?: boolean
     };
 
     return (
-        <group onClick={(e) => { if (!isGhost) { e.stopPropagation(); toggleVoltage(); } }}>
+        <group onClick={(e) => { if (!isGhost) { e.stopPropagation?.(); toggleVoltage(); } }}>
             {/* Glass Jar */}
             <mesh position={[0, 0.45, 0]} userData={{ isFunctional: true }}>
                 <cylinderGeometry args={[0.5, 0.48, 0.9, 32]} />

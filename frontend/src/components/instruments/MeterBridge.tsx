@@ -15,7 +15,7 @@ export default function MeterBridge({ id, isGhost }: { id: string, isGhost?: boo
         const jockey = placedInstruments.find((i: any) => i.type === 'jockey');
         if (!jockey) return;
 
-        e.stopPropagation();
+        e.stopPropagation?.();
         setIsSliding(true);
         if (gl.domElement) {
             gl.domElement.setPointerCapture(e.pointerId);
@@ -28,13 +28,13 @@ export default function MeterBridge({ id, isGhost }: { id: string, isGhost?: boo
         const jockey = placedInstruments.find((i: any) => i.type === 'jockey');
         if (!jockey) return;
 
-        e.stopPropagation();
+        e.stopPropagation?.();
         updateJockeyPosition(e.point.x, jockey.id);
     };
 
     const handlePointerUp = (e: any) => {
         if (!isSliding || isGhost) return;
-        e.stopPropagation();
+        e.stopPropagation?.();
         setIsSliding(false);
         if (gl.domElement) {
             gl.domElement.releasePointerCapture(e.pointerId);

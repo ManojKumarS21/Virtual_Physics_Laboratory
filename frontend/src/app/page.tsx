@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Play, ArrowLeft } from 'lucide-react';
 import Scene from '../lab/Scene';
 import Shelf from '../lab/Shelf';
+import { QRCodeCanvas } from 'qrcode.react';
 import ObservationSystem from '../experiments/ObservationSystem';
 import TheoryPanel from '../experiments/TheoryPanel';
 import LabHUD from '../lab/LabHUD';
@@ -25,7 +26,21 @@ export default function Home() {
     }, []);
 
     const [showQR, setShowQR] = useState(false);
+    const [arUrl, setArUrl] = useState('');
+    const [localIP, setLocalIP] = useState('192.168.0.201');
     const showInterface = currentScreen === 'TOUR' || currentScreen === 'PRACTICE' || currentScreen === 'WORKOUT';
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const protocol = window.location.protocol;
+            const port = window.location.port ? `:${window.location.port}` : '';
+            if (localIP) {
+                setArUrl(`${protocol}//${localIP}${port}/ar`);
+            } else {
+                setArUrl(`${window.location.origin}/ar`);
+            }
+        }
+    }, [localIP]);
 
     return (
         <main className="relative w-full h-screen overflow-hidden bg-[#0a2538]">
@@ -94,14 +109,31 @@ export default function Home() {
                         </div>
 
                         <h2 className="text-2xl font-bold text-white mb-2">Experience AR</h2>
-                        <p className="text-white/60 text-sm mb-8">Scan to open the laboratory in your physical space with WebXR</p>
+                        <p className="text-white/60 text-sm mb-6">Scan to open the laboratory in your physical space with WebXR</p>
+
+                        <div className="mb-6 px-4">
+                            <label className="block text-[#2bb3a1] text-[10px] font-bold tracking-widest uppercase mb-2 text-left opacity-60">
+                                Local Machine IP (eg: 192.168.x.x)
+                            </label>
+                            <input 
+                                type="text"
+                                value={localIP}
+                                onChange={(e) => setLocalIP(e.target.value)}
+                                placeholder="Enter Local IP"
+                                className="w-full bg-white/5 border border-[#2bb3a1]/30 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2bb3a1] transition-colors"
+                            />
+                        </div>
                         
-                        <div className="relative aspect-square w-full max-w-[240px] mx-auto mb-8 bg-white rounded-3xl p-6 border border-white/10 overflow-hidden group">
-                           <img 
-                                src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=http://192.168.0.201:3000" 
-                                alt="AR QR Code" 
-                                className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                           />
+                        <div className="relative aspect-square w-full max-w-[240px] mx-auto mb-8 bg-white rounded-3xl p-6 border border-white/10 overflow-hidden group flex items-center justify-center">
+                           {arUrl && (
+                               <QRCodeCanvas 
+                                   value={arUrl}
+                                   size={200}
+                                   level="H"
+                                   includeMargin={false}
+                                   className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                               />
+                           )}
                            {/* Scanning line animation */}
                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#2bb3a1]/50 shadow-[0_0_15px_#2bb3a1] animate-[scan_3s_ease-in-out_infinite] pointer-events-none" />
                         </div>
