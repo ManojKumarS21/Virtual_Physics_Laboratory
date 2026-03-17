@@ -72,8 +72,8 @@ interface LabState {
     toggleVoice: () => void;
 
     // Screen State
-    currentScreen: 'WELCOME' | 'SUBJECT_SELECTION' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT';
-    setScreen: (screen: 'WELCOME' | 'SUBJECT_SELECTION' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT') => void;
+    currentScreen: 'WELCOME' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT';
+    setScreen: (screen: 'WELCOME' | 'FRONT' | 'TOUR' | 'PRACTICE' | 'WORKOUT') => void;
 
     tourState: {
         isActive: boolean;
