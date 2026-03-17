@@ -46,10 +46,10 @@ const PulsingRing = ({ id }: { id: string }) => {
         <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
             <ringGeometry args={[0.22, 0.28, 32]} />
             <meshStandardMaterial 
-                color="#2bb3a1" 
+                color="#2F8D46" 
                 transparent 
                 opacity={0.6} 
-                emissive="#2bb3a1" 
+                emissive="#2F8D46" 
                 emissiveIntensity={1.5}
                 side={THREE.DoubleSide}
             />

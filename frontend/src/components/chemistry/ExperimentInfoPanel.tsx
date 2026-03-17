@@ -26,12 +26,12 @@ export const ExperimentInfoPanel: React.FC = () => {
             right: "40px",
             width: "400px",
             padding: "24px",
-            background: "rgba(10, 15, 25, 0.9)",
+            background: "rgba(45, 48, 50, 0.9)",
             backdropFilter: "blur(20px)",
-            border: "1px solid rgba(79, 195, 247, 0.3)",
+            border: "1px solid rgba(47, 141, 70, 0.3)",
             borderRadius: "20px",
             color: "white",
-            boxShadow: "0 20px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(79, 195, 247, 0.1)",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(47, 141, 70, 0.1)",
             fontFamily: "'Segoe UI', Roboto, sans-serif",
             zIndex: 2000,
             animation: "panel-slide-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
@@ -42,7 +42,7 @@ export const ExperimentInfoPanel: React.FC = () => {
                     to { transform: translateY(0) scale(1); opacity: 1; }
                 }
                 .glow-text {
-                    text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+                    text-shadow: 0 0 10px rgba(47, 141, 70, 0.5);
                 }
             `}} />
 
@@ -75,11 +75,11 @@ export const ExperimentInfoPanel: React.FC = () => {
                     width: "40px", 
                     height: "40px", 
                     borderRadius: "10px", 
-                    background: lastObservation.color || "#4fc3f7",
-                    boxShadow: `0 0 15px ${lastObservation.color || "#4fc3f7"}`
+                    background: lastObservation.color || "#2F8D46",
+                    boxShadow: `0 0 15px ${lastObservation.color || "#2F8D46"}`
                 }} />
                 <div>
-                    <div style={{ fontSize: "12px", color: "#4fc3f7", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
+                    <div style={{ fontSize: "12px", color: "#2F8D46", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
                         Experiment Result
                     </div>
                     <div style={{ fontSize: "18px", fontWeight: "600" }} className="glow-text">
@@ -103,7 +103,7 @@ export const ExperimentInfoPanel: React.FC = () => {
                 <div style={{ 
                     fontFamily: "'Fira Code', monospace", 
                     fontSize: "14px", 
-                    color: "#4fc3f7",
+                    color: "#2F8D46",
                     wordBreak: "break-all"
                 }}>
                     {lastObservation.equation}
@@ -113,11 +113,11 @@ export const ExperimentInfoPanel: React.FC = () => {
             <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
                 <div style={{ 
                     fontSize: "12px", 
-                    color: "#4fc3f7", 
+                    color: "#2F8D46", 
                     padding: "4px 12px", 
                     borderRadius: "20px", 
-                    background: "rgba(79, 195, 247, 0.1)",
-                    border: "1px solid rgba(79, 195, 247, 0.2)"
+                    background: "rgba(47, 141, 70, 0.1)",
+                    border: "1px solid rgba(47, 141, 70, 0.2)"
                 }}>
                     Qualitative Analysis Verified
                 </div>

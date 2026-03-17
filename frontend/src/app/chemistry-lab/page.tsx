@@ -9,14 +9,14 @@ import { ArrowLeft } from "lucide-react";
 export default function ChemistryLabPage() {
   return (
     <LabProvider>
-      <main className="relative w-full h-screen overflow-hidden bg-[#0b0f1a]">
+      <main className="relative w-full h-screen overflow-hidden bg-[#2d3032]">
         {/* Back button */}
         <Link
           href="/"
-          className="absolute top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 rounded-xl
+          className="absolute top-4 left-4 z-[3000] flex items-center gap-2 px-3 py-2 rounded-xl
             bg-white/5 backdrop-blur-md border border-white/10
             text-white/60 hover:text-white hover:bg-white/10
-            transition-all duration-200 text-sm font-medium"
+            transition-all duration-200 text-sm font-medium pointer-events-auto"
         >
           <ArrowLeft className="w-4 h-4" />
           Back

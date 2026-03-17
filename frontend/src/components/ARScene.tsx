@@ -42,10 +42,10 @@ function Reticle({ onHitDetect }: { onHitDetect: (detected: boolean) => void }) 
     return (
         <mesh ref={reticleRef} matrixAutoUpdate={false} visible={false}>
             <ringGeometry args={[0.08, 0.1, 32]} />
-            <meshBasicMaterial color="#2bb3a1" />
+            <meshBasicMaterial color="#2F8D46" />
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
                 <circleGeometry args={[0.015, 32]} />
-                <meshBasicMaterial color="#2bb3a1" />
+                <meshBasicMaterial color="#2F8D46" />
             </mesh>
         </mesh>
     );
@@ -94,7 +94,7 @@ function ARInstrument({ inst }: { inst: any }) {
                 {isDragging && (
                     <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                         <ringGeometry args={[0.6, 0.65, 32]} />
-                        <meshBasicMaterial color="#2bb3a1" transparent opacity={0.5} />
+                        <meshBasicMaterial color="#2F8D46" transparent opacity={0.5} />
                     </mesh>
                 )}
             </group>
@@ -209,7 +209,7 @@ function SceneContent({ onReady }: { onReady: () => void }) {
                 <Text
                     position={[0, 1.5, 0]}
                     fontSize={0.1}
-                    color="#2bb3a1"
+                    color="#2F8D46"
                     anchorX="center"
                     anchorY="middle"
                     outlineWidth={0.01}
@@ -242,11 +242,11 @@ export default function ARScene() {
                 <div className="absolute inset-0 z-[60] flex items-center justify-center bg-[#0a2538]">
                     <div className="flex flex-col items-center gap-6">
                         <div className="relative">
-                            <div className="w-16 h-16 border-4 border-[#2bb3a1]/20 rounded-full" />
-                            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-[#2bb3a1] border-t-transparent rounded-full animate-spin" />
+                            <div className="w-16 h-16 border-4 border-[#2F8D46]/20 rounded-full" />
+                            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-[#2F8D46] border-t-transparent rounded-full animate-spin" />
                         </div>
                         <div className="flex flex-col items-center gap-1">
-                            <span className="text-[#2bb3a1] font-black text-sm tracking-[0.3em] uppercase animate-pulse">BOOTING ENGINE</span>
+                            <span className="text-[#2F8D46] font-black text-sm tracking-[0.3em] uppercase animate-pulse">BOOTING ENGINE</span>
                             <span className="text-white/30 text-[9px] font-bold tracking-widest">INITIALIZING PHYSICS CORE</span>
                         </div>
                     </div>
@@ -254,7 +254,7 @@ export default function ARScene() {
             ) : (
                 <button
                     onClick={handleEnterAR}
-                    className="absolute bottom-24 left-1/2 -translate-x-1/2 px-10 py-6 bg-[#2bb3a1] text-black font-black text-xl rounded-2xl z-50 shadow-[0_20px_50px_rgba(43,179,161,0.5)] transition-all hover:scale-110 active:scale-95 flex items-center gap-4 border-b-8 border-black/20"
+                    className="absolute bottom-24 left-1/2 -translate-x-1/2 px-10 py-6 bg-[#2F8D46] text-black font-black text-xl rounded-2xl z-50 shadow-[0_20px_50px_rgba(47,141,70,0.5)] transition-all hover:scale-110 active:scale-95 flex items-center gap-4 border-b-8 border-black/20"
                 >
                     <div className="w-4 h-4 bg-black rounded-full animate-ping" />
                     LAUNCH AR EXPERIENCE

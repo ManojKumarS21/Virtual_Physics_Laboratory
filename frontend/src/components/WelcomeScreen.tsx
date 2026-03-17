@@ -13,10 +13,8 @@ export default function WelcomeScreen() {
         if (currentScreen === 'WELCOME') {
             const timer = setTimeout(() => {
                 setIsVisible(false);
-                // Trigger transition to FRONT immediately as UI fades
-                // This starts the camera zoom in Scene.tsx
                 setScreen('FRONT');
-            }, 2500);
+            }, 2500); 
             return () => clearTimeout(timer);
         }
     }, [currentScreen, setScreen]);
@@ -29,37 +27,39 @@ export default function WelcomeScreen() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a2538]/40 backdrop-blur-sm"
+                    exit={{ opacity: 0, transition: { duration: 0.8 } }}
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-[#2d3032]"
                 >
-                    <div className="text-center">
-                        <motion.h1
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.5, duration: 0.8 }}
-                            className="text-5xl md:text-7xl font-bold text-white tracking-tight"
-                        >
-                            Welcome to <span className="text-[#2bb3a1]">Amypo's</span>
-                        </motion.h1>
-                        <motion.h2
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8, duration: 0.8 }}
-                            className="text-4xl md:text-6xl font-light text-white/80 mt-2"
-                        >
-                            Physics Laboratory
-                        </motion.h2>
-                        
-                        <motion.div
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: 1 }}
-                            transition={{ delay: 1.2, duration: 1.5, ease: "easeInOut" }}
-                            className="h-[1px] w-48 bg-[#2bb3a1] mx-auto mt-8 origin-center"
-                        />
+                    <div className="relative flex flex-col items-center">
+                        <div className="text-center">
+                            <motion.div
+                                initial={{ opacity: 0, y: 15 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="flex flex-col items-center"
+                            >
+                                <span className="text-[10px] font-bold text-[#2F8D46] tracking-[0.4em] uppercase mb-4">
+                                    Virtual Physics Laboratory
+                                </span>
+                                <h1 className="text-5xl md:text-7xl font-black text-white tracking-widest flex items-center gap-2">
+                                    AMYPO
+                                </h1>
+                            </motion.div>
+                        </div>
+
+                        {/* Progress Indicator */}
+                        <div className="mt-12 w-48 h-[3px] bg-white/5 rounded-full overflow-hidden">
+                            <motion.div 
+                                initial={{ x: "-100%" }}
+                                animate={{ x: "0%" }}
+                                transition={{ duration: 2.0, ease: "easeInOut" }}
+                                className="w-full h-full bg-[#2F8D46]" 
+                            />
+                        </div>
                     </div>
                 </motion.div>
             )}
         </AnimatePresence>
     );
 }
+

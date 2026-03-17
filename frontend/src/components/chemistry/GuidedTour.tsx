@@ -421,7 +421,7 @@ export default function GuidedTour() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         onClick={() => setTourState({ stepIndex: stepIndex + 1, isPaused: false })}
-                        className="mt-6 px-8 py-3 bg-[#2bb3a1] text-black font-bold rounded-2xl hover:bg-[#259b8a] transition-all flex items-center gap-2 mx-auto group shadow-[0_0_30px_rgba(43,179,161,0.4)]"
+                        className="mt-6 px-8 py-3 bg-[#2F8D46] text-white font-bold rounded-2xl hover:bg-[#34ceba] transition-all flex items-center gap-2 mx-auto group shadow-[0_0_30px_rgba(47,141,70,0.4)]"
                     >
                         NEXT STEP
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -432,7 +432,7 @@ export default function GuidedTour() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         onClick={stopTour}
-                        className="mt-6 px-8 py-3 bg-[#2bb3a1] text-black font-bold rounded-2xl hover:bg-[#259b8a] transition-all flex items-center gap-2 mx-auto group shadow-[0_0_30px_rgba(43,179,161,0.4)]"
+                        className="mt-6 px-8 py-3 bg-[#2F8D46] text-white font-bold rounded-2xl hover:bg-[#34ceba] transition-all flex items-center gap-2 mx-auto group shadow-[0_0_30px_rgba(47,141,70,0.4)]"
                     >
                         FINISH TOUR
                         <Check className="w-5 h-5" />
@@ -477,7 +477,7 @@ export default function GuidedTour() {
                                             }}
                                             className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                                                 language === lang.id 
-                                                ? 'bg-[#2bb3a1] text-black' 
+                                                ? 'bg-[#2F8D46] text-white' 
                                                 : 'text-white/70 hover:bg-white/5 hover:text-white'
                                             }`}
                                         >
@@ -504,7 +504,7 @@ export default function GuidedTour() {
                     
                     <button
                         onClick={handleTogglePlay}
-                        className="p-3 text-[#2bb3a1] hover:scale-110 transition-all bg-white/5 rounded-full"
+                        className="p-3 text-[#2F8D46] hover:scale-110 transition-all bg-white/5 rounded-full"
                     >
                         {isPaused ? <Play className="w-8 h-8 fill-current" /> : <Pause className="w-8 h-8 fill-current" />}
                     </button>
@@ -522,14 +522,14 @@ export default function GuidedTour() {
 
                 <button
                     onClick={() => toggleVoice()}
-                    className={`p-2 transition-all ${voiceEnabled ? 'text-[#2bb3a1]' : 'text-white/30'}`}
+                    className={`p-2 transition-all ${voiceEnabled ? 'text-[#2F8D46]' : 'text-white/30'}`}
                 >
                     {voiceEnabled ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6" />}
                 </button>
 
                 <div className="flex gap-1.5 px-2">
                     {TOUR_STEPS.map((_, i) => (
-                        <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i === stepIndex ? 'w-6 bg-[#2bb3a1]' : 'w-1.5 bg-white/20'}`} />
+                        <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i === stepIndex ? 'w-6 bg-[#2F8D46]' : 'w-1.5 bg-white/20'}`} />
                     ))}
                 </div>
 

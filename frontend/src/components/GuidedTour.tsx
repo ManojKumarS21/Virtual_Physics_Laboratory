@@ -518,7 +518,7 @@ export default function GuidedTour() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         onClick={handleTogglePlay}
-                        className="mt-4 px-6 py-2 bg-[#2bb3a1] text-black font-black rounded-xl hover:bg-[#259b8a] transition-all flex items-center gap-2 mx-auto group shadow-[0_0_20px_rgba(43,179,161,0.3)]"
+                        className="mt-4 px-6 py-2 bg-[#2F8D46] text-white font-black rounded-xl hover:bg-[#34ceba] transition-all flex items-center gap-2 mx-auto group shadow-[0_0_20px_rgba(47,141,70,0.3)]"
                     >
                         NEXT STEP
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -529,7 +529,7 @@ export default function GuidedTour() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0, 1, 0] }}
                         transition={{ repeat: Infinity, duration: 2 }}
-                        className="mt-1 text-[#2bb3a1] font-bold text-[10px] tracking-widest uppercase"
+                        className="mt-1 text-[#2F8D46] font-bold text-[10px] tracking-widest uppercase"
                     >
                         {TOUR_CONTENT[language].unlockHint}
                     </motion.p>
@@ -556,7 +556,7 @@ export default function GuidedTour() {
                                 stopTour();
                                 useLabStore.getState().setScreen('PRACTICE');
                             }}
-                            className="px-6 py-2 bg-[#2bb3a1] text-black font-bold rounded-full hover:bg-[#259b8a] transition-all flex items-center gap-2"
+                            className="px-6 py-2 bg-[#2F8D46] text-white font-bold rounded-full hover:bg-[#34ceba] transition-all flex items-center gap-2"
                         >
                             <FlaskConical className="w-4 h-4" />
                             PRACTICE NOW
@@ -602,7 +602,7 @@ export default function GuidedTour() {
                                             }}
                                             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                                                 language === lang.id 
-                                                ? 'bg-[#2bb3a1] text-black' 
+                                                ? 'bg-[#2F8D46] text-white' 
                                                 : 'text-white/70 hover:bg-white/5 hover:text-white'
                                             }`}
                                         >
@@ -628,7 +628,7 @@ export default function GuidedTour() {
                 
                 <button
                     onClick={handleTogglePlay}
-                    className="p-2 text-[#2bb3a1] hover:scale-110 transition-all bg-white/5 rounded-full"
+                    className="p-2 text-[#2F8D46] hover:scale-110 transition-all bg-white/5 rounded-full"
                     title={isPaused ? "Resume Tour" : "Pause Tour"}
                 >
                     {isPaused ? <Play className="w-6 h-6 fill-current" /> : <Pause className="w-6 h-6 fill-current" />}
@@ -650,7 +650,7 @@ export default function GuidedTour() {
 
                 <button
                     onClick={() => toggleVoice()}
-                    className={`p-1.5 transition-all ${voiceEnabled ? 'text-[#2bb3a1]' : 'text-white/30'}`}
+                    className={`p-1.5 transition-all ${voiceEnabled ? 'text-[#2F8D46]' : 'text-white/30'}`}
                     title={voiceEnabled ? "Mute Voice" : "Unmute Voice"}
                 >
                     {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
@@ -658,7 +658,7 @@ export default function GuidedTour() {
 
                 <div className="flex gap-1">
                     {TOUR_STEPS.map((_, i) => (
-                        <div key={i} className={`h-1 rounded-full transition-all ${i === stepIndex ? 'w-4 bg-[#2bb3a1]' : 'w-1 bg-white/20'}`} />
+                        <div key={i} className={`h-1 rounded-full transition-all ${i === stepIndex ? 'w-4 bg-[#2F8D46]' : 'w-1 bg-white/20'}`} />
                     ))}
                 </div>
 

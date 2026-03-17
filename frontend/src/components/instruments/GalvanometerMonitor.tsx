@@ -50,11 +50,11 @@ export function GalvanometerMonitor() {
                     className="fixed bottom-[110px] right-6 z-50 pointer-events-none select-none"
                     style={{ width: 180 }}
                 >
-                    <div className="bg-[#0a2538]/60 backdrop-blur-xl border border-[#2bb3a1]/30 rounded-2xl p-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.4)] overflow-hidden">
+                    <div className="bg-[#404446]/90 backdrop-blur-md border border-white/5 rounded-2xl p-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.4)] overflow-hidden">
                         {/* Header */}
                         <div className="flex items-center justify-between mb-2 px-1">
-                            <span className="text-[9px] text-[#2bb3a1]/60 font-black uppercase tracking-widest">Galvo-Copy</span>
-                            <div className={`w-1.5 h-1.5 rounded-full ${Math.abs(visualDeflection) < 0.005 ? 'bg-[#e5e744] shadow-[0_0_8px_#e5e744]' : 'bg-[#e11d48]/20'}`} />
+                            <span className="text-[9px] text-white/50 font-black uppercase tracking-widest">Galvo-Copy</span>
+                            <div className={`w-1.5 h-1.5 rounded-full ${Math.abs(visualDeflection) < 0.005 ? 'bg-[#2F8D46] shadow-[0_0_8px_#2F8D46]' : 'bg-[#e11d48]/20'}`} />
                         </div>
 
                         {/* Dial Area */}
@@ -137,8 +137,8 @@ export function GalvanometerMonitor() {
 
                         {/* Footer info */}
                         <div className="mt-2 flex justify-between px-1 opacity-40">
-                            <span className="text-[7px] text-[#2bb3a1] font-bold uppercase tracking-tighter">MC / MR-100</span>
-                            <span className="text-[7px] text-[#2bb3a1] font-bold uppercase tracking-tighter">Class 2.0</span>
+                            <span className="text-[7px] text-white/50 font-bold uppercase tracking-tighter">MC / MR-100</span>
+                            <span className="text-[7px] text-white/50 font-bold uppercase tracking-tighter">Class 2.0</span>
                         </div>
                     </div>
                 </motion.div>

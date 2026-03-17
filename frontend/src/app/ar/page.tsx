@@ -48,7 +48,7 @@ export default function ARPage() {
                             </ul>
                         </div>
                     </div>
-                    <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-[#2bb3a1] text-black font-bold rounded-xl transition-all hover:scale-105">
+                    <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-[#2F8D46] text-black font-bold rounded-xl transition-all hover:scale-105">
                         <ArrowLeft className="w-4 h-4" />
                         BACK TO LAB
                     </Link>
@@ -64,12 +64,12 @@ export default function ARPage() {
                 <Link href="/" className="pointer-events-auto p-4 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 text-white shadow-2xl active:scale-90 transition-all hover:bg-black/80">
                     <ArrowLeft className="w-6 h-6" />
                 </Link>
-                <div className="px-5 py-2.5 bg-black/60 backdrop-blur-xl border border-[#2bb3a1]/40 rounded-full flex items-center gap-3 shadow-2xl animate-in fade-in slide-in-from-right duration-500">
+                <div className="px-5 py-2.5 bg-black/60 backdrop-blur-xl border border-[#2F8D46]/40 rounded-full flex items-center gap-3 shadow-2xl animate-in fade-in slide-in-from-right duration-500">
                     <div className="relative flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#2bb3a1] animate-ping absolute" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#2bb3a1]" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#2F8D46] animate-ping absolute" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#2F8D46]" />
                     </div>
-                    <span className="text-[#2bb3a1] text-[10px] font-black tracking-[0.2em] uppercase">
+                    <span className="text-[#2F8D46] text-[10px] font-black tracking-[0.2em] uppercase">
                         {isXRPresenting ? 'AR ACTIVE' : 'SCANNING ENVIRONMENT'}
                     </span>
                 </div>
@@ -77,8 +77,8 @@ export default function ARPage() {
 
             <Suspense fallback={
                 <div className="flex flex-col items-center justify-center h-full bg-[#0a2538] gap-4">
-                    <div className="w-12 h-12 border-4 border-[#2bb3a1] border-t-transparent rounded-full animate-spin" />
-                    <div className="text-[#2bb3a1] font-bold tracking-widest animate-pulse uppercase text-xs">CALIBRATING LENSES...</div>
+                    <div className="w-12 h-12 border-4 border-[#2F8D46] border-t-transparent rounded-full animate-spin" />
+                    <div className="text-[#2F8D46] font-bold tracking-widest animate-pulse uppercase text-xs">CALIBRATING LENSES...</div>
                 </div>
             }>
                 <ARScene />
@@ -102,7 +102,7 @@ export default function ARPage() {
                         <div className="flex flex-col gap-6 items-center animate-in fade-in slide-in-from-bottom duration-1000">
                            <button 
                                 onClick={() => setArPlacementTrigger(true)}
-                                className="pointer-events-auto px-12 py-6 bg-[#2bb3a1] text-black font-black text-xl rounded-[2.5rem] shadow-[0_25px_60px_rgba(43,179,161,0.6)] active:scale-90 transition-all border-4 border-white/30 flex flex-col items-center gap-1"
+                                className="pointer-events-auto px-12 py-6 bg-[#2F8D46] text-black font-black text-xl rounded-[2.5rem] shadow-[0_25px_60px_rgba(47,141,70,0.6)] active:scale-90 transition-all border-4 border-white/30 flex flex-col items-center gap-1"
                             >
                                 <span>PLACE HERE</span>
                                 <span className="text-[10px] opacity-60 font-bold uppercase tracking-widest">TAP TO SPAWN</span>

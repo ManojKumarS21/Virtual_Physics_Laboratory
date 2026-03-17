@@ -1,8 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Play, FlaskConical, BookOpen, Beaker } from 'lucide-react';
-import Link from 'next/link';
+import { Play, FlaskConical, BookOpen } from 'lucide-react';
 import { useLabStore } from '../hooks/useLabStore';
 import { initWorkoutInstruments } from '../components/WorkoutMode';
 
@@ -30,50 +29,58 @@ export default function FrontScreen() {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="max-w-xl w-full mx-4 p-8 rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl pointer-events-auto"
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="max-w-2xl w-full bg-[#404446]/90 backdrop-blur-md rounded-[2.5rem] p-10 md:p-14 shadow-2xl relative pointer-events-auto border border-white/5"
             >
-                <div className="text-center mb-8">
-                    <h2 className="text-[#2bb3a1] font-bold tracking-[0.2em] uppercase text-sm mb-2">Experiment 01</h2>
-                    <h1 className="text-3xl font-bold text-white uppercase tracking-wider">Meter Bridge Experiment</h1>
-                    <div className="h-1 w-12 bg-[#2bb3a1] mx-auto mt-4 rounded-full" />
-                </div>
-
-                <div className="space-y-4 mb-10">
-                    <p className="text-white/70 text-center leading-relaxed">
+                <div className="flex flex-col items-center text-center">
+                    <span className="text-[10px] font-bold text-[#2F8D46] tracking-[0.2em] uppercase mb-3">
+                        Experiment 01
+                    </span>
+                    
+                    <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-wider mb-2">
+                        Meter Bridge Experiment
+                    </h1>
+                    
+                    <div className="w-10 h-[3px] bg-[#2F8D46] rounded-full mt-3 mb-6" />
+                    
+                    <p className="text-[#a0aab2] text-sm leading-relaxed max-w-xl mx-auto mb-10">
                         Learn how to determine the unknown resistance of a wire using the principle of a Wheatstone bridge. This experiment uses a 1-meter long wire to find the balancing point and calculate resistance with precision.
                     </p>
-                </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <button
-                        onClick={handleStartTour}
-                        className="flex items-center justify-center gap-3 bg-white/5 hover:bg-[#2bb3a1]/20 border border-white/10 hover:border-[#2bb3a1]/40 text-white rounded-2xl py-4 transition-all group"
-                    >
-                        <Play className="w-5 h-5 text-[#2bb3a1] group-hover:scale-110 transition-transform" />
-                        <span className="font-bold tracking-wide">START TOUR</span>
-                    </button>
+                    <div className="flex flex-wrap items-center justify-center gap-4">
+                        {/* Start Tour Button */}
+                        <button
+                            onClick={handleStartTour}
+                            className="group flex items-center gap-3 px-6 py-4 bg-white/5 border border-white/10 hover:bg-white/10 rounded-2xl transition-all"
+                        >
+                            <Play className="w-5 h-5 text-[#2F8D46] transition-transform group-hover:scale-110" />
+                            <div className="text-left leading-tight">
+                                <span className="block text-white font-bold text-sm tracking-wider">START</span>
+                                <span className="block text-white font-bold text-sm tracking-wider">TOUR</span>
+                            </div>
+                        </button>
 
-                    <button
-                        onClick={handleWorkout}
-                        className="flex items-center justify-center gap-3 bg-white/5 hover:bg-[#e5e744]/20 border border-white/10 hover:border-[#e5e744]/40 text-white rounded-2xl py-4 transition-all group"
-                    >
-                        <FlaskConical className="w-5 h-5 text-[#e5e744] group-hover:scale-110 transition-transform" />
-                        <span className="font-bold tracking-wide">WORKOUT</span>
-                    </button>
+                        {/* Workout Button */}
+                        <button
+                            onClick={handleWorkout}
+                            className="group flex items-center gap-3 px-6 py-4 bg-white/5 border border-white/10 hover:bg-white/10 rounded-2xl transition-all"
+                        >
+                            <FlaskConical className="w-5 h-5 text-yellow-500 transition-transform group-hover:scale-110" />
+                            <span className="block text-white font-bold text-sm tracking-wider">WORKOUT</span>
+                        </button>
 
-                    <button
-                        onClick={handlePractice}
-                        className="flex items-center justify-center gap-3 bg-[#2bb3a1] hover:bg-[#259b8a] text-black rounded-2xl py-4 transition-all group"
-                    >
-                        <BookOpen className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                        <span className="font-bold tracking-wide">PRACTICE</span>
-                    </button>
-
-
+                        {/* Practice Button */}
+                        <button
+                            onClick={handlePractice}
+                            className="group flex items-center gap-3 px-8 py-4 bg-[#2F8D46] hover:bg-[#329e4d] rounded-2xl transition-all shadow-lg"
+                        >
+                            <BookOpen className="w-5 h-5 text-black" />
+                            <span className="block text-black font-black text-sm tracking-wider">PRACTICE</span>
+                        </button>
+                    </div>
                 </div>
             </motion.div>
         </div>

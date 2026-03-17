@@ -132,16 +132,16 @@ export default function Shelf() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: -320, opacity: 0 }}
                         transition={{ type: 'spring', damping: 20 }}
-                        className="bg-[#0a2538]/80 backdrop-blur-2xl border border-[#2bb3a1]/20 rounded-2xl shadow-[0_0_30px_rgba(10,37,56,0.6)] w-58 overflow-hidden"
+                        className="bg-[#404446]/90 backdrop-blur-md border border-white/5 rounded-2xl shadow-xl w-58 overflow-hidden"
                         style={{ width: 220 }}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2bb3a1]/20">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2F8D46]/20">
                             <div>
-                                <p className="text-[10px] text-[#2bb3a1]/50 uppercase tracking-widest pl-1">Lab Shelf</p>
-                                <p className="text-sm font-bold text-white">Instruments</p>
+                                <p className="text-[10px] text-[#2F8D46]/50 uppercase tracking-widest pl-1">Lab Shelf</p>
+                                <p className="text-sm font-bold text-white tracking-wide">Instruments</p>
                             </div>
-                            <button onClick={() => setIsOpen(false)} className="text-[#2bb3a1]/40 hover:text-[#e5e744] hover:bg-[#2bb3a1]/10 p-1.5 rounded-lg transition-all">
+                            <button onClick={() => setIsOpen(false)} className="text-[#2F8D46]/60 hover:text-[#2F8D46] hover:bg-white/5 p-1.5 rounded-lg transition-all">
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
@@ -150,10 +150,10 @@ export default function Shelf() {
                         <div className="p-3 space-y-1.5 overflow-y-auto max-h-[400px]">
                             {AVAILABLE_INSTRUMENTS.map((inst) => {
                                 const isSelected = inst.type === 'wire' && isHoldingWire;
-                                // Using SKITECH Teal for base items, Yellow when selected
+                                // Using Amypo Green for base items, White for selected
                                 const colorCls = isSelected
-                                    ? 'ring-2 ring-[#e5e744]/60 scale-[1.02] bg-[#e5e744]/20 border-[#e5e744]/50 shadow-[0_0_15px_rgba(229,231,68,0.2)]'
-                                    : 'bg-[#2bb3a1]/10 text-white border-[#2bb3a1]/20 hover:bg-[#2bb3a1]/20 hover:border-[#2bb3a1]/40';
+                                    ? 'ring-2 ring-[#2F8D46] scale-[1.02] bg-[#2F8D46]/10 border-[#2F8D46]/30 shadow-sm'
+                                    : 'bg-white/5 text-white border-white/10 hover:bg-white/10 hover:border-white/20';
 
                                 return (
                                     <div
@@ -161,12 +161,12 @@ export default function Shelf() {
                                         onPointerDown={() => handleSpawn(inst)}
                                         className={`flex items-center gap-3 p-2 rounded-xl border cursor-pointer transition-all ${colorCls}`}
                                     >
-                                        <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-[#0a2538]/60 border border-[#2bb3a1]/20">
+                                        <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-black/20 border border-white/5">
                                             <img src={inst.image} alt={inst.name} className="w-full h-full object-cover opacity-90" />
                                         </div>
                                         <div className="min-w-0">
-                                            <p className={`text-xs font-bold truncate tracking-tight ${isSelected ? 'text-[#e5e744]' : 'text-white'}`}>{inst.name}</p>
-                                            <p className={`text-[9px] truncate leading-tight ${isSelected ? 'text-[#e5e744]/80' : 'text-[#2bb3a1]/60'}`}>
+                                            <p className={`text-xs font-bold truncate tracking-tight ${isSelected ? 'text-white' : 'text-white'}`}>{inst.name}</p>
+                                            <p className={`text-[9px] truncate leading-tight ${isSelected ? 'text-[#2F8D46]' : 'text-[#a0aab2]'}`}>
                                                 {inst.type === 'wire' && isHoldingWire ? 'Holding Wire...' : inst.desc}
                                             </p>
                                         </div>
@@ -177,15 +177,15 @@ export default function Shelf() {
 
                         {/* Placed Instruments */}
                         {placedInstruments.length > 0 && (
-                            <div className="border-t border-[#2bb3a1]/20 px-4 py-3 bg-[#0a2538]/40">
-                                <p className="text-[10px] text-[#2bb3a1]/50 uppercase tracking-widest pl-1 mb-2">On Table</p>
+                            <div className="border-t border-white/10 px-4 py-3 bg-black/10">
+                                <p className="text-[10px] text-[#2F8D46]/50 uppercase tracking-widest pl-1 mb-2">On Table</p>
                                 <div className="space-y-1">
                                     {placedInstruments.map((inst: any) => (
                                         <div key={inst.id} className="flex items-center justify-between group">
                                             <span className="text-[11px] font-medium text-white/50 group-hover:text-white transition-colors">{inst.name}</span>
                                             <button
                                                 onClick={() => removeInstrument(inst.id)}
-                                                className="text-white/20 hover:text-[#e5e744] hover:bg-white/5 p-1 rounded transition-colors"
+                                                className="text-white/20 hover:text-white hover:bg-white/5 p-1 rounded transition-colors"
                                             >
                                                 <X className="w-3 h-3" />
                                             </button>
@@ -195,8 +195,8 @@ export default function Shelf() {
                             </div>
                         )}
 
-                        <div className="px-4 py-3 border-t border-[#2bb3a1]/20 bg-[#2bb3a1]/5">
-                            <p className="text-[9px] text-[#2bb3a1]/40 text-center uppercase tracking-widest font-bold">Click to place · Drag to position</p>
+                        <div className="px-4 py-3 border-t border-white/10 bg-black/20">
+                            <p className="text-[9px] text-[#2F8D46]/60 text-center uppercase tracking-widest font-bold">Click to place · Drag to position</p>
                         </div>
                     </motion.div>
                 )}
@@ -205,7 +205,7 @@ export default function Shelf() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-[#0a2538]/80 backdrop-blur-xl p-3 rounded-xl border border-[#2bb3a1]/30 text-[#2bb3a1]/60 hover:text-[#e5e744] hover:border-[#e5e744]/50 hover:bg-[#2bb3a1]/20 transition-all shadow-[0_0_20px_rgba(43,179,161,0.1)]"
+                    className="bg-[#404446]/90 backdrop-blur-md p-3 rounded-2xl border border-white/5 text-[#a0aab2] hover:text-[#2F8D46] hover:bg-white/10 transition-all shadow-xl"
                 >
                     <Box className="w-5 h-5" />
                 </button>

@@ -132,7 +132,7 @@ export default function InstrumentContainer({
             {showHighlight && (
                 <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                     <ringGeometry args={[0.5, 0.55, 32]} />
-                    <meshBasicMaterial color={isDragging ? "#3b82f6" : "#ffffff"} transparent opacity={0.5} />
+                    <meshBasicMaterial color={isDragging ? "#2F8D46" : "#ffffff"} transparent opacity={0.5} />
                 </mesh>
             )}
 
@@ -141,11 +141,11 @@ export default function InstrumentContainer({
                 <group position={[0, -0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                     <mesh ref={highlightRef}>
                         <ringGeometry args={[0.55, 0.7, 32]} />
-                        <meshBasicMaterial color="#2bb3a1" transparent opacity={0.4} />
+                        <meshBasicMaterial color="#2F8D46" transparent opacity={0.4} />
                     </mesh>
                     <mesh>
                         <ringGeometry args={[0.55, 0.6, 32]} />
-                        <meshBasicMaterial color="#2bb3a1" transparent opacity={0.2} />
+                        <meshBasicMaterial color="#2F8D46" transparent opacity={0.2} />
                     </mesh>
                 </group>
             )}

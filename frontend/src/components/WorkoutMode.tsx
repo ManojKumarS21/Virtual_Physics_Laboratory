@@ -314,10 +314,10 @@ export default function WorkoutMode() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="max-w-2xl w-full mx-4 bg-black/70 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl pointer-events-auto"
+                        className="max-w-2xl w-full mx-4 bg-[#404446]/95 backdrop-blur-md border border-white/5 rounded-3xl p-6 shadow-2xl pointer-events-auto"
                     >
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-[#e5e744] font-bold tracking-[0.2em] uppercase text-sm">
+                            <h3 className="text-[#2F8D46] font-bold tracking-[0.2em] uppercase text-sm">
                                 {currentStepData?.title}
                             </h3>
                             <span className="text-white/40 text-sm font-bold">
@@ -330,8 +330,8 @@ export default function WorkoutMode() {
                         </p>
 
                         <div className="flex items-center gap-2 mb-6">
-                            <div className="w-2 h-2 rounded-full bg-[#3b82f6] animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
-                            <p className="text-[#3b82f6] font-bold text-sm tracking-wide">
+                            <div className="w-2 h-2 rounded-full bg-[#2F8D46] animate-pulse shadow-[0_0_8px_rgba(47,141,70,0.8)]" />
+                            <p className="text-[#2F8D46] font-bold text-sm tracking-wide">
                                 Click two valid terminals to connect them with a wire.
                             </p>
                         </div>
@@ -341,8 +341,8 @@ export default function WorkoutMode() {
                                 <div 
                                     key={i} 
                                     className={`flex-1 rounded-full transition-all duration-500 ${
-                                        i + 1 < stepIndex ? 'bg-green-500' :
-                                        i + 1 === stepIndex ? 'bg-[#e5e744]' :
+                                        i + 1 < stepIndex ? 'bg-[#2F8D46]' :
+                                        i + 1 === stepIndex ? 'bg-white' :
                                         'bg-white/10'
                                     }`} 
                                 />
@@ -354,9 +354,9 @@ export default function WorkoutMode() {
                         key="completion"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="max-w-md w-full mx-4 bg-[#2bb3a1]/20 backdrop-blur-xl border border-[#2bb3a1]/40 rounded-3xl p-8 shadow-[0_0_50px_rgba(43,179,161,0.2)] text-center pointer-events-auto"
+                        className="max-w-md w-full mx-4 bg-[#404446]/95 backdrop-blur-md border border-white/5 rounded-3xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.4)] text-center pointer-events-auto"
                     >
-                        <div className="w-16 h-16 bg-[#2bb3a1] rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-16 h-16 bg-[#2F8D46] rounded-full flex items-center justify-center mx-auto mb-6">
                             <CheckCircle2 className="w-8 h-8 text-black" />
                         </div>
                         
@@ -371,7 +371,7 @@ export default function WorkoutMode() {
                                 setWorkoutState({ isActive: false, stepIndex: 1 });
                                 setScreen('PRACTICE');
                             }}
-                            className="w-full py-4 bg-[#2bb3a1] hover:bg-[#259b8a] text-black font-bold rounded-2xl transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-4 bg-[#2F8D46] hover:bg-[#34ceba] text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 group"
                         >
                             <FlaskConical className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                             MOVE TO PRACTICE MODE

@@ -61,29 +61,29 @@ export default function Home() {
                                 useLabStore.getState().resetLab();
                                 useLabStore.getState().setScreen('WELCOME');
                             }}
-                            className="pointer-events-auto p-2 rounded-full border border-[#2bb3a1]/40 bg-[#2bb3a1]/10 text-white hover:bg-[#2bb3a1]/20 transition-all flex items-center justify-center shadow-[0_0_15px_rgba(43,179,161,0.1)]"
+                            className="pointer-events-auto p-2 rounded-full border border-[#2F8D46]/40 bg-[#2F8D46]/10 text-white hover:bg-[#2F8D46]/20 transition-all flex items-center justify-center shadow-[0_0_15px_rgba(47,141,70,0.1)]"
                             title="Back to Welcome Screen"
                         >
-                            <ArrowLeft className="w-4 h-4 text-[#2bb3a1]" />
+                            <ArrowLeft className="w-4 h-4 text-[#2F8D46]" />
                         </button>
                         <AmypoLogo subtitle="METER BRIDGE EXPERIMENT" />
                     </div>
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => useLabStore.getState().toggleStaticMode()}
-                            className={`pointer-events-auto px-4 py-1.5 rounded-full border transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(43,179,161,0.15)] ${isStaticMode
-                                ? 'bg-[#2bb3a1]/20 text-[#2bb3a1] border-[#2bb3a1]/40 hover:bg-[#2bb3a1]/30'
-                                : 'bg-[#e5e744]/20 text-[#e5e744] border-[#e5e744]/40 hover:bg-[#e5e744]/30 animate-pulse'
+                            className={`pointer-events-auto px-4 py-1.5 rounded-full border transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(47,141,70,0.15)] ${isStaticMode
+                                ? 'bg-[#2F8D46]/20 text-[#2F8D46] border-[#2F8D46]/40 hover:bg-[#2F8D46]/30'
+                                : 'bg-[#ffffff]/20 text-[#ffffff] border-[#ffffff]/40 hover:bg-[#ffffff]/30 animate-pulse'
                                 }`}
                         >
-                            <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor] ${isStaticMode ? 'bg-[#2bb3a1]' : 'bg-[#e5e744]'}`} />
+                            <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor] ${isStaticMode ? 'bg-[#2F8D46]' : 'bg-[#ffffff]'}`} />
                             <span className="text-[10px] font-bold tracking-wider uppercase">
                                 {isStaticMode ? 'STATIC MODE' : 'EDIT MODE'}
                             </span>
                         </button>
                         <button
                             onClick={() => setShowQR(true)}
-                            className="pointer-events-auto px-3 py-1.5 bg-[#0a2538]/80 backdrop-blur-md text-[#2bb3a1] text-[10px] tracking-wider font-bold rounded-full border border-[#2bb3a1]/30 shadow-[0_0_10px_rgba(43,179,161,0.1)] hover:bg-[#2bb3a1]/10 transition-all hover:scale-105 active:scale-95"
+                            className="pointer-events-auto px-3 py-1.5 bg-[#0a2538]/80 backdrop-blur-md text-[#2F8D46] text-[10px] tracking-wider font-bold rounded-full border border-[#2F8D46]/30 shadow-[0_0_10px_rgba(47,141,70,0.1)] hover:bg-[#2F8D46]/10 transition-all hover:scale-105 active:scale-95"
                         >
                             XR READY
                         </button>
@@ -94,7 +94,7 @@ export default function Home() {
             {/* AR QR Modal */}
             {showQR && (
                 <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
-                    <div className="relative max-w-sm w-full bg-[#0a2538]/90 border border-[#2bb3a1]/40 rounded-[2.5rem] p-8 text-center shadow-[0_0_50px_rgba(43,179,161,0.2)] animate-in fade-in zoom-in duration-300">
+                    <div className="relative max-w-sm w-full bg-[#0a2538]/90 border border-[#2F8D46]/40 rounded-[2.5rem] p-8 text-center shadow-[0_0_50px_rgba(47,141,70,0.2)] animate-in fade-in zoom-in duration-300">
                         <button
                             onClick={() => setShowQR(false)}
                             className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-colors"
@@ -102,8 +102,8 @@ export default function Home() {
                             <span className="text-xl">×</span>
                         </button>
 
-                        <div className="mb-6 mx-auto w-16 h-16 bg-[#2bb3a1]/10 rounded-2xl flex items-center justify-center border border-[#2bb3a1]/20 group">
-                            <svg className="w-8 h-8 text-[#2bb3a1] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="mb-6 mx-auto w-16 h-16 bg-[#2F8D46]/10 rounded-2xl flex items-center justify-center border border-[#2F8D46]/20 group">
+                            <svg className="w-8 h-8 text-[#2F8D46] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                             </svg>
                         </div>
@@ -112,7 +112,7 @@ export default function Home() {
                         <p className="text-white/60 text-sm mb-6">Scan to open the laboratory in your physical space with WebXR</p>
 
                         <div className="mb-6 px-4">
-                            <label className="block text-[#2bb3a1] text-[10px] font-bold tracking-widest uppercase mb-2 text-left opacity-60">
+                            <label className="block text-[#2F8D46] text-[10px] font-bold tracking-widest uppercase mb-2 text-left opacity-60">
                                 Local Machine IP (eg: 192.168.x.x)
                             </label>
                             <input
@@ -120,7 +120,7 @@ export default function Home() {
                                 value={localIP}
                                 onChange={(e) => setLocalIP(e.target.value)}
                                 placeholder="Enter Local IP"
-                                className="w-full bg-white/5 border border-[#2bb3a1]/30 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2bb3a1] transition-colors"
+                                className="w-full bg-white/5 border border-[#2F8D46]/30 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2F8D46] transition-colors"
                             />
                         </div>
 
@@ -135,12 +135,12 @@ export default function Home() {
                                 />
                             )}
                             {/* Scanning line animation */}
-                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#2bb3a1]/50 shadow-[0_0_15px_#2bb3a1] animate-[scan_3s_ease-in-out_infinite] pointer-events-none" />
+                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#2F8D46]/50 shadow-[0_0_15px_#2F8D46] animate-[scan_3s_ease-in-out_infinite] pointer-events-none" />
                         </div>
 
                         <button
                             onClick={() => setShowQR(false)}
-                            className="w-full py-4 bg-[#2bb3a1] hover:bg-[#2bb3a1]/90 text-black font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#2bb3a1]/20"
+                            className="w-full py-4 bg-[#2F8D46] hover:bg-[#2F8D46]/90 text-black font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#2F8D46]/20"
                         >
                             CLOSE PREVIEW
                         </button>
