@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Play, FlaskConical, BookOpen } from 'lucide-react';
+import { Play, FlaskConical, BookOpen, Beaker } from 'lucide-react';
+import Link from 'next/link';
 import { useLabStore } from '../hooks/useLabStore';
 import { initWorkoutInstruments } from '../components/WorkoutMode';
 
@@ -47,7 +48,7 @@ export default function FrontScreen() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <button
                         onClick={handleStartTour}
                         className="flex items-center justify-center gap-3 bg-white/5 hover:bg-[#2bb3a1]/20 border border-white/10 hover:border-[#2bb3a1]/40 text-white rounded-2xl py-4 transition-all group"
@@ -71,6 +72,14 @@ export default function FrontScreen() {
                         <BookOpen className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                         <span className="font-bold tracking-wide">PRACTICE</span>
                     </button>
+
+                    <Link
+                        href="/chemistry-lab"
+                        className="flex items-center justify-center gap-3 bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-400/40 text-white rounded-2xl py-4 transition-all group"
+                    >
+                        <Beaker className="w-5 h-5 text-purple-400 group-hover:scale-110 transition-transform" />
+                        <span className="font-bold tracking-wide">CHEM LAB</span>
+                    </Link>
                 </div>
             </motion.div>
         </div>

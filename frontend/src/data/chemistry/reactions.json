@@ -1,0 +1,186 @@
+{
+  "anions": {
+    "CO3": {
+      "name": "Carbonate",
+      "tests": [
+        {
+          "reagent": "HCl",
+          "observation": "Brisk effervescence with CO2 gas. White milky appearance expected with Limewater.",
+          "gas": "CO2",
+          "animation": "bubbles",
+          "equation": "CO3²⁻ + 2HCl → CO2↑ + H2O + 2Cl⁻"
+        },
+        {
+          "reagent": "Limewater",
+          "observation": "Limewater turns milky (Confirmatory for Carbonate)",
+          "color": "#F0F0F0",
+          "animation": "cloudy",
+          "equation": "Ca(OH)2 + CO2 → CaCO3↓ + H2O"
+        }
+      ]
+    },
+    "SO4": {
+      "name": "Sulphate",
+      "tests": [
+        {
+          "reagent": "BaCl2",
+          "condition": "HCl",
+          "observation": "White precipitate of BaSO4 confirms presence of Sulphate ions.",
+          "precipitate": "BaSO4",
+          "color": "#FFFFFF",
+          "animation": "sediment",
+          "equation": "SO4²⁻ + BaCl2 → BaSO4↓ + 2Cl⁻"
+        }
+      ]
+    },
+    "Cl": {
+      "name": "Chloride",
+      "tests": [
+        {
+          "reagent": "AgNO3",
+          "condition": "HNO3",
+          "observation": "White curdy precipitate of AgCl formed – Chloride confirmed.",
+          "precipitate": "AgCl",
+          "color": "#F0F0F0",
+          "animation": "curdy",
+          "equation": "Cl⁻ + AgNO3 → AgCl↓ + NO3⁻"
+        },
+        {
+          "reagent": "NH4OH",
+          "observation": "AgCl precipitate dissolves (colourless complex)",
+          "color": "#E0F2FE",
+          "animation": "glow",
+          "equation": "AgCl + 2NH4OH → [Ag(NH3)2]Cl + 2H2O"
+        }
+      ]
+    },
+    "NO3": {
+      "name": "Nitrate",
+      "tests": [
+        {
+          "reagent": "FeSO4",
+          "condition": "H2SO4",
+          "name": "Brown Ring Test",
+          "observation": "Brown ring formed at junction",
+          "animation": "brown_ring",
+          "color": "#5D4037",
+          "equation": "NO3⁻ + 3Fe²⁺ + 4H⁺ → NO↑ + 3Fe³⁺ + 2H2O"
+        }
+      ]
+    }
+  },
+  "cations": {
+    "NH4": {
+      "name": "Ammonium",
+      "tests": [
+        {
+          "reagent": "NaOH",
+          "condition": "heat",
+          "observation": "Pungent smell of Ammonia gas (Ammonium confirmed)",
+          "gas": "NH3",
+          "animation": "smoke",
+          "equation": "NH4⁺ + NaOH --(Δ)--> NH3↑ + H2O + Na⁺"
+        }
+      ]
+    },
+    "Fe3": {
+      "name": "Iron(III)",
+      "tests": [
+        {
+          "reagent": "KSCN",
+          "observation": "Blood red complex confirms presence of Iron(III) ions.",
+          "color": "#D32F2F",
+          "animation": "glow",
+          "equation": "Fe³⁺ + SCN⁻ → [Fe(SCN)]²⁺"
+        },
+        {
+          "reagent": "NaOH",
+          "observation": "Brown precipitate of Fe(OH)3",
+          "precipitate": "Fe(OH)3",
+          "color": "#795548",
+          "animation": "sediment",
+          "equation": "Fe³⁺ + 3NaOH → Fe(OH)3↓ + 3Na⁺"
+        }
+      ]
+    },
+    "Cu": {
+      "name": "Copper(II)",
+      "tests": [
+        {
+          "reagent": "NaOH",
+          "observation": "Blue precipitate of Cu(OH)2",
+          "precipitate": "Cu(OH)2",
+          "color": "#1976D2",
+          "animation": "sediment",
+          "equation": "Cu²⁺ + 2NaOH → Cu(OH)2↓"
+        },
+        {
+          "reagent": "NH4OH",
+          "observation": "Deep blue solution of [Cu(NH3)4]²⁺ confirms presence of Copper(II) ions.",
+          "color": "#0D47A1",
+          "animation": "glow",
+          "equation": "Cu²⁺ + 4NH4OH → [Cu(NH3)4]²⁺ + 4H2O"
+        }
+      ]
+    },
+    "Fe2": {
+      "name": "Iron(II)",
+      "tests": [
+        {
+          "reagent": "NaOH",
+          "observation": "Dirty green precipitate of Fe(OH)2",
+          "precipitate": "Fe(OH)2",
+          "color": "#388E3C",
+          "animation": "sediment",
+          "equation": "Fe²⁺ + 2NaOH → Fe(OH)2↓"
+        }
+      ]
+    },
+    "Ca": {
+      "name": "Calcium",
+      "tests": [
+        {
+          "reagent": "Bunsen Burner",
+          "observation": "Brick red flame (flame test)",
+          "color": "#FF5722",
+          "animation": "glow"
+        }
+      ]
+    },
+    "Na": {
+      "name": "Sodium",
+      "tests": [
+        {
+          "reagent": "Bunsen Burner",
+          "observation": "Golden yellow flame (flame test)",
+          "color": "#FFD600",
+          "animation": "glow"
+        }
+      ]
+    },
+    "K": {
+      "name": "Potassium",
+      "tests": [
+        {
+          "reagent": "Bunsen Burner",
+          "observation": "Violet flame (flame test)",
+          "color": "#D1C4E9",
+          "animation": "glow"
+        }
+      ]
+    },
+    "Ag": {
+      "name": "Silver",
+      "tests": [
+        {
+          "reagent": "HCl",
+          "observation": "White curdy precipitate of AgCl",
+          "precipitate": "AgCl",
+          "color": "#F0F0F0",
+          "animation": "curdy",
+          "equation": "Ag⁺ + Cl⁻ → AgCl↓"
+        }
+      ]
+    }
+  }
+}

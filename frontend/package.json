@@ -8,16 +8,18 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@react-three/drei": "latest",
-        "@react-three/fiber": "latest",
+        "@react-three/drei": "^10.7.7",
+        "@react-three/fiber": "^9.5.0",
+        "@react-three/postprocessing": "^3.0.4",
         "@react-three/xr": "^6.6.29",
+        "@use-gesture/react": "^10.3.1",
         "framer-motion": "latest",
         "lucide-react": "latest",
         "next": "latest",
         "qrcode.react": "^4.2.0",
         "react": "latest",
         "react-dom": "latest",
-        "three": "^0.160.0",
+        "three": "^0.170.0",
         "zustand": "latest"
     },
     "devDependencies": {
