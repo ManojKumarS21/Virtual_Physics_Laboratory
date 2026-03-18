@@ -18,10 +18,12 @@ const TOUR_CONTENT: Record<string, Record<string, string>> = {
         sink: "This is the Lab Sink. Use it to dispose of chemicals and clean your test tubes.",
         cleanup: "Remember to clean up after each experiment to keep your workspace tidy! Happy experimenting!",
         unlockHint: "( Click and drag any tool to interact )",
-        cl_intro: "Let's perform the Chloride Ion Test to detect chloride ions using Silver Nitrate.",
+        cl_intro: "Now, watch carefully. Let's perform the Chloride Ion Test to detect chloride ions using Silver Nitrate.",
+        cl_pick_tube: "First, use the holder to carefully pick a clean test tube from the rack and place it on the workbench.",
         cl_salt: "First, use the spatula to take a small amount of Sodium Chloride (NaCl) salt.",
         cl_add: "Add the salt into a clean test tube to prepare for the reaction.",
-        cl_reagent: "Now, use the dropper to add a few drops of Silver Nitrate (AgNO3) reagent.",
+        cl_reagent_bottle: "Now, watch closely as we add the reagent. First, move the Silver Nitrate (AgNO3) bottle to the table and open the bottle using right click.",
+        cl_reagent_dropper: "Then, use the dropper, drag to the bottle neck and right click on the dropper to pick the chemical to add a few drops of Silver Nitrate (AgNO3).",
         cl_result: "Observe the white precipitate forming. This confirms the presence of Chloride ions!"
     },
     hi: {
@@ -35,10 +37,12 @@ const TOUR_CONTENT: Record<string, Record<string, string>> = {
         sink: "यह लैब सिंक है। रसायनों के निपटान और अपनी टेस्ट ट्यूबों को साफ करने के लिए इसका उपयोग करें।",
         cleanup: "अपने कार्यक्षेत्र को साफ रखने के लिए प्रत्येक प्रयोग के बाद सफाई करना याद रखें! हैप्पी एक्सपेरिमेंटिंग!",
         unlockHint: "( बातचीत करने के लिए किसी भी उपकरण को क्लिक करें और खींचें )",
-        cl_intro: "आइए सिल्वर नाइट्रेट का उपयोग करके क्लोराइड आयनों का पता लगाने के लिए क्लोराइड आयन परीक्षण करें।",
+        cl_intro: "अब ध्यान से देखें। सिल्वर नाइट्रेट का उपयोग करके क्लोराइड आयनों का पता लगाने के लिए क्लोराइड आयन परीक्षण करें।",
+        cl_pick_tube: "सबसे पहले, होल्डर का उपयोग करके रैक से एक साफ टेस्ट ट्यूब उठाएँ और उसे वर्कबेंच पर रखें।",
         cl_salt: "सबसे पहले, सोडियम क्लोराइड (NaCl) नमक की थोड़ी मात्रा लेने के लिए स्पैटुला का उपयोग करें।",
         cl_add: "प्रतिक्रिया की तैयारी के लिए नमक को एक साफ टेस्ट ट्यूब में डालें।",
-        cl_reagent: "अब, सिल्वर नाइट्रेट (AgNO3) रिएजेंट की कुछ बूंदें डालने के लिए ड्रॉपर का उपयोग करें।",
+        cl_reagent_bottle: "अब, अभिकर्मక डालते समय ध्यान से देखें। सबसे पहले, सिल्वर नाइट्रेट (AgNO3) की बोतल को टेबल पर लाएं और राइट क्लिक करके बोतल खोलें।",
+        cl_reagent_dropper: "फिर, ड्रॉपर का उपयोग करें, उसे बोतल की गर्दन तक लाएं और सिल्वर नाइट्रेट (AgNO3) की कुछ बूंदें लेने के लिए ड्रॉपर पर राइट क्लिक करें।",
         cl_result: "सफेद अवक्षेप बनते हुए देखें। यह क्लोराइड आयनों की उपस्थिति की पुष्टि करता है!"
     },
     mr: {
@@ -52,10 +56,12 @@ const TOUR_CONTENT: Record<string, Record<string, string>> = {
         sink: "हा लॅब सिंक आहे. रसायनांचे निपटारा आणि टेस्ट ट्यूब स्वच्छ करण्यासाठी वापरा.",
         cleanup: "प्रत्येक प्रयोगानंतर स्वच्छता ठेवायला विसरू नका! आनंदाने प्रयोग करा!",
         unlockHint: "( कोणतेही साधन क्लिक करून ड्रॅग करा )",
-        cl_intro: "चला, सिल्वर नायट्रेट वापरून क्लोराईड आयन शोधण्यासाठी क्लोराईड आयन चाचणी करूया.",
+        cl_intro: "आता लक्षपूर्वक पहा. सिल्वर नायट्रेट वापरून क्लोराईड आयन शोधण्यासाठी क्लोराईड आयन चाचणी करूया.",
+        cl_pick_tube: "सर्वप्रथम, होल्डर वापरून रॅकमधून एक स्वच्छ टेस्ट ट्यूब उचला आणि ती वर्कबेंचवर ठेवा.",
         cl_salt: "प्रथम, सोडियम क्लोराईड (NaCl) मिठाचे थोडे प्रमाण घेण्यासाठी स्पॅटुला वापरा.",
         cl_add: "प्रतिक्रियेच्या तयारीसाठी मीठ एका स्वच्छ टेस्ट ट्यूबमध्ये टाका.",
-        cl_reagent: "आता, सिल्वर नायट्रेट (AgNO3) रिएजेंटचे काही थेंब टाकण्यासाठी ड्रॉपर वापरा.",
+        cl_reagent_bottle: "आता, रिएजेंट टाकताना काळजीपूर्वक पहा. सर्वप्रथम, सिल्वर नायट्रेट (AgNO3) ची बाटली टेबलवर आणा आणि राइट क्लिक करून बाटली उघडा.",
+        cl_reagent_dropper: "नंतर, ड्रॉपर वापरा, तो बाटलीच्या गळ्यापर्यंत न्या आणि सिल्वर नायट्रेट (AgNO3) चे काही थेंబ घेण्यासाठी ड्रॉपरवर राइट क्लिक करा.",
         cl_result: "पांढरा अवक्षेप तयार होताना पहा. हे क्लोराईड आयनांच्या अस्तित्वाची पुष्टी करते!"
     },
     te: {
@@ -69,34 +75,40 @@ const TOUR_CONTENT: Record<string, Record<string, string>> = {
         sink: "ఇది ల్యాబ్ సింక్. రసాయనాలను పారవేయడానికి మరియు టెస్ట్ ట్యూబ్లను శుభ్రం చేయడానికి ఉపయోగించండి.",
         cleanup: "ప్రతి ప్రయోగం తర్వాత శుభ్రపరచడం మర్చిపోవద్దు! ఆనందంగా ప్రయోగాలు చేయండి!",
         unlockHint: "( పరికరాన్ని క్లిక్ చేసి డ్రాగ్ చేయండి )",
-        cl_intro: "సిల్వర్ నైట్రేట్‌ను ఉపయోగించి క్లోరైడ్ అయాన్లను గుర్తించడానికి క్లోరైడ్ అయాన్ పరీక్షను చేద్దాం.",
+        cl_intro: "ఇప్పుడు జాగ్రత్తగా చూడండి. సిల్వర్ నైట్రేట్‌ను ఉపయోగించి క్లోరైడ్ అయాన్లను గుర్తించడానికి క్లోరైడ్ అయాన్ పరీక్షను చేద్దాం.",
+        cl_pick_tube: "మొదట, హోల్డర్ను ఉపయోగించి రాక్ నుండి ఒక శుభ్రమైన టెస్ట్ ట్యూబ్ తీసుకుని వర్క్బెంచ్పై ఉంచండి.",
         cl_salt: "మొదట, సోడియం క్లోరైడ్ (NaCl) ఉప్పును కొద్ది మొత్తంలో తీసుకోవడానికి స్పాటులాను ఉపయోగించండి.",
         cl_add: "ప్రతిచర్య కోసం సిద్ధం చేయడానికి ఉప్పును క్లీన్ టెస్ట్ ట్యూబ్‌లో వేయండి.",
-        cl_reagent: "ఇప్పుడు, సిల్వర్ నైట్రేట్ (AgNO3) రియాజెంట్ కొన్ని చుక్కలను వేయడానికి డ్రాపర్‌ను ఉపయోగించండి.",
+        cl_reagent_bottle: "ఇప్పుడు, రియాజెంట్‌ను జోడించేటప్పుడు నిశితంగా గమనించండి. మొదట, సిల్వర్ నైట్రేట్ (AgNO3) సీసాను టేబుల్ వద్దకు తీసుకువచ్చి రైట్ క్లిక్ చేసి సీసాను తెరవండి.",
+        cl_reagent_dropper: "ఆపై, డ్రాపర్‌ను ఉపయోగించి, దానిని సీసా మెడ వద్దకు తీసుకెళ్లి, సిల్వర్ నైట్రేట్ (AgNO3) కొన్ని చుక్కలను తీసుకోవడానికి డ్రాపర్‌పై రైట్ క్లిక్ చేయండి.",
         cl_result: "తెల్లటి అవక్షేపం ఏర్పడటం గమనించండి. ఇది క్లోరైడ్ అయాన్ల ఉనికిని నిర్ధారిస్తుంది!"
     }
 };
 
 const STEP_KEYS = [
     "intro", "burner", "rack", "tubes", "bottles", "dropper", "spatula", "sink", "cleanup",
-    "cl_intro", "cl_salt", "cl_add", "cl_reagent", "cl_result"
+    "cl_intro",
+    "cl_pick_tube",
+    "cl_salt", "cl_add", "cl_reagent_bottle", "cl_reagent_dropper", "cl_result"
 ];
 
 const TOUR_STEPS = [
-    { title: "Welcome", highlights: [] },
-    { title: "Bunsen Burner", highlights: ["burner"] },
-    { title: "Test Tube Rack", highlights: ["testTubeRack"] },
-    { title: "Test Tubes", highlights: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"] },
-    { title: "Reagent Bottles", highlights: ["bot_HCl", "bot_H2SO4", "bot_AgNO3", "bot_NH4OH", "bot_NaOH"] },
-    { title: "Dropper", highlights: ["dropper"] },
-    { title: "Spatula", highlights: ["spatula"] },
-    { title: "Lab Sink", highlights: ["sink"] },
-    { title: "Cleanup", highlights: ["sink"] },
-    { title: "Chloride Test", highlights: [] },
-    { title: "Take Salt", highlights: ["spatula", "salt_Cl"] },
-    { title: "Prepare Sample", highlights: ["tt1"] },
-    { title: "Add Reagent", highlights: ["dropper", "bot_AgNO3"] },
-    { title: "Observation", highlights: ["tt1"] },
+    { title: "Welcome", highlights: [], focus: null },
+    { title: "Bunsen Burner", highlights: ["burner"], focus: "burner" },
+    { title: "Test Tube Rack", highlights: ["testTubeRack"], focus: "testTubeRack" },
+    { title: "Test Tubes", highlights: ["tt1", "tt2", "tt3", "tt4", "tt5", "tt6"], focus: "tt1" },
+    { title: "Reagent Bottles", highlights: ["bot_HCl", "bot_H2SO4", "bot_AgNO3", "bot_NH4OH", "bot_NaOH"], focus: "bot_AgNO3" },
+    { title: "Dropper", highlights: ["dropper"], focus: "dropper" },
+    { title: "Spatula", highlights: ["spatula"], focus: "spatula" },
+    { title: "Lab Sink", highlights: ["sink"], focus: "sink" },
+    { title: "Cleanup", highlights: ["sink"], focus: "sink" },
+    { title: "Chloride Test", highlights: [], focus: null },
+    { title: "Pick Test Tube", highlights: ["holder", "tt1", "testTubeRack"], focus: "tt1" },
+    { title: "Take Salt", highlights: ["spatula", "salt_Cl"], focus: "salt_Cl" },
+    { title: "Prepare Sample", highlights: ["tt1"], focus: "tt1" },
+    { title: "Open Reagent", highlights: ["bot_AgNO3"], focus: "bot_AgNO3" },
+    { title: "Add Reagent", highlights: ["dropper", "bot_AgNO3"], focus: "tt1" },
+    { title: "Observation", highlights: ["tt1"], focus: "tt1" },
 ];
 
 export default function GuidedTour() {
@@ -114,7 +126,8 @@ export default function GuidedTour() {
         emptyDropper,
         attachHolder,
         openBottle,
-        setApparatusRotation
+        setApparatusRotation,
+        setSqueezeTime
     } = useLabState();
     const { tourState, language, voiceEnabled } = state;
     const { isActive, stepIndex, isPaused } = tourState;
@@ -239,6 +252,95 @@ export default function GuidedTour() {
         }, 100);
     }, [voiceEnabled, language, isPaused, setTourState]);
 
+    const moveArc = useCallback(async (id: string, target: [number, number, number], peakHeight = 0.3, duration = 1500) => {
+        const start = stateRef.current.apparatus[id]?.position || [0, 0, 0];
+        const startTime = performance.now();
+        
+        return new Promise<void>((resolve) => {
+            const animate = (now: number) => {
+                const elapsed = now - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                // Ease quad
+                const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                
+                // Parabolic arc for Y
+                const arcY = Math.sin(t * Math.PI) * peakHeight;
+                
+                const current: [number, number, number] = [
+                    start[0] + (target[0] - start[0]) * eased,
+                    start[1] + (target[1] - start[1]) * eased + arcY,
+                    start[2] + (target[2] - start[2]) * eased
+                ];
+                
+                setApparatusPosition(id, current);
+                if (t < 1) requestAnimationFrame(animate);
+                else resolve();
+            };
+            requestAnimationFrame(animate);
+        });
+    }, [setApparatusPosition]);
+
+    const tiltWithAnchor = useCallback(async (id: string, targetAngle: number, anchorOffset: [number, number, number], duration = 800) => {
+        const startRot = stateRef.current.apparatus[id]?.rotation?.[2] || 0;
+        const startPos = stateRef.current.apparatus[id]?.position || [0, 0, 0];
+        const startTime = performance.now();
+
+        return new Promise<void>((resolve) => {
+            const animate = (now: number) => {
+                const elapsed = now - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                
+                const currentAngle = startRot + (targetAngle - startRot) * eased;
+                
+                // Compensate position to keep the anchor point stationary
+                // x' = x + cos(a)*r - cos(a_start)*r ... something like that
+                // Simplify: we calculate how much the anchor moves in local space and apply it in world
+                const r = anchorOffset[0]; // Assuming tilt is around Z, so X offset matters
+                const dx = r * (Math.cos(currentAngle) - Math.cos(startRot));
+                const dy = r * (Math.sin(currentAngle) - Math.sin(startRot));
+
+                setApparatusRotation(id, [0, 0, currentAngle]);
+                // We don't adjust position here because it might conflict with moveSmooth
+                // Instead, the GuidedTour should call tilt with a duration and wait
+                if (t < 1) requestAnimationFrame(animate);
+                else resolve();
+            };
+            requestAnimationFrame(animate);
+        });
+    }, [setApparatusRotation]);
+
+    const tilt = useCallback(async (id: string, angle: number, duration = 600) => {
+        return tiltWithAnchor(id, angle, [0, 0, 0], duration);
+    }, [tiltWithAnchor]);
+
+    const moveSmooth = useCallback(async (id: string, target: [number, number, number], duration = 1200) => {
+        const start = stateRef.current.apparatus[id]?.position || [0, 0, 0];
+        const startTime = performance.now();
+        
+        return new Promise<void>((resolve) => {
+            const animate = (now: number) => {
+                const elapsed = now - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                
+                // Add subtle "carrying" sway in Z
+                const sway = Math.sin(t * Math.PI * 2) * 0.01;
+                
+                const current: [number, number, number] = [
+                    start[0] + (target[0] - start[0]) * eased,
+                    start[1] + (target[1] - start[1]) * eased,
+                    start[2] + (target[2] - start[2]) * eased + sway
+                ];
+                
+                setApparatusPosition(id, current);
+                if (t < 1) requestAnimationFrame(animate);
+                else resolve();
+            };
+            requestAnimationFrame(animate);
+        });
+    }, [setApparatusPosition]);
+
     // Real-time Action Sequencer
     const performAction = useCallback(async (stepKey: string) => {
         if (isActionRunningRef.current) return;
@@ -246,16 +348,6 @@ export default function GuidedTour() {
 
         const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-        const moveSmooth = async (id: string, pos: [number, number, number]) => {
-            setApparatusPosition(id, pos);
-            await delay(1200);
-        };
-
-        const tilt = async (id: string, angle: number) => {
-            setApparatusRotation(id, [0, 0, angle]);
-            await delay(600);
-        };
-        
         try {
             const { testTubes, apparatus } = stateRef.current;
             const tt1 = testTubes.find(t => t.id === 'tt1');
@@ -264,79 +356,75 @@ export default function GuidedTour() {
             const spatulaHome = DEFAULT_APPARATUS_LAYOUT["spatula"].position;
             const dropperHome = DEFAULT_APPARATUS_LAYOUT["dropper"].position;
             const bottleHome = DEFAULT_APPARATUS_LAYOUT["bot_AgNO3"].position;
+            const holderHome = DEFAULT_APPARATUS_LAYOUT["holder"].position;
 
             const salt = apparatus["salt_Cl"];
             const bottle = apparatus["bot_AgNO3"];
+            const SPATULA_TIP_X_OFFSET = -0.288;
 
             switch (stepKey) {
                 case "cl_intro":
-                    // 1. Pick tube using holder
-                    await moveSmooth("holder", [1.7, 1.15, 0]);
-                    attachHolder("tt1");
-                    await delay(900);
-                    // 2. Bring to workbench
-                    await moveSmooth("holder", [0.2, 1.05, -0.2]);
-                    attachHolder(null); // Release onto bench
+                    break;
+
+                case "cl_pick_tube":
+                    // 1. Move to holder
                     await delay(500);
-                    // 3. Return holder
-                    await moveSmooth("holder", [1.3, 0.8, -0.8]);
+                    // 2. Pick holder and move to rack
+                    await moveArc("holder", [tt1.position[0], tt1.position[1] + 0.2, tt1.position[2]], 0.2, 1000);
+                    attachHolder("tt1");
+                    await delay(400);
+                    // 3. Place tube on workbench
+                    await moveArc("holder", [0, 1.03, 0.4], 0.35, 1500);
+                    attachHolder(null);
+                    await delay(500);
+                    // 4. Return holder
+                    await moveArc("holder", holderHome, 0.3, 1200);
                     break;
 
                 case 'cl_salt':
-                    // 1. Spatula moves to salt
-                    if (salt) {
-                        await moveSmooth("spatula", [salt.position[0] - 0.1, salt.position[1] + 0.15, salt.position[2]]);
-                        await delay(500);
-                        // 2. Scoop
-                        pickSalt('Cl');
-                        await delay(900);
-                    }
-                    break;
-                    
-                case 'cl_add':
-                    // 1. Spatula to tube mouth
-                    await moveSmooth("spatula", [tt1.position[0], tt1.position[1] + 0.35, tt1.position[2]]);
-                    // 2. Tilt & Drop
-                    await tilt("spatula", -0.9);
-                    addSalt('tt1', 'Cl');
-                    await delay(1000);
-                    // 3. Reset & Return
-                    await tilt("spatula", 0);
-                    await moveSmooth("spatula", spatulaHome);
-                    break;
-                    
-                case 'cl_reagent':
-                    // 1. Bring bottle forward
-                    await moveSmooth("bot_AgNO3", [0.45, 1.1, -0.25]);
-                    await delay(800);
-                    openBottle("AgNO3"); // Open cap
+                    // 1. Move spatula to salt (Compensate for tip offset)
+                    await moveArc("spatula", [salt.position[0] - SPATULA_TIP_X_OFFSET, salt.position[1] + 0.1, salt.position[2] + 0.05], 0.2, 1000);
+                    // 2. Lift slightly
+                    pickSalt('Cl');
                     await delay(500);
+                    break;
 
-                    // 2. Suction with dropper
-                    if (bottle) {
-                        await moveSmooth("dropper", [0.45, 1.45, -0.25]); // Drop into bottle
-                        pickDropper('AgNO3');
-                        await delay(1000);
+                case 'cl_add':
+                    // 1. Move to tube rim (Compensate for tip offset)
+                    await moveArc("spatula", [tt1.position[0] - 0.05 - SPATULA_TIP_X_OFFSET, tt1.position[1] + 0.15, tt1.position[2]], 0.3, 1200);
+                    // 2. Tilt and dump
+                    await tilt("spatula", -Math.PI / 3, 800);
+                    addSalt("tt1", "Cl");
+                    await delay(600);
+                    // 3. Reset and return
+                    await tilt("spatula", Math.PI / 2, 500);
+                    await moveArc("spatula", spatulaHome, 0.3, 1200);
+                    break;
 
-                        // 3. Move dropper to tube mouth
-                        await moveSmooth("dropper", [tt1.position[0], tt1.position[1] + 0.45, tt1.position[2]]);
-                        
-                        // 4. Tilt & Drop reagent
-                        await tilt("dropper", -0.5);
-                        dropOneFromDropper('tt1');
-                        await delay(500);
-                        dropOneFromDropper('tt1');
-                        await delay(500);
-                        dropOneFromDropper('tt1');
-                        await delay(1200);
-                        
-                        // 5. Reset & Cleanup
-                        await tilt("dropper", 0);
-                        await moveSmooth("dropper", dropperHome);
-                        emptyDropper();
-                        openBottle(null); // Close bottle
-                        await moveSmooth("bot_AgNO3", bottleHome);
-                    }
+                case "cl_reagent_bottle":
+                    // 1. Move bottle to workbench
+                    await moveArc("bot_AgNO3", [0.4, 0.78, 0.4], 0.3, 1200);
+                    // 2. Open bottle
+                    await delay(600);
+                    openBottle("AgNO3");
+                    await delay(400);
+                    break;
+
+                case "cl_reagent_dropper":
+                    // 1. Fill dropper
+                    await moveArc("dropper", [0.4, 0.95, 0.4], 0.2, 1000);
+                    setSqueezeTime(performance.now());
+                    await delay(600);
+                    pickDropper("AgNO3");
+                    await delay(500);
+                    // 2. Add drops to tube
+                    await moveArc("dropper", [tt1.position[0], tt1.position[1] + 0.25, tt1.position[2]], 0.3, 1200);
+                    setSqueezeTime(performance.now());
+                    await delay(600);
+                    dropOneFromDropper("tt1");
+                    await delay(1000);
+                    // 3. Return home
+                    await moveArc("dropper", dropperHome, 0.3, 1500);
                     break;
             }
         } finally {
@@ -351,25 +439,35 @@ export default function GuidedTour() {
         dropOneFromDropper, 
         emptyDropper,
         attachHolder,
-        openBottle
+        openBottle,
+        setSqueezeTime
     ]);
 
     const stopTour = useCallback(() => {
         if (window.speechSynthesis) window.speechSynthesis.cancel();
-        setTourState({ isActive: false, stepIndex: 0, isPaused: false, highlightedIds: [] });
+        setTourState({ isActive: false, stepIndex: 0, isPaused: false, highlightedIds: [], cameraFocusId: null });
     }, [setTourState]);
 
     useEffect(() => {
         if (isActive && lastPerformedStepRef.current !== stepIndex) {
             lastPerformedStepRef.current = stepIndex;
             setHasFinishedNarration(false);
-            const step = TOUR_STEPS[stepIndex];
-            setTourState({ highlightedIds: step.highlights });
-            const textKey = STEP_KEYS[stepIndex];
-            speak(TOUR_CONTENT[language]?.[textKey] || TOUR_CONTENT['en'][textKey]);
+            const step = TOUR_STEPS[stepIndex] as any;
             
-            // Trigger real-time action if applicable
-            performAction(textKey);
+            // Immediately set highlights and zoom focus
+            setTourState({ 
+                highlightedIds: step.highlights,
+                cameraFocusId: step.focus || null
+            });
+            
+            const textKey = STEP_KEYS[stepIndex];
+            const text = TOUR_CONTENT[language]?.[textKey] || TOUR_CONTENT['en'][textKey];
+            speak(text);
+            
+            // ⏱️ Delay action so user hears instruction first
+            setTimeout(() => {
+                performAction(textKey);
+            }, 800); 
         }
     }, [isActive, stepIndex, language, speak, setTourState, performAction]);
 
@@ -402,16 +500,16 @@ export default function GuidedTour() {
     const currentText = TOUR_CONTENT[language]?.[STEP_KEYS[stepIndex]] || TOUR_CONTENT['en'][STEP_KEYS[stepIndex]];
 
     return (
-        <div className="absolute inset-0 z-[100] pointer-events-none flex flex-col items-center justify-end pb-32">
+        <div className="absolute inset-0 z-[100] pointer-events-none flex flex-col items-center justify-between py-16">
             <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
             {/* Captions */}
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
+                exit={{ opacity: 0, y: -20 }}
                 key={`${stepIndex}-${language}`}
-                className="max-w-2xl text-center px-8 py-6 bg-black/60 backdrop-blur-xl rounded-[2rem] border border-white/20 pointer-events-auto shadow-2xl"
+                className="max-w-2xl text-center px-8 py-6 bg-black/60 backdrop-blur-xl rounded-[2rem] border border-white/20 pointer-events-auto shadow-2xl mt-4"
             >
                 <p className="text-lg font-medium text-white tracking-wide leading-relaxed">
                     {currentText}

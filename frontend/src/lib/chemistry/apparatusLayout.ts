@@ -34,11 +34,11 @@ export const DEFAULT_APPARATUS_LAYOUT: Record<string, ApparatusLayoutItem> = {
     "bot_NH4Cl": { id: "bot_NH4Cl", type: "bottle", position: [1.2, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
     // Glassware
-    "measuringCylinder": { id: "measuringCylinder", type: "cylinder", position: [-1.4, 0.78, 0.3], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "flask": { id: "flask", type: "flask", position: [-0.96, 0.78, 0.3], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "beaker": { id: "beaker", type: "beaker", position: [-1.2, 0.78, 0.45], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "glassRod": { id: "glassRod", type: "rod", position: [-0.8, 0.78, 0.3], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "spatula": { id: "spatula", type: "spatula", position: [0.0, 0.78, 0.15], rotation: [0, 0, Math.PI / 2], scale: [1, 1, 1], draggable: true, holder: null },
+    "measuringCylinder": { id: "measuringCylinder", type: "cylinder", position: [-1.4, 0.78, -0.5], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "flask": { id: "flask", type: "flask", position: [-0.96, 0.78, -0.5], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "beaker": { id: "beaker", type: "beaker", position: [-1.2, 0.78, -0.4], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "glassRod": { id: "glassRod", type: "rod", position: [-0.6, 0.78, -0.65], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "spatula": { id: "spatula", type: "spatula", position: [-0.8, 0.78, -0.1], rotation: [0, 0, Math.PI / 2], scale: [1, 1, 1], draggable: true, holder: null },
 
     // Burner + Dropper
     "burner": { id: "burner", type: "burner", position: [0.4, 0.78, -0.35], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
@@ -52,7 +52,7 @@ export const DEFAULT_APPARATUS_LAYOUT: Record<string, ApparatusLayoutItem> = {
     "tt5": { id: "tt5", type: "tube", position: [2.07, 0.83, 0.0], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: "rack" },
     "tt6": { id: "tt6", type: "tube", position: [2.32, 0.83, 0.0], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: "rack" },
 
-    "funnel": { id: "funnel", type: "funnel", position: [0.8, 0.78, 0.5], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "funnel": { id: "funnel", type: "funnel", position: [1.8, 0.78, 0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "holder": { id: "holder", type: "holder", position: [1.2, 0.78, 0.4], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
     // Salts
@@ -74,9 +74,10 @@ export const DEFAULT_APPARATUS_LAYOUT: Record<string, ApparatusLayoutItem> = {
     "salt_Na": { id: "salt_Na", type: "salt", position: [-0.8, 0.78, 0.55], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "salt_K": { id: "salt_K", type: "salt", position: [-0.5, 0.78, 0.55], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
-    "filterPaper": { id: "filterPaper", type: "paper", position: [-0.2, 0.78, 0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "candle": { id: "candle", type: "candle", position: [0.55, 0.78, 0.55], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "filterPaper": { id: "filterPaper", type: "paper", position: [1.5, 0.78, 0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "candle": { id: "candle", type: "candle", position: [2.1, 0.78, 0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "retortStand": { id: "retortStand", type: "stand", position: [1.0, 0.78, -0.2], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "washBottle": { id: "washBottle", type: "washBottle", position: [0.8, 0.78, 0.6], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "washBottle": { id: "washBottle", type: "washBottle", position: [2.4, 0.78, 0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
     "testTubeRack": { id: "testTubeRack", type: "rack", position: [1.7, 0.78, 0.0], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: false, holder: null },
+    "sink": { id: "sink", type: "sink", position: [-1.9, 0.58, -0.40], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: false, holder: null },
 };

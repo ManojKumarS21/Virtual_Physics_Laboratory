@@ -32,6 +32,7 @@ import { ChemicalId } from "@/lib/chemistry/engine";
 import { useLabState } from "@/lib/chemistry/LabContext";
 import GuidedTour from "./GuidedTour";
 import { HighlightWrapper } from "./HighlightWrapper";
+import { TourCameraController } from "./TourCameraController";
 
 const BENCH_TOP = 0.78;
 
@@ -86,8 +87,9 @@ export const LabScene = () => {
                     target={[0, 1.1, 0]}
                     dampingFactor={0.07}
                     enableDamping
-                    enabled={!isDragging}
+                    enabled={!isDragging && !state.tourState.isActive}
                 />
+                <TourCameraController />
 
                 <ambientLight intensity={0.095} color="#dbe6ea" />
 

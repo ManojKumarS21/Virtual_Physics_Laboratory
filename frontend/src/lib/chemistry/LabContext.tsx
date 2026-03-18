@@ -67,9 +67,11 @@ interface LabState {
         stepIndex: number;
         isPaused: boolean;
         highlightedIds: string[];
+        cameraFocusId: string | null;
     };
     language: 'en' | 'hi' | 'te' | 'mr';
     voiceEnabled: boolean;
+    lastSqueezeTime: number; // For sync bulb animation
 }
 
 type LabAction =
@@ -104,6 +106,7 @@ type LabAction =
     | { type: "SET_TOUR_STATE"; payload: Partial<LabState["tourState"]> }
     | { type: "SET_LANGUAGE"; language: LabState["language"] }
     | { type: "TOGGLE_VOICE" }
+    | { type: "SET_SQUEEZE_TIME"; time: number }
     | { type: "RESET_LAB" };
 
 const INITIAL_TUBES: TestTubeState[] = Object.values(DEFAULT_APPARATUS_LAYOUT)
@@ -160,10 +163,12 @@ const INITIAL_STATE: LabState = {
         isActive: false,
         stepIndex: 0,
         isPaused: false,
-        highlightedIds: []
+        highlightedIds: [],
+        cameraFocusId: null
     },
     language: 'en',
-    voiceEnabled: true
+    voiceEnabled: true,
+    lastSqueezeTime: 0
 };
 
 // ─── Reducer ───────────────────────────────────────────────────────────────────
@@ -210,7 +215,7 @@ function labReducer(state: LabState, action: LabAction): LabState {
                 const tubeId = state.holderAttachedId;
                 const tubePos: [number, number, number] = [
                     action.position[0],
-                    action.position[1] - 0.2475,
+                    action.position[1] - 0.22,
                     action.position[2]
                 ];
 
@@ -841,7 +846,8 @@ function labReducer(state: LabState, action: LabAction): LabState {
                     isActive: false,
                     stepIndex: 0,
                     isPaused: false,
-                    highlightedIds: []
+                    highlightedIds: [],
+                    cameraFocusId: null
                 }
             };
         }
@@ -860,6 +866,9 @@ function labReducer(state: LabState, action: LabAction): LabState {
 
         case "TOGGLE_VOICE":
             return { ...state, voiceEnabled: !state.voiceEnabled };
+
+        case "SET_SQUEEZE_TIME":
+            return { ...state, lastSqueezeTime: action.time };
 
         default:
             return state;
@@ -901,6 +910,7 @@ interface LabContextValue {
     setTourState: (payload: Partial<LabState["tourState"]>) => void;
     setLanguage: (lang: LabState["language"]) => void;
     toggleVoice: () => void;
+    setSqueezeTime: (time: number) => void;
 }
 
 const LabContext = createContext<LabContextValue | null>(null);
@@ -950,7 +960,7 @@ export function LabProvider({ children }: { children: React.ReactNode }) {
     const setTourState = useCallback((payload: Partial<LabState["tourState"]>) => dispatch({ type: "SET_TOUR_STATE", payload }), []);
     const setLanguage = useCallback((language: LabState["language"]) => dispatch({ type: "SET_LANGUAGE", language }), []);
     const toggleVoice = useCallback(() => dispatch({ type: "TOGGLE_VOICE" }), []);
-
+    const setSqueezeTime = useCallback((time: number) => dispatch({ type: "SET_SQUEEZE_TIME", time }), []);
     // Safety sync: Ensure missing apparatus keys (from hot reloading or updates) are added to the state dynamically
     const syncDone = useRef(false);
     React.useEffect(() => {
@@ -976,7 +986,8 @@ export function LabProvider({ children }: { children: React.ReactNode }) {
             emptyDropper,
             setHolder,
             selectExperiment, resetLab, setSnapTarget,
-            setTourState, setLanguage, toggleVoice
+            setTourState, setLanguage, toggleVoice,
+            setSqueezeTime
         }}>
             {children}
         </LabContext.Provider>
