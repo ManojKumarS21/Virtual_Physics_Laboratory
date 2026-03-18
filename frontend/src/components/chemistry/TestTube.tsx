@@ -159,6 +159,24 @@ export const TestTube: React.FC<{ tubeId: string }> = ({ tubeId }) => {
     useFrame((stateFiber, delta) => {
         if (!groupRef.current || !tube) return;
 
+        // ─── RIGID HOLDER LOCK (Fix 3: No Lag - Using Object3D lookup) ───
+        if (isAttached) {
+            const holder = stateFiber.scene.getObjectByName("apparatus_holder");
+            if (holder) {
+                groupRef.current.position.set(
+                    holder.position.x,
+                    holder.position.y - (0.55 * 0.45), // Precise offset for holder jaws
+                    holder.position.z
+                );
+                // Sync rotation rigidly
+                groupRef.current.rotation.set(
+                    holder.rotation.x,
+                    holder.rotation.y,
+                    holder.rotation.z
+                );
+            }
+        }
+
         // ─── Sink Detection (Mouth-based world coordinates) ───
         const mouthPos = new THREE.Vector3(0, TUBE_HEIGHT * SCALER, 0);
         groupRef.current.localToWorld(mouthPos);
