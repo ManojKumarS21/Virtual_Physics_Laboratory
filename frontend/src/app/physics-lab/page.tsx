@@ -20,6 +20,8 @@ export default function Home() {
     const [mounted, setMounted] = useState(false);
     const isStaticMode = useLabStore(s => s.isStaticMode);
     const currentScreen = useLabStore(s => s.currentScreen);
+    const showQR = useLabStore(s => s.showQR);
+    const setShowQR = useLabStore(s => s.setShowQR);
 
     useEffect(() => {
         setMounted(true);
@@ -29,7 +31,6 @@ export default function Home() {
         store.setScreen('WELCOME');
     }, []);
 
-    const [showQR, setShowQR] = useState(false);
     const [arUrl, setArUrl] = useState('');
     const [localIP, setLocalIP] = useState('192.168.0.201');
     const showInterface = currentScreen === 'TOUR' || currentScreen === 'PRACTICE' || currentScreen === 'WORKOUT';
@@ -85,77 +86,120 @@ export default function Home() {
                                 {isStaticMode ? 'STATIC MODE' : 'EDIT MODE'}
                             </span>
                         </button>
-                        <button
-                            onClick={() => setShowQR(true)}
-                            className="pointer-events-auto px-3 py-1.5 bg-[#0a2538]/80 backdrop-blur-md text-[#2F8D46] text-[10px] tracking-wider font-bold rounded-full border border-[#2F8D46]/30 shadow-[0_0_10px_rgba(47,141,70,0.1)] hover:bg-[#2F8D46]/10 transition-all hover:scale-105 active:scale-95"
-                        >
-                            XR READY
-                        </button>
                     </div>
                 </div>
             )}
 
             {/* AR QR Modal */}
             {showQR && (
-                <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
-                    <div className="relative max-w-sm w-full bg-[#0a2538]/90 border border-[#2F8D46]/40 rounded-[2.5rem] p-8 text-center shadow-[0_0_50px_rgba(47,141,70,0.2)] animate-in fade-in zoom-in duration-300">
+                <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md px-4 py-8">
+                    <div className="relative max-w-sm w-full max-h-[90vh] overflow-y-auto bg-[#0a2538]/95 border border-[#2F8D46]/40 rounded-[2.5rem] p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(47,141,70,0.3)] animate-in fade-in zoom-in duration-300 custom-scrollbar">
                         <button
                             onClick={() => setShowQR(false)}
-                            className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+                            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-colors z-10"
                         >
                             <span className="text-xl">×</span>
                         </button>
 
-                        <div className="mb-6 mx-auto w-16 h-16 bg-[#2F8D46]/10 rounded-2xl flex items-center justify-center border border-[#2F8D46]/20 group">
-                            <svg className="w-8 h-8 text-[#2F8D46] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="mb-4 mx-auto w-12 h-12 bg-[#2F8D46]/10 rounded-xl flex items-center justify-center border border-[#2F8D46]/20 group">
+                            <svg className="w-6 h-6 text-[#2F8D46] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                             </svg>
                         </div>
 
-                        <h2 className="text-2xl font-bold text-white mb-2">Experience AR</h2>
-                        <p className="text-white/60 text-sm mb-6">Scan to open the laboratory in your physical space with WebXR</p>
+                        <h2 className="text-xl font-bold text-white mb-1 tracking-tight">Experience AR</h2>
+                        <p className="text-white/50 text-[10px] mb-6 font-medium leading-tight">Scan to bridge the laboratory into your physical environment</p>
 
-                        <div className="mb-6 px-4">
-                            <label className="block text-[#2F8D46] text-[10px] font-bold tracking-widest uppercase mb-2 text-left opacity-60">
-                                Local Machine IP (eg: 192.168.x.x)
+                        <div className="mb-6 px-2">
+                            <label className="block text-[#2F8D46] text-[9px] font-black tracking-widest uppercase mb-1.5 text-left opacity-60">
+                                PC Network IP Address
                             </label>
                             <input
                                 type="text"
                                 value={localIP}
                                 onChange={(e) => setLocalIP(e.target.value)}
                                 placeholder="Enter Local IP"
-                                className="w-full bg-white/5 border border-[#2F8D46]/30 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#2F8D46] transition-colors"
+                                className="w-full bg-white/5 border border-[#2F8D46]/30 rounded-lg px-4 py-2.5 text-white text-xs focus:outline-none focus:border-[#2F8D46] transition-all font-mono text-center"
                             />
                         </div>
 
-                        <div className="relative aspect-square w-full max-w-[240px] mx-auto mb-8 bg-white rounded-3xl p-6 border border-white/10 overflow-hidden group flex items-center justify-center">
+                        <div className="relative aspect-square w-full max-w-[200px] mx-auto mb-6 bg-white rounded-[2rem] p-6 border-6 border-white group flex items-center justify-center shadow-xl transition-transform hover:scale-105 duration-500">
                             {arUrl && (
                                 <QRCodeCanvas
                                     value={arUrl}
-                                    size={200}
+                                    size={160}
                                     level="H"
                                     includeMargin={false}
-                                    className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                                    className="w-full h-full"
                                 />
                             )}
-                            {/* Scanning line animation */}
-                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#2F8D46]/50 shadow-[0_0_15px_#2F8D46] animate-[scan_3s_ease-in-out_infinite] pointer-events-none" />
+                            <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#2F8D46] shadow-[0_0_20px_#2F8D46] animate-[scan_3s_ease-in-out_infinite] pointer-events-none opacity-40" />
                         </div>
 
-                        <button
-                            onClick={() => setShowQR(false)}
-                            className="w-full py-4 bg-[#2F8D46] hover:bg-[#2F8D46]/90 text-black font-bold rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#2F8D46]/20"
-                        >
-                            CLOSE PREVIEW
-                        </button>
+                        <div className="flex flex-col gap-2.5">
+                            <details className="w-full text-left group">
+                                <summary className="w-full py-2.5 bg-white/5 border border-white/10 rounded-lg text-white/40 text-[8px] font-black tracking-widest hover:bg-white/10 hover:text-white transition-all uppercase px-4 cursor-pointer list-none flex justify-between items-center group-open:bg-yellow-500/10 group-open:border-yellow-500/20 group-open:text-yellow-500">
+                                    <span>MOBILE SETUP GUIDE</span>
+                                    <svg className="w-2.5 h-2.5 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </summary>
+                                <div className="mt-1.5 p-3 bg-yellow-500/5 border border-yellow-500/10 rounded-lg space-y-2">
+                                     <p className="text-white/60 text-[8px] leading-relaxed italic">
+                                        WebXR requires a secure context or manual whitelist in Chrome:
+                                     </p>
+                                     <div className="p-1.5 bg-black/40 rounded-lg text-[7px] font-mono text-yellow-500/80 break-all border border-white/5 select-all">
+                                        chrome://flags/#unsafely-treat-insecure-origin-as-secure
+                                     </div>
+                                     <p className="text-[7px] text-white/40 leading-relaxed font-medium">
+                                        1. Add <b>{arUrl.replace('/ar', '')}</b> to whitelist.<br/>
+                                        2. Set to <b>ENABLED</b> and <b>RELAUNCH</b>.
+                                     </p>
+                                </div>
+                            </details>
+
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(arUrl);
+                                    const btn = document.getElementById('copy-btn');
+                                    if (btn) btn.innerText = 'COPIED!';
+                                    setTimeout(() => { if (btn) btn.innerText = 'COPY ACCESS LINK'; }, 2000);
+                                }}
+                                className="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-white/40 text-[9px] font-black tracking-widest hover:bg-white/10 hover:text-white transition-all uppercase"
+                                id="copy-btn"
+                            >
+                                COPY ACCESS LINK
+                            </button>
+                            
+                            <button
+                                onClick={() => setShowQR(false)}
+                                className="w-full py-4 bg-[#2F8D46] hover:bg-[#2F8D46]/90 text-black font-black text-xs tracking-widest rounded-xl transition-all active:scale-[0.98] shadow-xl shadow-[#2F8D46]/20 uppercase"
+                            >
+                                Back To Laboratory
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
 
             <style jsx global>{`
                 @keyframes scan {
-                    0%, 100% { top: 5%; }
-                    50% { top: 95%; }
+                    0%, 100% { top: 10%; }
+                    50% { top: 90%; }
+                }
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(47, 141, 70, 0.4);
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(47, 141, 70, 0.6);
                 }
             `}</style>
 

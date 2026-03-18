@@ -31,13 +31,13 @@ export default function ResistanceBox({ id, isGhost }: { id: string, isGhost?: b
     return (
         <group>
             {/* Box Body - Realistic Wood */}
-            <mesh castShadow receiveShadow userData={{ isFunctional: true }}>
+            <mesh castShadow receiveShadow position={[0, 0.4, 0]} userData={{ isFunctional: true }}>
                 <boxGeometry args={[2, 0.8, 1.4]} />
                 <meshStandardMaterial color="#3d2b1f" roughness={0.8} />
             </mesh>
 
             {/* Top Brass Plate */}
-            <mesh position={[0, 0.405, 0]}>
+            <mesh position={[0, 0.805, 0]}>
                 <boxGeometry args={[1.9, 0.02, 1.3]} />
                 <meshStandardMaterial color="#d4af37" metalness={0.9} roughness={0.2} />
             </mesh>
@@ -51,7 +51,7 @@ export default function ResistanceBox({ id, isGhost }: { id: string, isGhost?: b
                 const isRemoved = getPegStatus(idx);
 
                 return (
-                    <group key={idx} position={[x, 0.41, z]} onClick={(e) => { if (!isGhost) { e.stopPropagation?.(); togglePeg(idx); } }} userData={{ isFunctional: true }}>
+                    <group key={idx} position={[x, 0.81, z]} onClick={(e) => { if (!isGhost) { e.stopPropagation?.(); togglePeg(idx); } }} userData={{ isFunctional: true }}>
                         {/* Hole (dark circle) */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]} userData={{ isFunctional: true }}>
                             <circleGeometry args={[0.06, 16]} />
@@ -86,7 +86,7 @@ export default function ResistanceBox({ id, isGhost }: { id: string, isGhost?: b
             })}
 
             {/* Total Resistance HUD Label on Device */}
-            <group position={[0, 0.8, 0]}>
+            <group position={[0, 1.2, 0]}>
                 <Text fontSize={0.12} color="white" outlineColor="black" outlineWidth={0.01}>
                     {isGhost ? "Placement Preview" : `Total R: ${totalR} Ω`}
                 </Text>
@@ -95,8 +95,8 @@ export default function ResistanceBox({ id, isGhost }: { id: string, isGhost?: b
             {/* Terminals */}
             {!isGhost && (
                 <>
-                    <Terminal id={`${id}_t1`} instrumentId={id} position={[-0.9, 0, 0.8]} />
-                    <Terminal id={`${id}_t2`} instrumentId={id} position={[0.9, 0, 0.8]} />
+                    <Terminal id={`${id}_t1`} instrumentId={id} position={[-0.9, 0.4, 0.8]} />
+                    <Terminal id={`${id}_t2`} instrumentId={id} position={[0.9, 0.4, 0.8]} />
                 </>
             )}
         </group>

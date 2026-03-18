@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Play, FlaskConical, BookOpen, ArrowLeft } from 'lucide-react';
+import { Play, FlaskConical, BookOpen, ArrowLeft, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { useLabStore } from '../hooks/useLabStore';
 import { initWorkoutInstruments } from '../components/WorkoutMode';
@@ -10,6 +10,8 @@ export default function FrontScreen() {
     const currentScreen = useLabStore(s => s.currentScreen);
     const setScreen = useLabStore(s => s.setScreen);
     const setTourState = useLabStore(s => s.setTourState);
+    const initConnectedExperiment = useLabStore(s => s.initConnectedExperiment);
+    const setShowQR = useLabStore(s => s.setShowQR);
 
     if (currentScreen !== 'FRONT') return null;
 
@@ -27,6 +29,12 @@ export default function FrontScreen() {
     const handlePractice = () => {
         setScreen('PRACTICE');
         useLabStore.getState().resetLab();
+    };
+
+    const handleXRReady = () => {
+        setScreen('PRACTICE');
+        initConnectedExperiment();
+        setShowQR(true);
     };
 
     return (
@@ -83,6 +91,15 @@ export default function FrontScreen() {
                         >
                             <FlaskConical className="w-5 h-5 text-yellow-500 transition-transform group-hover:scale-110" />
                             <span className="block text-white font-bold text-sm tracking-wider">WORKOUT</span>
+                        </button>
+
+                        {/* XR Ready Button */}
+                        <button
+                            onClick={handleXRReady}
+                            className="group flex items-center gap-3 px-6 py-4 bg-[#2F8D46]/10 border border-[#2F8D46]/30 hover:bg-[#2F8D46]/20 rounded-2xl transition-all"
+                        >
+                            <Smartphone className="w-5 h-5 text-[#2F8D46] transition-transform group-hover:scale-110" />
+                            <span className="block text-white font-bold text-sm tracking-wider uppercase">XR READY</span>
                         </button>
 
                         {/* Practice Button */}

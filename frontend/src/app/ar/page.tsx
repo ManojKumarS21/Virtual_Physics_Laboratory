@@ -9,12 +9,28 @@ import Link from 'next/link';
 
 export default function ARPage() {
     const { 
-        isARPlaced, 
-        setArPlacementTrigger, 
+        isARPlaced,
+        setArPlacementTrigger,
         isXRPresenting,
-        resetLab
+        resetLab,
+        isSurfaceDetected,
+        isARStable,
+        canForcePlace,
+        setCanForcePlace
     } = useLabStore();
     const [isSupported, setIsSupported] = useState<boolean | null>(null);
+
+    // Timeout for manual placement
+    useEffect(() => {
+        if (isXRPresenting && !isARPlaced && !isARStable) {
+            const timer = setTimeout(() => {
+                setCanForcePlace(true);
+            }, 5000); // 5 seconds
+            return () => clearTimeout(timer);
+        } else {
+            setCanForcePlace(false);
+        }
+    }, [isXRPresenting, isARPlaced, isARStable, setCanForcePlace]);
 
     useEffect(() => {
         if (typeof navigator !== 'undefined' && (navigator as any).xr) {
@@ -90,28 +106,48 @@ export default function ARPage() {
                 <div className="absolute inset-0 z-[100] pointer-events-none flex flex-col items-center justify-between py-16 px-8">
                     <div className="mt-12 px-8 py-5 bg-black/80 backdrop-blur-2xl rounded-[2rem] border border-white/20 text-center shadow-2xl animate-in fade-in slide-in-from-top duration-1000">
                         <h3 className="text-white text-sm font-black tracking-[0.2em] uppercase mb-2">
-                            {isARPlaced ? 'EXPERIMENT READY' : 'POINT AT SURFACE'}
+                            {isARPlaced ? 'EXPERIMENT READY' : (isARStable ? 'SURFACE DETECTED' : 'SCANNING FOR SURFACE')}
                         </h3>
-                        <p className="text-white/50 text-[10px] max-w-[220px] font-medium leading-relaxed">
+                        <p className="text-white/50 text-[10px] max-w-[220px] font-medium leading-relaxed mx-auto">
                             {isARPlaced 
-                                ? 'The equipment is now on your table. You can walk around it or drag items to move them.' 
-                                : 'Move your phone slowly to find a flat surface. Look for the white ring on the ground.'}
+                                ? 'Experiment is locked in place. You can now walk around it freely.' 
+                                : (isARStable 
+                                    ? 'Surface is stable. Tap the button below to place the equipment.' 
+                                    : 'Move phone slowly to detect a table or floor surface.')
+                            }
                         </p>
                     </div>
 
                     {!isARPlaced && (
                         <div className="flex flex-col gap-6 items-center animate-in fade-in slide-in-from-bottom duration-1000">
-                           <button 
-                                onClick={() => setArPlacementTrigger(true)}
-                                className="pointer-events-auto px-12 py-6 bg-[#2F8D46] text-black font-black text-xl rounded-[2.5rem] shadow-[0_25px_60px_rgba(47,141,70,0.6)] active:scale-90 transition-all border-4 border-white/30 flex flex-col items-center gap-1"
-                            >
-                                <span>PLACE HERE</span>
-                                <span className="text-[10px] opacity-60 font-bold uppercase tracking-widest">TAP TO SPAWN</span>
-                            </button>
+                           {isSurfaceDetected ? (
+                                <button 
+                                    onClick={() => setArPlacementTrigger(true)}
+                                    className="pointer-events-auto px-12 py-6 rounded-[2.5rem] bg-[#2F8D46] text-black shadow-[0_25px_60px_rgba(47,141,70,0.6)] active:scale-90 transition-all border-4 border-white/30 flex flex-col items-center gap-1"
+                                >
+                                    <span className="font-black text-xl">PLACE EXPERIMENT</span>
+                                    <span className="text-[10px] opacity-60 font-bold uppercase tracking-widest">
+                                        SURFACE DETECTED - TAP TO SPAWN
+                                    </span>
+                                </button>
+                           ) : (
+                               canForcePlace && (
+                                    <button 
+                                        onClick={() => setArPlacementTrigger(true)}
+                                        className="pointer-events-auto px-10 py-5 rounded-[2rem] bg-amber-500 text-black shadow-2xl active:scale-90 transition-all border-2 border-white/20 flex flex-col items-center gap-1"
+                                    >
+                                        <span className="font-bold">PLACE MANUALLY</span>
+                                        <span className="text-[9px] opacity-70 font-bold uppercase tracking-wider">
+                                            SPAWN AT RED BOX POSITION
+                                        </span>
+                                    </button>
+                               )
+                           )}
+                            
                             <div className="flex items-center gap-3 px-4 py-2 bg-black/40 rounded-full border border-white/10 backdrop-blur-md">
-                                <div className="w-2 h-2 rounded-full bg-white/40 animate-pulse" />
+                                <div className={`w-2 h-2 rounded-full ${isSurfaceDetected ? 'bg-[#2F8D46] animate-pulse' : 'bg-white/20 animate-ping'}`} />
                                 <p className="text-white/60 text-[9px] font-bold uppercase tracking-widest">
-                                    SURFACE DETECTION ACTIVE
+                                    {isSurfaceDetected ? 'READY TO PLACE' : 'SCANNING ENVIRONMENT...'}
                                 </p>
                             </div>
                         </div>
