@@ -1,5 +1,14 @@
 // Chemistry Engine — reaction lookup, state management for the virtual lab
 
+export const EXPERIMENTS = [
+  { id: "chloride_test", title: "Chloride Ion Test", desc: "Detect Chloride ions using Silver Nitrate (AgNO3)." },
+  { id: "sulphate_test", title: "Sulphate Ion Test", desc: "Detect Sulphate ions using Barium Chloride (BaCl2)." },
+  { id: "copper_test", title: "Copper(II) Ion Test", desc: "Detect Copper(II) ions using Ammonium Hydroxide (NH4OH)." },
+  { id: "iron_test", title: "Iron(III) Ion Test", desc: "Detect Iron(III) ions using Pot. Thiocyanate (KSCN)." },
+  { id: "chromate_test", title: "Chromate Ion Test", desc: "Detect Chromate ions using Barium Chloride (BaCl2)." },
+  { id: "ammonium_test", title: "Ammonium Ion Test", desc: "Detect Ammonium ions using Sodium Hydroxide and Heat." }
+];
+
 export interface Observation {
   text: string;
   color?: string;

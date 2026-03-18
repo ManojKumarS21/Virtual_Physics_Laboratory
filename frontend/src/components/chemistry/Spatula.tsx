@@ -6,7 +6,7 @@ import { Text, Billboard } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useLabState } from "@/lib/chemistry/LabContext";
 import { useApparatusDrag } from "@/lib/chemistry/useApparatusDrag";
-import { GET_CHEMICAL_CONFIG } from "@/lib/chemistry/engine";
+import { GET_CHEMICAL_CONFIG, EXPERIMENTS } from "@/lib/chemistry/engine";
 
 interface SpatulaProps {
     position?: [number, number, number];
@@ -244,21 +244,22 @@ export const Spatula: React.FC = () => {
     const saltConfig = state.heldSalt ? GET_CHEMICAL_CONFIG(state.heldSalt) : null;
     const saltColor = saltConfig ? saltConfig.color : "#fff";
 
+    const activeExp = state.activeExperiment ? EXPERIMENTS.find(e => e.id === state.activeExperiment) : null;
+    const expPrefix = activeExp ? `${activeExp.title}\n` : "";
+
     // Create dynamic label
     let hintText = "Laboratory Spatula\nSlide over Salt Dish to Scoop";
     if (isDragging) {
         if (state.heldSalt && saltConfig) {
-            const qty = Math.ceil(state.heldSaltAmount * 100);
-            hintText = `${saltConfig.name} (${qty}%)\nTilt over Test Tube to Pour`;
+            hintText = `${expPrefix}${saltConfig.name}\nTilt over Test Tube to Pour`;
         } else {
-            hintText = "Spatula (Empty)\nTouch Salt Jar to Refill";
+            hintText = `${expPrefix}Spatula (Empty)\nTouch Salt Jar to Refill`;
         }
     } else if (isHovered) {
         if (state.heldSalt && saltConfig) {
-            const qty = Math.ceil(state.heldSaltAmount * 100);
-            hintText = `${saltConfig.name} (${qty}%)\nDrag to Test Tube mouth`;
+            hintText = `${expPrefix}${saltConfig.name}\nDrag to Test Tube mouth`;
         } else {
-            hintText = "Laboratory Spatula\nDrag OVER salt dish to scoop";
+            hintText = `${expPrefix}Laboratory Spatula\nDrag OVER salt dish to scoop`;
         }
     }
 
