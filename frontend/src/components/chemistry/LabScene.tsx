@@ -33,7 +33,6 @@ import { useLabState } from "@/lib/chemistry/LabContext";
 import GuidedTour from "./GuidedTour";
 import { HighlightWrapper } from "./HighlightWrapper";
 import { TourCameraController } from "./TourCameraController";
-import { VirtualHand } from "./VirtualHand";
 
 const BENCH_TOP = 0.78;
 
@@ -91,7 +90,6 @@ export const LabScene = () => {
                     enabled={!isDragging && !state.tourState.isActive}
                 />
                 <TourCameraController />
-                <VirtualHand />
 
                 <ambientLight intensity={0.095} color="#dbe6ea" />
 

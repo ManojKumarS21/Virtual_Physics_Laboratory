@@ -127,8 +127,7 @@ export default function GuidedTour() {
         attachHolder,
         openBottle,
         setApparatusRotation,
-        setSqueezeTime,
-        setVirtualHand
+        setSqueezeTime
     } = useLabState();
     const { tourState, language, voiceEnabled } = state;
     const { isActive, stepIndex, isPaused } = tourState;
@@ -274,13 +273,12 @@ export default function GuidedTour() {
                 ];
                 
                 setApparatusPosition(id, current);
-                setVirtualHand(current); // Sync hand
                 if (t < 1) requestAnimationFrame(animate);
                 else resolve();
             };
             requestAnimationFrame(animate);
         });
-    }, [setApparatusPosition, setVirtualHand]);
+    }, [setApparatusPosition]);
 
     const tiltWithAnchor = useCallback(async (id: string, targetAngle: number, anchorOffset: [number, number, number], duration = 800) => {
         const startRot = stateRef.current.apparatus[id]?.rotation?.[2] || 0;
@@ -336,13 +334,12 @@ export default function GuidedTour() {
                 ];
                 
                 setApparatusPosition(id, current);
-                setVirtualHand(current); // Sync hand
                 if (t < 1) requestAnimationFrame(animate);
                 else resolve();
             };
             requestAnimationFrame(animate);
         });
-    }, [setApparatusPosition, setVirtualHand]);
+    }, [setApparatusPosition]);
 
     // Real-time Action Sequencer
     const performAction = useCallback(async (stepKey: string) => {
@@ -363,14 +360,14 @@ export default function GuidedTour() {
 
             const salt = apparatus["salt_Cl"];
             const bottle = apparatus["bot_AgNO3"];
+            const SPATULA_TIP_X_OFFSET = -0.288;
 
             switch (stepKey) {
                 case "cl_intro":
                     break;
 
                 case "cl_pick_tube":
-                    // 1. Move pointer to holder
-                    setVirtualHand([apparatus["holder"].position[0], apparatus["holder"].position[1] + 0.1, apparatus["holder"].position[2]]);
+                    // 1. Move to holder
                     await delay(500);
                     // 2. Pick holder and move to rack
                     await moveArc("holder", [tt1.position[0], tt1.position[1] + 0.2, tt1.position[2]], 0.2, 1000);
@@ -380,42 +377,37 @@ export default function GuidedTour() {
                     await moveArc("holder", [0, 1.03, 0.4], 0.35, 1500);
                     attachHolder(null);
                     await delay(500);
-                    // 4. Return holder and release pointer
+                    // 4. Return holder
                     await moveArc("holder", holderHome, 0.3, 1200);
-                    setVirtualHand(null);
                     break;
 
                 case 'cl_salt':
-                    // 1. Move spatula to salt
-                    await moveArc("spatula", [salt.position[0], salt.position[1] + 0.1, salt.position[2] + 0.05], 0.2, 1000);
+                    // 1. Move spatula to salt (Compensate for tip offset)
+                    await moveArc("spatula", [salt.position[0] - SPATULA_TIP_X_OFFSET, salt.position[1] + 0.1, salt.position[2] + 0.05], 0.2, 1000);
                     // 2. Lift slightly
                     pickSalt('Cl');
                     await delay(500);
-                    setVirtualHand(null);
                     break;
 
                 case 'cl_add':
-                    // 1. Move to tube rim
-                    await moveArc("spatula", [tt1.position[0] - 0.05, tt1.position[1] + 0.15, tt1.position[2]], 0.3, 1200);
+                    // 1. Move to tube rim (Compensate for tip offset)
+                    await moveArc("spatula", [tt1.position[0] - 0.05 - SPATULA_TIP_X_OFFSET, tt1.position[1] + 0.15, tt1.position[2]], 0.3, 1200);
                     // 2. Tilt and dump
                     await tilt("spatula", -Math.PI / 3, 800);
                     addSalt("tt1", "Cl");
                     await delay(600);
                     // 3. Reset and return
-                    await tilt("spatula", 0, 500);
+                    await tilt("spatula", Math.PI / 2, 500);
                     await moveArc("spatula", spatulaHome, 0.3, 1200);
-                    setVirtualHand(null);
                     break;
 
                 case "cl_reagent_bottle":
                     // 1. Move bottle to workbench
                     await moveArc("bot_AgNO3", [0.4, 0.78, 0.4], 0.3, 1200);
                     // 2. Open bottle
-                    setVirtualHand([0.4, 0.95, 0.4]);
                     await delay(600);
                     openBottle("AgNO3");
                     await delay(400);
-                    setVirtualHand(null);
                     break;
 
                 case "cl_reagent_dropper":
@@ -433,7 +425,6 @@ export default function GuidedTour() {
                     await delay(1000);
                     // 3. Return home
                     await moveArc("dropper", dropperHome, 0.3, 1500);
-                    setVirtualHand(null);
                     break;
             }
         } finally {
@@ -449,8 +440,7 @@ export default function GuidedTour() {
         emptyDropper,
         attachHolder,
         openBottle,
-        setSqueezeTime,
-        setVirtualHand
+        setSqueezeTime
     ]);
 
     const stopTour = useCallback(() => {

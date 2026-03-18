@@ -20,14 +20,10 @@ export const TourCameraController = () => {
     const currentLookAt = useRef(DEFAULT_TARGET.clone());
     const isTransitioning = useRef(false);
 
-    // Update target positions based on focus
-    useEffect(() => {
-        if (!isActive) {
-            targetPos.current.copy(DEFAULT_POS);
-            targetLookAt.current.copy(DEFAULT_TARGET);
-            return;
-        }
+    useFrame((_, delta) => {
+        if (!isActive) return;
 
+        // 1. Calculate target positions (Moved from useEffect to ensure frame-sync)
         if (cameraFocusId) {
             const apparatus = state.apparatus[cameraFocusId];
             const tube = state.testTubes.find((t) => t.id === cameraFocusId);
@@ -37,36 +33,25 @@ export const TourCameraController = () => {
                 focusPos.set(...apparatus.position);
             } else if (tube) {
                 focusPos.set(...tube.position);
-            } else {
-                // fallback to default if ID not found
-                targetPos.current.copy(DEFAULT_POS);
-                targetLookAt.current.copy(DEFAULT_TARGET);
-                return;
             }
 
-            // Calculate a good zoom position
-            // We want to be closer and slightly above
-            targetLookAt.current.copy(focusPos);
-            targetLookAt.current.y += 0.15; // Focus slightly above base
-
-            const offset = new THREE.Vector3(0, 0.6, 1.2); // Closer zoom offset
-            targetPos.current.copy(focusPos).add(offset);
+            if (focusPos.length() > 0 || cameraFocusId === "tt1") { // valid target
+                targetLookAt.current.copy(focusPos);
+                targetLookAt.current.y += 0.15; 
+                const offset = new THREE.Vector3(0, 0.6, 1.2); 
+                targetPos.current.copy(focusPos).add(offset);
+            }
         } else {
-            // General tour overview if no specific focus
             targetPos.current.copy(DEFAULT_POS);
             targetLookAt.current.copy(DEFAULT_TARGET);
         }
-    }, [isActive, cameraFocusId, state.apparatus, state.testTubes]);
 
-    useFrame((_, delta) => {
-        if (!isActive) return;
+        const lerpFactor = 6.5 * delta;
 
-        const lerpFactor = 6.5 * delta; // Smoother but responsive
-
-        // 1. Smoothly lerp camera position
+        // 2. Smoothly lerp camera position
         camera.position.lerp(targetPos.current, lerpFactor);
 
-        // 2. Direct lookAt ( lerped target)
+        // 3. Direct lookAt (lerped target)
         currentLookAt.current.lerp(targetLookAt.current, lerpFactor);
         camera.lookAt(currentLookAt.current);
     });

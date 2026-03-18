@@ -270,7 +270,9 @@ export const LabHUD: React.FC = () => {
                         }}>
                             <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", color: "#2F8D46" }}>Select Experiment</h3>
                             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                {EXPERIMENTS.map((ex) => (
+                                {EXPERIMENTS
+                                    .filter(ex => activeMode === 'practice' || ex.id === 'chloride_test')
+                                    .map((ex) => (
                                     <button
                                         key={ex.id}
                                         onClick={() => selectExperiment(ex.id)}

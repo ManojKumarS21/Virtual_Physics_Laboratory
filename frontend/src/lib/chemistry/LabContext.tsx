@@ -68,9 +68,6 @@ interface LabState {
         isPaused: boolean;
         highlightedIds: string[];
         cameraFocusId: string | null;
-        virtualHandPosition: [number, number, number] | null;
-        virtualHandRotation: [number, number, number] | null;
-        virtualHandGrip: number; // 0 to 1
     };
     language: 'en' | 'hi' | 'te' | 'mr';
     voiceEnabled: boolean;
@@ -110,7 +107,6 @@ type LabAction =
     | { type: "SET_LANGUAGE"; language: LabState["language"] }
     | { type: "TOGGLE_VOICE" }
     | { type: "SET_SQUEEZE_TIME"; time: number }
-    | { type: "SET_VIRTUAL_HAND"; position: [number, number, number] | null; rotation?: [number, number, number] | null; grip?: number }
     | { type: "RESET_LAB" };
 
 const INITIAL_TUBES: TestTubeState[] = Object.values(DEFAULT_APPARATUS_LAYOUT)
@@ -168,10 +164,7 @@ const INITIAL_STATE: LabState = {
         stepIndex: 0,
         isPaused: false,
         highlightedIds: [],
-        cameraFocusId: null,
-        virtualHandPosition: null,
-        virtualHandRotation: null,
-        virtualHandGrip: 0
+        cameraFocusId: null
     },
     language: 'en',
     voiceEnabled: true,
@@ -222,7 +215,7 @@ function labReducer(state: LabState, action: LabAction): LabState {
                 const tubeId = state.holderAttachedId;
                 const tubePos: [number, number, number] = [
                     action.position[0],
-                    action.position[1] - 0.2475,
+                    action.position[1] - 0.22,
                     action.position[2]
                 ];
 
@@ -854,10 +847,7 @@ function labReducer(state: LabState, action: LabAction): LabState {
                     stepIndex: 0,
                     isPaused: false,
                     highlightedIds: [],
-                    cameraFocusId: null,
-                    virtualHandPosition: null,
-                    virtualHandRotation: null,
-                    virtualHandGrip: 0
+                    cameraFocusId: null
                 }
             };
         }
@@ -876,17 +866,6 @@ function labReducer(state: LabState, action: LabAction): LabState {
 
         case "TOGGLE_VOICE":
             return { ...state, voiceEnabled: !state.voiceEnabled };
-
-        case "SET_VIRTUAL_HAND":
-            return {
-                ...state,
-                tourState: {
-                    ...state.tourState,
-                    virtualHandPosition: action.position,
-                    virtualHandRotation: action.rotation !== undefined ? action.rotation : state.tourState.virtualHandRotation,
-                    virtualHandGrip: action.grip !== undefined ? action.grip : state.tourState.virtualHandGrip
-                }
-            };
 
         case "SET_SQUEEZE_TIME":
             return { ...state, lastSqueezeTime: action.time };
@@ -932,7 +911,6 @@ interface LabContextValue {
     setLanguage: (lang: LabState["language"]) => void;
     toggleVoice: () => void;
     setSqueezeTime: (time: number) => void;
-    setVirtualHand: (position: [number, number, number] | null, rotation?: [number, number, number] | null, grip?: number) => void;
 }
 
 const LabContext = createContext<LabContextValue | null>(null);
@@ -983,9 +961,6 @@ export function LabProvider({ children }: { children: React.ReactNode }) {
     const setLanguage = useCallback((language: LabState["language"]) => dispatch({ type: "SET_LANGUAGE", language }), []);
     const toggleVoice = useCallback(() => dispatch({ type: "TOGGLE_VOICE" }), []);
     const setSqueezeTime = useCallback((time: number) => dispatch({ type: "SET_SQUEEZE_TIME", time }), []);
-    const setVirtualHand = useCallback((position: [number, number, number] | null, rotation?: [number, number, number] | null, grip?: number) => 
-        dispatch({ type: "SET_VIRTUAL_HAND", position, rotation, grip }), []);
-
     // Safety sync: Ensure missing apparatus keys (from hot reloading or updates) are added to the state dynamically
     const syncDone = useRef(false);
     React.useEffect(() => {
@@ -1012,7 +987,7 @@ export function LabProvider({ children }: { children: React.ReactNode }) {
             setHolder,
             selectExperiment, resetLab, setSnapTarget,
             setTourState, setLanguage, toggleVoice,
-            setSqueezeTime, setVirtualHand
+            setSqueezeTime
         }}>
             {children}
         </LabContext.Provider>

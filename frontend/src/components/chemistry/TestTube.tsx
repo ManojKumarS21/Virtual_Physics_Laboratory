@@ -277,13 +277,7 @@ export const TestTube: React.FC<{ tubeId: string }> = ({ tubeId }) => {
 
         // Enforce alignment
         if (groupRef.current) {
-            if (isAttached) {
-                const holder = stateFiber.scene.getObjectByName("apparatus_holder");
-                if (holder) {
-                    groupRef.current.position.copy(holder.position);
-                    groupRef.current.position.y -= 0.22;
-                }
-            } else if (!isDragging) {
+            if (!isDragging && !isAttached) {
                 const RACK_X_MIN = 0.95;
                 const RACK_X_MAX = 2.45;
                 const RACK_Z_CENTER = 0.0;

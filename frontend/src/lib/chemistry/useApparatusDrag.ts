@@ -128,7 +128,7 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
             const isTourActive = state.tourState.isActive;
             const lerpFactor = draggingRef.current
                 ? 0.45   // smoother motion
-                : isTourActive ? 0.95 : 0.15;  // near-instant sync during tour, smooth settle otherwise
+                : isTourActive ? 1.0 : 0.15;  // near-instant sync during tour, smooth settle otherwise
 
             currentPos.current.lerp(targetPos.current, lerpFactor);
             groupRef.current.position.copy(currentPos.current);
