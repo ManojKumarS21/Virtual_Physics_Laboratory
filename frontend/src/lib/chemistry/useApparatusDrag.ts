@@ -104,6 +104,9 @@ export function useApparatusDrag({ id, groupRef, yOffset = 0, liftHeight = 0.05,
     useEffect(() => {
         if (!groupRef.current || !initialPos) return;
         if (draggingRef.current) return; // Don't fight manual dragging
+        
+        // Don't fight virtual dragging during tour for spatula
+        if (id === "spatula" && state.tourState.isTourDragging) return;
 
         const newTarget = new THREE.Vector3(...initialPos);
         const dist = currentPos.current.distanceTo(newTarget);

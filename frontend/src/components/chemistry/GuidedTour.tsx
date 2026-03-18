@@ -390,14 +390,22 @@ export default function GuidedTour() {
                     break;
 
                 case 'cl_add':
-                    // 1. Move to tube rim (Compensate for tip offset)
-                    await moveArc("spatula", [tt1.position[0] - 0.05 - SPATULA_TIP_X_OFFSET, tt1.position[1] + 0.15, tt1.position[2]], 0.3, 1200);
-                    // 2. Tilt and dump
-                    await tilt("spatula", -Math.PI / 3, 800);
-                    addSalt("tt1", "Cl");
-                    await delay(600);
-                    // 3. Reset and return
-                    await tilt("spatula", Math.PI / 2, 500);
+                    // 1. Move focus near tube center (Account for tip offset)
+                    await moveArc("spatula", [
+                        tt1.position[0] - SPATULA_TIP_X_OFFSET,
+                        tt1.position[1] + 0.25,
+                        tt1.position[2]
+                    ], 0.3, 1200);
+
+                    // 2. Enable Virtual Drag (triggers auto-snap and pour logic)
+                    setTourState({ isTourDragging: true });
+
+                    // 3. Wait for lock + auto-tilt + pour flow
+                    await delay(400); // initial lock timing
+                    await delay(3000); // actual flow time for realistic fill
+
+                    // 4. Stop Virtual Drag and Return
+                    setTourState({ isTourDragging: false });
                     await moveArc("spatula", spatulaHome, 0.3, 1200);
                     break;
 
@@ -421,10 +429,16 @@ export default function GuidedTour() {
                     await moveArc("dropper", [tt1.position[0], tt1.position[1] + 0.25, tt1.position[2]], 0.3, 1200);
                     setSqueezeTime(performance.now());
                     await delay(600);
-                    dropOneFromDropper("tt1");
-                    await delay(1000);
+                    dropOneFromDropper("tt1"); await delay(400);
+                    dropOneFromDropper("tt1"); await delay(400);
+                    dropOneFromDropper("tt1"); await delay(600);
                     // 3. Return home
                     await moveArc("dropper", dropperHome, 0.3, 1500);
+                    break;
+
+                case "cl_result":
+                    // Stay focused on the result for a few seconds
+                    await delay(3000);
                     break;
             }
         } finally {

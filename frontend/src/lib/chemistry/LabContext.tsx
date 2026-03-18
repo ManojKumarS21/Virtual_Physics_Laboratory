@@ -70,6 +70,7 @@ interface LabState {
         isPaused: boolean;
         highlightedIds: string[];
         cameraFocusId: string | null;
+        isTourDragging: boolean;
     };
     language: 'en' | 'hi' | 'te' | 'mr';
     voiceEnabled: boolean;
@@ -167,7 +168,8 @@ const INITIAL_STATE: LabState = {
         stepIndex: 0,
         isPaused: false,
         highlightedIds: [],
-        cameraFocusId: null
+        cameraFocusId: null,
+        isTourDragging: false
     },
     language: 'en',
     voiceEnabled: true,
@@ -575,7 +577,7 @@ function labReducer(state: LabState, action: LabAction): LabState {
 
             const newChemicals = [...tube.chemicals, chemContent];
             const rxn = getMixReaction(chemContent, newIons, tube.isHeating);
-            const newFill = Math.min(tube.fillLevel + 0.02, 0.95);
+            const newFill = Math.min(tube.fillLevel + 0.08, 0.95); // Increased from 0.02 for better visibility
             // Drop amount: 0.05 per drop (20 drops max capacity)
             const newDropperLevel = Math.max(state.dropperLevel - 0.05, 0);
 
@@ -669,6 +671,9 @@ function labReducer(state: LabState, action: LabAction): LabState {
             const newHeldAmount = Math.max(0, state.heldSaltAmount - amount);
             const isNowEmpty = newHeldAmount <= 0.005;
 
+            const observationText = rxn?.text ?? `Added some ${saltConfig?.name}`;
+            const isNewObservation = tube.observation !== observationText;
+
             return {
                 ...state,
                 heldSalt: isNowEmpty ? null : state.heldSalt,
@@ -678,7 +683,7 @@ function labReducer(state: LabState, action: LabAction): LabState {
                         ? {
                             ...t,
                             ions: newIons,
-                            observation: rxn?.text ?? t.observation ?? `Added some ${saltConfig?.name}`,
+                            observation: observationText,
                             hasPrecipitate: !!rxn?.precipitate || pStatus === 'forming',
                             precipitateStatus: pStatus,
                             precipitateColor: rxn?.precipitate ? rxn.color : (pStatus === 'forming' ? '#ffffff' : t.precipitateColor),
@@ -690,17 +695,19 @@ function labReducer(state: LabState, action: LabAction): LabState {
                         }
                         : t
                 ),
-                observations: [
-                    {
-                        id: Math.random().toString(36).substr(2, 9),
-                        time: new Date(),
-                        text: rxn?.text ?? `Added some ${saltConfig?.name}`,
-                        equation: rxn?.equation,
-                        color: rxn?.color || saltConfig?.color,
-                        tubeId: action.tubeId
-                    },
-                    ...state.observations
-                ],
+                observations: isNewObservation
+                    ? [
+                        {
+                            id: Math.random().toString(36).substr(2, 9),
+                            time: new Date(),
+                            text: observationText,
+                            equation: rxn?.equation,
+                            color: rxn?.color || saltConfig?.color,
+                            tubeId: action.tubeId
+                        },
+                        ...state.observations
+                    ]
+                    : state.observations,
             };
         }
 
@@ -708,7 +715,7 @@ function labReducer(state: LabState, action: LabAction): LabState {
             return { 
                 ...state, 
                 heldSalt: action.saltId,
-                heldSaltAmount: action.saltId ? 1.0 : 0 
+                heldSaltAmount: action.saltId ? 0.4 : 0 
             };
 
         case "ATTACH_HOLDER": {
@@ -862,7 +869,8 @@ function labReducer(state: LabState, action: LabAction): LabState {
                     stepIndex: 0,
                     isPaused: false,
                     highlightedIds: [],
-                    cameraFocusId: null
+                    cameraFocusId: null,
+                    isTourDragging: false
                 }
             };
         }

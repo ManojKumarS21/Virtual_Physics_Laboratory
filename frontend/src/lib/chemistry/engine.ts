@@ -288,12 +288,11 @@ export function getMixReaction(
     isHeating: boolean = false
 ): Observation | null {
     const chemicalPoured = CHEMICALS[poured as ChemicalId];
-    // Standardize all ions to their base element name for lookup
     const reactiveIons = chemicalPoured ? chemicalPoured.ions : [poured];
-    const normalizedNewIons = [...new Set([...currentIons, ...reactiveIons])]
-        .map(normalizeIon);
-
     const pouredIons = reactiveIons.map(normalizeIon);
+    
+    // Standardize all ions to their base element name for lookup
+    const normalizedNewIons = [...new Set([...currentIons.map(normalizeIon), ...pouredIons])];
 
     // 1. Copper(II) Test: Cu + OH -> Cu(OH)2 (Blue ppt)
     if (normalizedNewIons.includes("Cu") && normalizedNewIons.includes("OH")) {
@@ -311,7 +310,7 @@ export function getMixReaction(
     if (normalizedNewIons.includes("Cl") && normalizedNewIons.includes("Ag")) {
         return {
             text: "White curdy precipitate of Silver Chloride formed confirms Chloride ions.",
-            color: "#f0f0f0",
+            color: "#ffffff", // Pure white for high contrast against salt pile
             precipitate: "AgCl",
             animation: "curdy",
             equation: "Ag⁺ + Cl⁻ → AgCl↓",

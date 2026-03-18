@@ -49,8 +49,10 @@ export const Spatula: React.FC = () => {
 
         const pos = groupRef.current.position;
 
+        const isActiveDrag = isDragging || state.tourState.isTourDragging;
+
         // Apply orientation from state/tour OR dragging
-        if (isDragging) {
+        if (isActiveDrag) {
             groupRef.current.rotation.z = Math.PI / 2 + (tiltFactor * 0.85);
         } else {
             const stateRotation = state.apparatus["spatula"]?.rotation;
@@ -84,7 +86,7 @@ export const Spatula: React.FC = () => {
         }
 
         // 2. LOCK LOGIC (with timer to prevent flicker)
-        if (closestTube && isDragging && state.heldSalt) {
+        if (closestTube && isActiveDrag && state.heldSalt) {
             lockTimer.current += delta;
             if (lockTimer.current > 0.08) {
                 lockedTubeRef.current = closestTube.id;
@@ -93,14 +95,14 @@ export const Spatula: React.FC = () => {
             }
         } else {
             lockTimer.current = 0;
-            if (!isDragging) lockedTubeRef.current = null;
+            if (!isActiveDrag) lockedTubeRef.current = null;
         }
 
         const lockedTube = state.testTubes.find(t => t.id === lockedTubeRef.current);
         const TEST_TUBE_MOUTH_HEIGHT = lockedTube ? lockedTube.position[1] + 0.22 : 0;
 
         // 3. DYNAMIC HARD SNAP (Trig-based precision)
-        if (lockedTube && isDragging && state.heldSalt) {
+        if (lockedTube && isActiveDrag && state.heldSalt) {
             const L = 0.264; // Distance to tip
             const angle = groupRef.current.rotation.z;
 
@@ -137,8 +139,8 @@ export const Spatula: React.FC = () => {
             tipCheck.y > TEST_TUBE_MOUTH_HEIGHT - 0.05;
 
         // 5. CONTINUOUS POUR (Now rock solid)
-        if (lockedTube && isDragging && state.heldSalt && state.heldSaltAmount > 0 && isInsideMouth && tiltFactor > 0.5) {
-            const FLOW_RATE = 0.6;
+        if (lockedTube && isActiveDrag && state.heldSalt && state.heldSaltAmount > 0 && isInsideMouth && tiltFactor > 0.5) {
+            const FLOW_RATE = 0.18; // Further reduction for fine control
             const amountToDrop = Math.min(state.heldSaltAmount, FLOW_RATE * delta);
             addSalt(lockedTube.id, state.heldSalt, amountToDrop);
 
@@ -164,30 +166,33 @@ export const Spatula: React.FC = () => {
             }
         }
 
-        // Check salt dishes (AUTO-PICK or TOUR)
-        for (const appId in state.apparatus) {
-            if (appId.startsWith("salt_")) {
-                const salt = state.apparatus[appId];
-                const dx = tipWorld.x - salt.position[0];
-                const dz = tipWorld.z - salt.position[2];
-                const distanceSq = dx * dx + dz * dz;
-
-                if (distanceSq < 0.0144) { // sqrt(0.0144) = 0.12 extension for tolerance
-                    setNearbyTarget(appId);
-                    foundTarget = true;
+        // 6. SALT PICKING Logic (Fixed: Only when actively being used/dragged)
+        if (isActiveDrag) {
+            for (const appId in state.apparatus) {
+                if (appId.startsWith("salt_")) {
+                    const salt = state.apparatus[appId];
                     const saltId = appId.replace("salt_", "");
-                    // Pick up if empty, or if different, or if same but needs refill
-                    if (!state.heldSalt || state.heldSalt !== saltId || state.heldSaltAmount < 0.95) {
-                        pickSalt(saltId);
+                    
+                    const dx = tipWorld.x - salt.position[0];
+                    const dz = tipWorld.z - (salt.position[2] + 0.05);
+                    const distanceSq = dx * dx + dz * dz;
+
+                    if (distanceSq < 0.0144) {
+                        setNearbyTarget(appId);
+                        foundTarget = true;
+                        // Debounce/Prevent rapid re-pick
+                        if (!state.heldSalt || state.heldSalt !== saltId || state.heldSaltAmount < 0.95) {
+                            pickSalt(saltId);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
 
         if (!foundTarget) {
             setNearbyTarget(null);
-            if (!isDragging) {
+            if (!isActiveDrag) {
                 setTiltFactor(THREE.MathUtils.lerp(tiltFactor, 0, 5 * delta));
                 // Fade out particles if not near a target
                 for (let i = 0; i < particleCount; i++) {
