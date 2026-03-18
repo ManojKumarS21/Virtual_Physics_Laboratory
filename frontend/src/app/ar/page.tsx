@@ -106,43 +106,32 @@ export default function ARPage() {
                 <div className="absolute inset-0 z-[100] pointer-events-none flex flex-col items-center justify-between py-16 px-8">
                     <div className="mt-12 px-8 py-5 bg-black/80 backdrop-blur-2xl rounded-[2rem] border border-white/20 text-center shadow-2xl animate-in fade-in slide-in-from-top duration-1000">
                         <h3 className="text-white text-sm font-black tracking-[0.2em] uppercase mb-2">
-                            {isARPlaced ? 'EXPERIMENT READY' : (isARStable ? 'SURFACE DETECTED' : 'SCANNING FOR SURFACE')}
+                            {isARPlaced ? 'EXPERIMENT READY' : (isSurfaceDetected ? 'SURFACE DETECTED' : 'READY TO PLACE')}
                         </h3>
                         <p className="text-white/50 text-[10px] max-w-[220px] font-medium leading-relaxed mx-auto">
                             {isARPlaced 
                                 ? 'Experiment is locked in place. You can now walk around it freely.' 
-                                : (isARStable 
-                                    ? 'Surface is stable. Tap the button below to place the equipment.' 
-                                    : 'Move phone slowly to detect a table or floor surface.')
+                                : (isSurfaceDetected 
+                                    ? 'A stable surface was found. Tap the button to place your lab.' 
+                                    : 'Scan the floor or tap the button to place at your current position.')
                             }
                         </p>
                     </div>
 
                     {!isARPlaced && (
                         <div className="flex flex-col gap-6 items-center animate-in fade-in slide-in-from-bottom duration-1000">
-                           {isSurfaceDetected ? (
-                                <button 
-                                    onClick={() => setArPlacementTrigger(true)}
-                                    className="pointer-events-auto px-12 py-6 rounded-[2.5rem] bg-[#2F8D46] text-black shadow-[0_25px_60px_rgba(47,141,70,0.6)] active:scale-90 transition-all border-4 border-white/30 flex flex-col items-center gap-1"
-                                >
-                                    <span className="font-black text-xl">PLACE EXPERIMENT</span>
-                                    <span className="text-[10px] opacity-60 font-bold uppercase tracking-widest">
-                                        SURFACE DETECTED - TAP TO SPAWN
-                                    </span>
-                                </button>
-                           ) : (
-                               canForcePlace && (
-                                    <button 
-                                        onClick={() => setArPlacementTrigger(true)}
-                                        className="pointer-events-auto px-10 py-5 rounded-[2rem] bg-amber-500 text-black shadow-2xl active:scale-90 transition-all border-2 border-white/20 flex flex-col items-center gap-1"
-                                    >
-                                        <span className="font-bold">PLACE MANUALLY</span>
-                                        <span className="text-[9px] opacity-70 font-bold uppercase tracking-wider">
-                                            SPAWN AT RED BOX POSITION
-                                        </span>
-                                    </button>
-                               )
-                           )}
+                            <button 
+                                onClick={() => setArPlacementTrigger(true)}
+                                className={`pointer-events-auto px-12 py-6 rounded-[2.5rem] shadow-[0_25px_60px_rgba(47,141,70,0.6)] active:scale-90 transition-all border-4 border-white/30 flex flex-col items-center gap-1 ${
+                                    isARStable ? 'bg-[#2F8D46] text-black shadow-emerald-500/20' : 'bg-white/5 text-white/20 border-white/5 cursor-not-allowed'
+                                }`}
+                                disabled={!isARStable}
+                            >
+                                <span className="font-black text-xl">PLACE EXPERIMENT</span>
+                                <span className="text-[10px] opacity-60 font-bold uppercase tracking-widest">
+                                    {isARStable ? 'SURFACE STABLE - READY' : 'SCANNING ENVIRONMENT...'}
+                                </span>
+                            </button>
                             
                             <div className="flex items-center gap-3 px-4 py-2 bg-black/40 rounded-full border border-white/10 backdrop-blur-md">
                                 <div className={`w-2 h-2 rounded-full ${isSurfaceDetected ? 'bg-[#2F8D46] animate-pulse' : 'bg-white/20 animate-ping'}`} />
