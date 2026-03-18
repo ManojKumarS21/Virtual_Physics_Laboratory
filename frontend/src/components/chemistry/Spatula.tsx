@@ -6,7 +6,7 @@ import { Text, Billboard } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useLabState } from "@/lib/chemistry/LabContext";
 import { useApparatusDrag } from "@/lib/chemistry/useApparatusDrag";
-import { GET_CHEMICAL_CONFIG } from "@/lib/chemistry/engine";
+import { GET_CHEMICAL_CONFIG, EXPERIMENTS } from "@/lib/chemistry/engine";
 
 interface SpatulaProps {
     position?: [number, number, number];
@@ -17,10 +17,15 @@ export const Spatula: React.FC = () => {
     const groupRef = useRef<THREE.Group>(null!);
     const [nearbyTarget, setNearbyTarget] = React.useState<string | null>(null);
     const [tiltFactor, setTiltFactor] = React.useState(0);
+    const lockedTubeRef = useRef<string | null>(null);
+    const lockTimer = useRef(0);
     const dropCooldown = useRef(false);
 
-    // Tip offset after 0.48 scale and PI/2 rotation: Blade at origin 0, 0.6, 0 -> rotated -> -0.6, 0, 0 -> scale -> -0.288, 0, 0
-    const TIP_OFFSET = -0.288;
+    // Tip offset after 0.48 scale and PI/2 rotation: 
+    // Sub-group tip at local Y = 0.675 (blade end).
+    // Final local Y = (0.675 * 0.48) - 0.06 = 0.264.
+    // In world-relative X (at PI/2 rotation), this is -0.264.
+    const TIP_OFFSET = -0.264;
 
     const { dragProps, isHovered, isDragging } = useApparatusDrag({
         id: "spatula",
@@ -34,17 +39,20 @@ export const Spatula: React.FC = () => {
 
     const particleCount = 60;
     const [particlePositions] = React.useState(() => new Float32Array(particleCount * 3));
+    const [particleVelocity] = React.useState(() => new Float32Array(particleCount * 3));
     const [particleLives] = React.useState(() => new Float32Array(particleCount).fill(0));
     const pointsRef = useRef<THREE.Points>(null!);
 
     // Detect nearby targets during drag for labels and auto-actions
     useFrame((state_gl, delta) => {
+        if (!groupRef.current) return;
+
         const pos = groupRef.current.position;
-        const tipX = pos.x + TIP_OFFSET;
-        const tipZ = pos.z;
+
+        const isActiveDrag = isDragging || state.tourState.isTourDragging;
 
         // Apply orientation from state/tour OR dragging
-        if (isDragging) {
+        if (isActiveDrag) {
             groupRef.current.rotation.z = Math.PI / 2 + (tiltFactor * 0.85);
         } else {
             const stateRotation = state.apparatus["spatula"]?.rotation;
@@ -56,62 +64,126 @@ export const Spatula: React.FC = () => {
         const currentZRot = groupRef.current.rotation.z;
         const currentTilt = currentZRot - Math.PI / 2;
 
+        // Detect nearby targets during drag for labels and auto-actions
+        groupRef.current.updateMatrixWorld();
+        const tipWorld = new THREE.Vector3(0, 0.264, 0); // Correct local tip Y in sub-scaled group
+        groupRef.current.localToWorld(tipWorld);
+
         let foundTarget = false;
+        let closestTube: any = null;
+        let closestDist = Infinity;
 
-        // Check tubes for salt dropping (DRAG or TOUR)
+        // 1. STABLE DETECTION
         for (const tube of state.testTubes) {
-            const dx = tipX - tube.position[0];
-            const dz = tipZ - tube.position[2];
+            const dx = tipWorld.x - tube.position[0];
+            const dz = tipWorld.z - tube.position[2];
+            const dist = Math.sqrt(dx * dx + dz * dz);
 
-            if (Math.sqrt(dx * dx + dz * dz) < 0.144) {
-                const TEST_TUBE_MOUTH_HEIGHT = tube.position[1] + 0.22;
-                const distToMouthY = Math.abs(pos.y - (TEST_TUBE_MOUTH_HEIGHT + 0.05));
+            if (dist < 0.2 && dist < closestDist) {
+                closestTube = tube;
+                closestDist = dist;
+            }
+        }
 
-                if (distToMouthY < 0.2) {
-                    setNearbyTarget(tube.id);
-                    foundTarget = true;
+        // 2. LOCK LOGIC (with timer to prevent flicker)
+        if (closestTube && isActiveDrag && state.heldSalt) {
+            lockTimer.current += delta;
+            if (lockTimer.current > 0.08) {
+                lockedTubeRef.current = closestTube.id;
+                setNearbyTarget(closestTube.id);
+                foundTarget = true;
+            }
+        } else {
+            lockTimer.current = 0;
+            if (!isActiveDrag) lockedTubeRef.current = null;
+        }
 
-                    // Trigger particles if tilted enough
-                    if (state.heldSalt && currentTilt > 0.6) {
-                        // Spawn particles at tip
-                        let spawned = 0;
-                        for (let i = 0; i < particleCount && spawned < 2; i++) {
-                            if (particleLives[i] <= 0) {
-                                particlePositions[i * 3] = tipX + (Math.random() - 0.5) * 0.02;
-                                particlePositions[i * 3 + 1] = pos.y + 0.01;
-                                particlePositions[i * 3 + 2] = tipZ + (Math.random() - 0.5) * 0.02;
-                                particleLives[i] = 1.0;
-                                spawned++;
-                            }
-                        }
+        const lockedTube = state.testTubes.find(t => t.id === lockedTubeRef.current);
+        const TEST_TUBE_MOUTH_HEIGHT = lockedTube ? lockedTube.position[1] + 0.22 : 0;
 
-                        // Logical transfer during drag only (Tour handles its own addSalt)
-                        if (isDragging && !dropCooldown.current) {
-                            const activeCount = particleLives.filter(l => l > 0).length;
-                            if (activeCount > 15) { 
-                                addSalt(tube.id, state.heldSalt);
-                                dropCooldown.current = true;
-                                setTimeout(() => { dropCooldown.current = false; }, 2000);
-                            }
-                        }
-                    }
+        // 3. DYNAMIC HARD SNAP (Trig-based precision)
+        if (lockedTube && isActiveDrag && state.heldSalt) {
+            const L = 0.264; // Distance to tip
+            const angle = groupRef.current.rotation.z;
+
+            // Calculate where group needs to be so tip (0, L, 0) ends up at tube center
+            // World_Tip = Group_Pos + Rotation * Local_Tip
+            // World_Tip.x = Group.x + (0 * cos(z) - L * sin(z)) = Group.x - L * sin(z)
+            // World_Tip.y = Group.y + (0 * sin(z) + L * cos(z)) = Group.y + L * cos(z)
+
+            // So:
+            // Group.x = Tube.x + L * sin(angle)
+            // Group.y = (TEST_TUBE_MOUTH_HEIGHT - 0.02) - L * cos(angle)
+
+            groupRef.current.position.x = lockedTube.position[0] + L * Math.sin(angle);
+            groupRef.current.position.y = (TEST_TUBE_MOUTH_HEIGHT - 0.02) - L * Math.cos(angle);
+            groupRef.current.position.z = lockedTube.position[2];
+
+            groupRef.current.updateMatrixWorld();
+            foundTarget = true;
+
+            // Auto Tilt for user (once locked)
+            setTiltFactor(prev => THREE.MathUtils.lerp(prev, 1, 5 * delta));
+        } else {
+            setTiltFactor(prev => THREE.MathUtils.lerp(prev, 0, 5 * delta));
+        }
+
+        // 4. PRECISION POUR CHECK
+        const tipCheck = new THREE.Vector3(0, 0.264, 0);
+        groupRef.current.localToWorld(tipCheck);
+
+        const isInsideMouth = lockedTube &&
+            Math.abs(tipCheck.x - lockedTube.position[0]) < 0.03 &&
+            Math.abs(tipCheck.z - lockedTube.position[2]) < 0.03 &&
+            tipCheck.y < TEST_TUBE_MOUTH_HEIGHT + 0.01 &&
+            tipCheck.y > TEST_TUBE_MOUTH_HEIGHT - 0.05;
+
+        // 5. CONTINUOUS POUR (Now rock solid)
+        if (lockedTube && isActiveDrag && state.heldSalt && state.heldSaltAmount > 0 && isInsideMouth && tiltFactor > 0.5) {
+            const FLOW_RATE = 0.18; // Further reduction for fine control
+            const amountToDrop = Math.min(state.heldSaltAmount, FLOW_RATE * delta);
+            addSalt(lockedTube.id, state.heldSalt, amountToDrop);
+
+            // Flow Particles (using tipCheck for visual origin)
+            const tubeTarget = new THREE.Vector3(lockedTube.position[0], TEST_TUBE_MOUTH_HEIGHT - 0.08, lockedTube.position[2]);
+            for (let i = 0; i < 4; i++) {
+                const idx = Math.floor(Math.random() * particleCount);
+                if (particleLives[idx] < 0.2) {
+                    particlePositions[idx * 3] = tipCheck.x + (Math.random() - 0.5) * 0.015;
+                    particlePositions[idx * 3 + 1] = tipCheck.y;
+                    particlePositions[idx * 3 + 2] = tipCheck.z + (Math.random() - 0.5) * 0.015;
+
+                    const dir = new THREE.Vector3(tubeTarget.x - particlePositions[idx * 3], tubeTarget.y - tipCheck.y, tubeTarget.z - particlePositions[idx * 3 + 2]).normalize();
+                    dir.x += (Math.random() - 0.5) * 0.2;
+                    dir.z += (Math.random() - 0.5) * 0.2;
+                    dir.normalize();
+
+                    particleVelocity[idx * 3] = dir.x * 0.45;
+                    particleVelocity[idx * 3 + 1] = dir.y * 0.45;
+                    particleVelocity[idx * 3 + 2] = dir.z * 0.45;
+                    particleLives[idx] = 1.0;
                 }
             }
         }
 
-        if (isDragging && !foundTarget) {
-            setTiltFactor(THREE.MathUtils.lerp(tiltFactor, 0, 5 * delta));
-            // Check salt dishes
+        // 6. SALT PICKING Logic (Fixed: Only when actively being used/dragged)
+        if (isActiveDrag) {
             for (const appId in state.apparatus) {
                 if (appId.startsWith("salt_")) {
                     const salt = state.apparatus[appId];
-                    const dx = tipX - salt.position[0];
-                    const dz = tipZ - salt.position[2];
-                    if (Math.sqrt(dx * dx + dz * dz) < 0.08) {
+                    const saltId = appId.replace("salt_", "");
+                    
+                    const dx = tipWorld.x - salt.position[0];
+                    const dz = tipWorld.z - (salt.position[2] + 0.05);
+                    const distanceSq = dx * dx + dz * dz;
+
+                    if (distanceSq < 0.0144) {
                         setNearbyTarget(appId);
                         foundTarget = true;
-                        const saltId = appId.replace("salt_", "");
-                        if (state.heldSalt !== saltId) pickSalt(saltId);
+                        // Debounce/Prevent rapid re-pick
+                        if (!state.heldSalt || state.heldSalt !== saltId || state.heldSaltAmount < 0.95) {
+                            pickSalt(saltId);
+                        }
                         break;
                     }
                 }
@@ -120,8 +192,9 @@ export const Spatula: React.FC = () => {
 
         if (!foundTarget) {
             setNearbyTarget(null);
-            if (!isDragging) {
-                // Fade out particles if not near a target or not tilted
+            if (!isActiveDrag) {
+                setTiltFactor(THREE.MathUtils.lerp(tiltFactor, 0, 5 * delta));
+                // Fade out particles if not near a target
                 for (let i = 0; i < particleCount; i++) {
                     if (particleLives[i] > 0) particleLives[i] -= delta * 2;
                 }
@@ -137,8 +210,28 @@ export const Spatula: React.FC = () => {
         // Physics update for particles
         for (let i = 0; i < particleCount; i++) {
             if (particleLives[i] > 0) {
-                particlePositions[i * 3 + 1] -= 0.6 * delta; // Gravity
-                particleLives[i] -= delta * 1.2; // Life decay
+                // Apply velocity
+                particlePositions[i * 3] += particleVelocity[i * 3] * delta;
+                particlePositions[i * 3 + 1] += particleVelocity[i * 3 + 1] * delta;
+                particlePositions[i * 3 + 2] += particleVelocity[i * 3 + 2] * delta;
+
+                // Gravity (adds realism)
+                particleVelocity[i * 3 + 1] -= 0.4 * delta;
+
+                // Slight inward pull (funnel effect)
+                particleVelocity[i * 3] *= 0.98;
+                particleVelocity[i * 3 + 2] *= 0.98;
+
+                particleLives[i] -= delta * 1.2;
+
+                // Kill if inside tube or floor (dynamic based on tube)
+                const deathY = (nearbyTarget && state.testTubes.find(t => t.id === nearbyTarget))
+                    ? state.testTubes.find(t => t.id === nearbyTarget)!.position[1] + 0.02
+                    : 0.78; // bench top if no tube nearby
+
+                if (particlePositions[i * 3 + 1] < deathY) {
+                    particleLives[i] = 0;
+                }
             } else {
                 particlePositions[i * 3 + 1] = -10; // Hide below floor
             }
@@ -148,29 +241,26 @@ export const Spatula: React.FC = () => {
         }
     });
 
-    const saltColor = state.heldSalt ? GET_CHEMICAL_CONFIG(state.heldSalt)?.color : "#fff";
+    const saltConfig = state.heldSalt ? GET_CHEMICAL_CONFIG(state.heldSalt) : null;
+    const saltColor = saltConfig ? saltConfig.color : "#fff";
+
+    const activeExp = state.activeExperiment ? EXPERIMENTS.find(e => e.id === state.activeExperiment) : null;
+    const expPrefix = activeExp ? `${activeExp.title}\n` : "";
 
     // Create dynamic label
     let hintText = "Laboratory Spatula\nSlide over Salt Dish to Scoop";
     if (isDragging) {
-        if (state.heldSalt) {
-            hintText = `Held: ${GET_CHEMICAL_CONFIG(state.heldSalt)?.name || state.heldSalt}\n`;
-            if (nearbyTarget && nearbyTarget.startsWith("tt")) {
-                hintText += "RELEASING SALT...";
-            } else {
-                hintText += "Move tip over Test Tube mouth";
-            }
+        if (state.heldSalt && saltConfig) {
+            hintText = `${expPrefix}${saltConfig.name}\nTilt over Test Tube to Pour`;
         } else {
-            if (nearbyTarget && nearbyTarget.startsWith("salt_")) {
-                hintText = "SCOOPING SALT...";
-            } else {
-                hintText = "Move tip over Salt Dish to scoop";
-            }
+            hintText = `${expPrefix}Spatula (Empty)\nTouch Salt Jar to Refill`;
         }
     } else if (isHovered) {
-        hintText = state.heldSalt
-            ? `Held: ${GET_CHEMICAL_CONFIG(state.heldSalt)?.name}\nDrag to Test Tube`
-            : "Laboratory Spatula\nDrag OVER salt dish to scoop";
+        if (state.heldSalt && saltConfig) {
+            hintText = `${expPrefix}${saltConfig.name}\nDrag to Test Tube mouth`;
+        } else {
+            hintText = `${expPrefix}Laboratory Spatula\nDrag OVER salt dish to scoop`;
+        }
     }
 
     return (
@@ -204,7 +294,7 @@ export const Spatula: React.FC = () => {
                     <meshStandardMaterial color="#d0d0d0" metalness={1} roughness={0.05} />
                 </mesh>
                 {state.heldSalt && (
-                    <mesh position={[0, 0.65, 0.01]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <mesh position={[0, 0.65, 0.01]} rotation={[-Math.PI / 2, 0, 0]} scale={[state.heldSaltAmount, state.heldSaltAmount, state.heldSaltAmount]}>
                         <cylinderGeometry args={[0.01, 0.04, 0.02, 10]} />
                         <meshStandardMaterial color={saltColor} roughness={1} />
                     </mesh>
@@ -229,17 +319,17 @@ export const Spatula: React.FC = () => {
             {/* High Performance Falling Salt Particles */}
             <points ref={pointsRef}>
                 <bufferGeometry>
-                    <bufferAttribute 
-                        attach="attributes-position" 
-                        args={[particlePositions, 3]} 
+                    <bufferAttribute
+                        attach="attributes-position"
+                        args={[particlePositions, 3]}
                     />
                 </bufferGeometry>
-                <pointsMaterial 
-                    color={saltColor} 
-                    size={0.012} 
-                    transparent 
-                    opacity={0.8} 
-                    sizeAttenuation 
+                <pointsMaterial
+                    color={saltColor}
+                    size={0.012}
+                    transparent
+                    opacity={0.8}
+                    sizeAttenuation
                 />
             </points>
         </group>

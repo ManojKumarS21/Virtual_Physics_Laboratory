@@ -1,5 +1,14 @@
 // Chemistry Engine — reaction lookup, state management for the virtual lab
 
+export const EXPERIMENTS = [
+  { id: "chloride_test", title: "Chloride Ion Test", desc: "Detect Chloride ions using Silver Nitrate (AgNO3)." },
+  { id: "sulphate_test", title: "Sulphate Ion Test", desc: "Detect Sulphate ions using Barium Chloride (BaCl2)." },
+  { id: "copper_test", title: "Copper(II) Ion Test", desc: "Detect Copper(II) ions using Ammonium Hydroxide (NH4OH)." },
+  { id: "iron_test", title: "Iron(III) Ion Test", desc: "Detect Iron(III) ions using Pot. Thiocyanate (KSCN)." },
+  { id: "chromate_test", title: "Chromate Ion Test", desc: "Detect Chromate ions using Barium Chloride (BaCl2)." },
+  { id: "ammonium_test", title: "Ammonium Ion Test", desc: "Detect Ammonium ions using Sodium Hydroxide and Heat." }
+];
+
 export interface Observation {
   text: string;
   color?: string;
@@ -288,12 +297,11 @@ export function getMixReaction(
     isHeating: boolean = false
 ): Observation | null {
     const chemicalPoured = CHEMICALS[poured as ChemicalId];
-    // Standardize all ions to their base element name for lookup
     const reactiveIons = chemicalPoured ? chemicalPoured.ions : [poured];
-    const normalizedNewIons = [...new Set([...currentIons, ...reactiveIons])]
-        .map(normalizeIon);
-
     const pouredIons = reactiveIons.map(normalizeIon);
+    
+    // Standardize all ions to their base element name for lookup
+    const normalizedNewIons = [...new Set([...currentIons.map(normalizeIon), ...pouredIons])];
 
     // 1. Copper(II) Test: Cu + OH -> Cu(OH)2 (Blue ppt)
     if (normalizedNewIons.includes("Cu") && normalizedNewIons.includes("OH")) {
@@ -311,7 +319,7 @@ export function getMixReaction(
     if (normalizedNewIons.includes("Cl") && normalizedNewIons.includes("Ag")) {
         return {
             text: "White curdy precipitate of Silver Chloride formed confirms Chloride ions.",
-            color: "#f0f0f0",
+            color: "#ffffff", // Pure white for high contrast against salt pile
             precipitate: "AgCl",
             animation: "curdy",
             equation: "Ag⁺ + Cl⁻ → AgCl↓",

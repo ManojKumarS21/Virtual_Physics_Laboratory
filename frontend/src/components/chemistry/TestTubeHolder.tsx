@@ -43,13 +43,7 @@ export const TestTubeHolder: React.FC = () => {
         yOffset: 0.015,
     });
 
-    const activeDragProps: any = (state.holderAttachedId) ? {
-        onPointerDown: undefined,
-        onPointerMove: undefined,
-        onPointerUp: undefined,
-        onPointerEnter: undefined,
-        onPointerLeave: undefined
-    } : dragProps;
+    const activeDragProps = dragProps; // Fix 4: Always allow dragging
 
     const handlePointerUp = useCallback((e: any) => {
         // Pass through to drag engine so it resets state properly
@@ -71,12 +65,13 @@ export const TestTubeHolder: React.FC = () => {
         const pos = groupRef.current.position;
         const now = performance.now();
 
+        // Sync holder state (only when not dragging)
         if (state.holderAttachedId && !isDragging) {
             const tube = state.testTubes.find(t => t.id === state.holderAttachedId);
             if (tube) {
                 groupRef.current.position.set(
                     tube.position[0],
-                    tube.position[1] + 0.22,
+                    tube.position[1] + (0.55 * 0.45),
                     tube.position[2]
                 );
             }
@@ -94,36 +89,30 @@ export const TestTubeHolder: React.FC = () => {
         if (!state.holderAttachedId && !isReleased) {
             let found = false;
             for (const tube of state.testTubes) {
-                const tubePos = new THREE.Vector3(
+                const rimPos = new THREE.Vector3(
                     tube.position[0],
-                    tube.position[1],
+                    tube.position[1] + (0.55 * 0.45),
                     tube.position[2]
                 );
 
-                const dist = groupRef.current.position.distanceTo(tubePos);
+                const dist = groupRef.current.position.distanceTo(rimPos);
 
-                if (dist < 0.22) {
+                if (dist < 0.25) { // Use rimPos for distance check
                     setNearbyTube(tube.id);
                     found = true;
 
-                    const assist = new THREE.Vector3(
-                        tube.position[0],
-                        tube.position[1] + 0.22,
-                        tube.position[2]
-                    );
+                    const clampTarget = rimPos.clone();
 
                     // Assist alignment only when not dragging
                     if (!isDragging) {
-                        groupRef.current.position.lerp(assist, 0.05);
+                        groupRef.current.position.lerp(clampTarget, 0.05);
                     }
 
-                    // Start pickup animation only when not dragging
-                    if (dist < 0.09 && !pickupAnim.current && !isDragging) {
+                    // Start pickup animation (Fix 1: Match 12cm sensitivity to 25cm for bench pick)
+                    if (dist < 0.25 && !pickupAnim.current) {
                         pickupAnim.current = true;
                         pickupStart.current = performance.now();
-                        pickupTarget.current = assist.clone();
-                        // Realistic tilt
-                        groupRef.current.rotation.x = -0.1;
+                        pickupTarget.current = clampTarget.clone();
                     }
                     break;
                 }
@@ -133,11 +122,16 @@ export const TestTubeHolder: React.FC = () => {
             if (nearbyTube) setNearbyTube(null);
         }
 
-        // 200ms Smooth pickup animation (only when not dragging)
-        if (pickupAnim.current && pickupTarget.current && !isDragging) {
-            const t = (performance.now() - pickupStart.current) / 200;
-            if (t < 1) {
-                groupRef.current.position.lerp(pickupTarget.current, 0.2);
+        // ───────────────── TWO-STAGE PICK (Fix 2: Lift -> Clamp) ─────────────────
+        if (pickupAnim.current && pickupTarget.current) {
+            const t = (performance.now() - pickupStart.current) / 220;
+            const clampTarget = pickupTarget.current;
+            const liftTarget = new THREE.Vector3(clampTarget.x, clampTarget.y + 0.1, clampTarget.z);
+
+            if (t < 0.5) {
+                groupRef.current.position.lerp(liftTarget, 0.2);
+            } else if (t < 1) {
+                groupRef.current.position.lerp(clampTarget, 0.25);
             } else {
                 pickupAnim.current = false;
                 if (nearbyTube) {
@@ -147,43 +141,51 @@ export const TestTubeHolder: React.FC = () => {
             }
         }
 
-        // ───────────────── Rack Collision (Solid collision) ─────────────────
-        const RACK_X_MIN = 0.95;
-        const RACK_X_MAX = 2.45;
+        // ───────────────── HARD BLOCK COLLISIONS (Fix 5 & 6) ─────────────────
+        const BENCH_TOP = 0.78;
+        const isCarrying = !!state.holderAttachedId;
+        
+        const RACK_X_MIN = 0.90;
+        const RACK_X_MAX = 2.50;
         const RACK_Z_MIN = -0.22;
         const RACK_Z_MAX = 0.22;
+        const MIN_RACK_Y = 1.05;
 
-        const MIN_RACK_Y = 1.06 + 0.015; // Top of rack + offset
-
-        const insideRack =
+        const overRack =
             pos.x > RACK_X_MIN &&
             pos.x < RACK_X_MAX &&
             pos.z > RACK_Z_MIN &&
             pos.z < RACK_Z_MAX;
 
-        if (insideRack) {
-            const isNearTop = pos.y > MIN_RACK_Y - 0.05;
+        // Force minimum heights for carrying and bench clearance
+        if (isCarrying) {
+            const minCarryY = overRack ? 1.28 : 1.12; // Clear rack (1.28) vs clear bench (1.12)
+            if (pos.y < minCarryY) {
+                groupRef.current.position.y = minCarryY; // Fix 6: Hard clamp
+            }
+        } else if (overRack) {
+            if (pos.y < MIN_RACK_Y) {
+                groupRef.current.position.y = MIN_RACK_Y; // Fix 5: Hard clamp
+            }
+        } else {
+            // Prevent bench penetration for empty holder
+            if (pos.y < BENCH_TOP + 0.015) {
+                groupRef.current.position.y = BENCH_TOP + 0.015;
+            }
 
-            if (isNearTop || state.holderAttachedId) {
-                // Smoothly snap to top surface
-                if (pos.y < MIN_RACK_Y) {
-                    groupRef.current.position.y = THREE.MathUtils.lerp(
-                        pos.y,
-                        MIN_RACK_Y,
-                        0.3
-                    );
-                }
-            } else {
-                // Below rack top: push sideways (Solid object feel)
-                const edgeX = Math.abs(pos.x - RACK_X_MIN) < Math.abs(pos.x - RACK_X_MAX) 
-                    ? RACK_X_MIN 
-                    : RACK_X_MAX;
-                
-                groupRef.current.position.x = THREE.MathUtils.lerp(
-                    pos.x,
-                    edgeX,
-                    0.2
-                );
+            // Side repulsion from rack
+            const APPROACH_X = pos.x > RACK_X_MIN - 0.1 && pos.x < RACK_X_MAX + 0.1;
+            const APPROACH_Z = pos.z > RACK_Z_MIN - 0.1 && pos.z < RACK_Z_MAX + 0.1;
+            if (APPROACH_X && APPROACH_Z && pos.y < MIN_RACK_Y) {
+                 const distL = Math.abs(pos.x - (RACK_X_MIN - 0.1));
+                 const distR = Math.abs(pos.x - (RACK_X_MAX + 0.1));
+                 const distF = Math.abs(pos.z - (RACK_Z_MAX + 0.1));
+                 const distB = Math.abs(pos.z - (RACK_Z_MIN - 0.1));
+                 const minDist = Math.min(distL, distR, distF, distB);
+                 if (minDist === distL) pos.x = RACK_X_MIN - 0.1;
+                 else if (minDist === distR) pos.x = RACK_X_MAX + 0.1;
+                 else if (minDist === distF) pos.z = RACK_Z_MAX + 0.1;
+                 else pos.z = RACK_Z_MIN - 0.1;
             }
         }
 

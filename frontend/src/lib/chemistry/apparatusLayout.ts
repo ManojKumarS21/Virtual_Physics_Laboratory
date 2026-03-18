@@ -16,22 +16,22 @@ export interface ApparatusLayoutItem extends Transform {
 export const DEFAULT_APPARATUS_LAYOUT: Record<string, ApparatusLayoutItem> = {
     // Bottles
     // Bottles Row 1 (Bottom Rack Shelf, y = 1.08, z = -0.8)
-    "bot_HCl": { id: "bot_HCl", type: "bottle", position: [-1.2, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_H2SO4": { id: "bot_H2SO4", type: "bottle", position: [-0.8, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_AgNO3": { id: "bot_AgNO3", type: "bottle", position: [-0.4, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_BaCl2": { id: "bot_BaCl2", type: "bottle", position: [0.0, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_NH4OH": { id: "bot_NH4OH", type: "bottle", position: [0.4, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_FeSO4": { id: "bot_FeSO4", type: "bottle", position: [0.8, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_NaOH": { id: "bot_NaOH", type: "bottle", position: [1.2, 1.08, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_HCl": { id: "bot_HCl", type: "bottle", position: [-1.2, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_H2SO4": { id: "bot_H2SO4", type: "bottle", position: [-0.8, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_AgNO3": { id: "bot_AgNO3", type: "bottle", position: [-0.4, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_BaCl2": { id: "bot_BaCl2", type: "bottle", position: [0.0, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_NH4OH": { id: "bot_NH4OH", type: "bottle", position: [0.4, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_FeSO4": { id: "bot_FeSO4", type: "bottle", position: [0.8, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_NaOH": { id: "bot_NaOH", type: "bottle", position: [1.2, 1.08, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
-    // Bottles Row 2 (Top Rack Shelf, y = 1.68, z = -0.8)
-    "bot_KSCN": { id: "bot_KSCN", type: "bottle", position: [-1.2, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_H2O": { id: "bot_H2O", type: "bottle", position: [-0.8, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_Limewater": { id: "bot_Limewater", type: "bottle", position: [-0.4, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_CuSO4": { id: "bot_CuSO4", type: "bottle", position: [0.0, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_FeCl3": { id: "bot_FeCl3", type: "bottle", position: [0.4, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_K2CrO4": { id: "bot_K2CrO4", type: "bottle", position: [0.8, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
-    "bot_NH4Cl": { id: "bot_NH4Cl", type: "bottle", position: [1.2, 1.68, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    // Bottles Row 2 (Top Rack Shelf, y = 1.68, z = -0.75)
+    "bot_KSCN": { id: "bot_KSCN", type: "bottle", position: [-1.2, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_H2O": { id: "bot_H2O", type: "bottle", position: [-0.8, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_Limewater": { id: "bot_Limewater", type: "bottle", position: [-0.4, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_CuSO4": { id: "bot_CuSO4", type: "bottle", position: [0.0, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_FeCl3": { id: "bot_FeCl3", type: "bottle", position: [0.4, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_K2CrO4": { id: "bot_K2CrO4", type: "bottle", position: [0.8, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
+    "bot_NH4Cl": { id: "bot_NH4Cl", type: "bottle", position: [1.2, 1.68, -0.75], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },
 
     // Glassware
     "measuringCylinder": { id: "measuringCylinder", type: "cylinder", position: [-1.4, 0.78, -0.5], rotation: [0, 0, 0], scale: [1, 1, 1], draggable: true, holder: null },

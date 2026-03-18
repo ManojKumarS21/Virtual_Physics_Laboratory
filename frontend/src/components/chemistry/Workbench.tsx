@@ -160,7 +160,7 @@ export const Workbench = () => {
                 ))}
                 {/* Shelves */}
                 {[-0.17, 0.43].map((y, i) => (
-                    <mesh key={`shelf-${i}`} position={[0, y, 0]} receiveShadow>
+                    <mesh key={`shelf-${i}`} position={[0, y, 0]} receiveShadow raycast={null as any}>
                         <boxGeometry args={[4.6, 0.06, 0.2]} />
                         <meshPhysicalMaterial color={RACK_METAL} roughness={0.4} clearcoat={0.05} />
                     </mesh>
