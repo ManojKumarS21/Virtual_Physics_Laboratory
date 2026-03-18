@@ -529,7 +529,7 @@ export const TestTube: React.FC<{ tubeId: string }> = ({ tubeId }) => {
                     <mesh position={[0, BOTTOM_Y + ((tube.heldSaltAmount || 0) * 0.05), 0]}>
                         <cylinderGeometry args={[0.04, 0.045, (tube.heldSaltAmount || 0) * 0.1, 8]} />
                         <meshStandardMaterial
-                            color={tube.color || "#ffffff"}
+                            color={tube.heldSalt ? GET_CHEMICAL_CONFIG(tube.heldSalt).color : (tube.color || "#ffffff")}
                             roughness={1.0}
                         />
                     </mesh>

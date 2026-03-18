@@ -17,6 +17,7 @@ export interface TestTubeState {
     precipitateColor?: string;
     precipitateStatus?: 'none' | 'forming' | 'stable' | 'dissolving' | 'dissolved';
     precipitateProgress?: number;
+    heldSalt?: string | null;
     heldSaltAmount?: number;
     observation?: string;
     equation?: string;
@@ -57,6 +58,7 @@ interface LabState {
     currentStep: number;
     sinkOn: boolean;
     heldSalt: string | null; // active salt on spatula
+    heldSaltAmount: number; // 0 to 1 (full scoop)
     holderAttachedId: string | null; // ID of test tube currently in the holder
     candleOn: boolean;
     filterPaperInFunnel: boolean;
@@ -83,7 +85,7 @@ type LabAction =
     | { type: "SET_TUBE_POSITION"; id: string; position: [number, number, number] }
     | { type: "SET_TUBE_HEATING"; id: string; isHeating: boolean }
     | { type: "RESET_TUBE"; id: string }
-    | { type: "ADD_SALT"; tubeId: string; saltId: string }
+    | { type: "ADD_SALT"; tubeId: string; saltId: string; amount?: number }
     | { type: "PICK_DROPPER"; chemical: ChemicalId }
     | { type: "RELEASE_DROPPER"; tubeId: string }
     | { type: "STIR_TUBE"; tubeId: string; active: boolean }
@@ -154,6 +156,7 @@ const INITIAL_STATE: LabState = {
     currentStep: 0,
     sinkOn: false,
     heldSalt: null,
+    heldSaltAmount: 0,
     holderAttachedId: null,
     candleOn: false,
     filterPaperInFunnel: false,
@@ -627,7 +630,9 @@ function labReducer(state: LabState, action: LabAction): LabState {
             if (!tube) return state;
 
             const saltConfig = GET_CHEMICAL_CONFIG(action.saltId);
-            const saltIons = (CHEMICALS[action.saltId] as any)?.ions || [action.saltId];
+            const saltIons = (CHEMICALS[action.saltId as any] as any)?.ions || [action.saltId];
+            const amount = action.amount ?? 0.05;
+
             let newIons = [...tube.ions];
 
             // ─── Neutralization Logic ───
@@ -660,22 +665,28 @@ function labReducer(state: LabState, action: LabAction): LabState {
                 pStatus = 'forming';
             }
 
+            // Calculate new held amount
+            const newHeldAmount = Math.max(0, state.heldSaltAmount - amount);
+            const isNowEmpty = newHeldAmount <= 0.005;
+
             return {
                 ...state,
-                heldSalt: null,
+                heldSalt: isNowEmpty ? null : state.heldSalt,
+                heldSaltAmount: isNowEmpty ? 0 : newHeldAmount,
                 testTubes: state.testTubes.map((t) =>
                     t.id === action.tubeId
                         ? {
                             ...t,
                             ions: newIons,
-                            observation: rxn?.text ?? `Added some ${saltConfig?.name}`,
+                            observation: rxn?.text ?? t.observation ?? `Added some ${saltConfig?.name}`,
                             hasPrecipitate: !!rxn?.precipitate || pStatus === 'forming',
                             precipitateStatus: pStatus,
                             precipitateColor: rxn?.precipitate ? rxn.color : (pStatus === 'forming' ? '#ffffff' : t.precipitateColor),
                             equation: rxn?.equation,
                             color: rxn?.color ?? (t.fillLevel === 0 ? saltConfig?.color : (t.color === "#ffffff" ? saltConfig?.color : t.color)),
-                            heldSaltAmount: Math.min((t.heldSaltAmount || 0) + 0.2, 1.0),
-                            fillLevel: Math.min(t.fillLevel + 0.05, 0.9)
+                            heldSalt: action.saltId,
+                            heldSaltAmount: Math.min((t.heldSaltAmount || 0) + amount, 1.0),
+                            fillLevel: Math.min(t.fillLevel + (amount * 0.1), 0.9)
                         }
                         : t
                 ),
@@ -694,7 +705,11 @@ function labReducer(state: LabState, action: LabAction): LabState {
         }
 
         case "PICK_SALT":
-            return { ...state, heldSalt: action.saltId };
+            return { 
+                ...state, 
+                heldSalt: action.saltId,
+                heldSaltAmount: action.saltId ? 1.0 : 0 
+            };
 
         case "ATTACH_HOLDER": {
             const releasedId = !action.tubeId ? state.holderAttachedId : null;
@@ -891,7 +906,7 @@ interface LabContextValue {
     setApparatusRotation: (id: string, rotation: [number, number, number]) => void;
     setDragging: (id: string) => void;
     endDragging: (id: string) => void;
-    addSalt: (tubeId: string, saltId: string) => void;
+    addSalt: (tubeId: string, saltId: string, amount?: number) => void;
     pickDropper: (chemical: ChemicalId) => void;
     releaseDropper: (tubeId: string) => void;
     stirTube: (tubeId: string, active: boolean) => void;
@@ -939,7 +954,7 @@ export function LabProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: "SET_DRAGGING", id });
     }, []);
     const endDragging = useCallback((id: string) => dispatch({ type: "END_DRAGGING", id }), []);
-    const addSalt = useCallback((tubeId: string, saltId: string) => dispatch({ type: "ADD_SALT", tubeId, saltId }), []);
+    const addSalt = useCallback((tubeId: string, saltId: string, amount?: number) => dispatch({ type: "ADD_SALT", tubeId, saltId, amount }), []);
     const pickSalt = useCallback((saltId: string | null) => dispatch({ type: "PICK_SALT", saltId }), []);
     const pickDropper = useCallback((chemical: ChemicalId) => dispatch({ type: "PICK_DROPPER", chemical }), []);
     const releaseDropper = useCallback((tubeId: string) => dispatch({ type: "RELEASE_DROPPER", tubeId }), []);

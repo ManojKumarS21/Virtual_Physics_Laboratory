@@ -245,16 +245,23 @@ export const Dropper: React.FC = () => {
             innerGroupRef.current.rotation.z = THREE.MathUtils.lerp(innerGroupRef.current.rotation.z, 0, 6 * delta);
         }
 
-        // 4. Bulb Squeeze Animation (Converted to timed trigger for realism)
+        // 4. Bulb Squeeze Animation (Standardized Clock)
+        const now = performance.now() / 1000; 
         if (squeezeStartRef.current !== null) {
-            const elapsed = state3r.clock.elapsedTime - squeezeStartRef.current;
-            const duration = 0.25; // total animation
-            const cycles = 1;      // number of bounces
+            const elapsed = now - squeezeStartRef.current;
+
+            const duration = 0.22; // shorter = snappy
+            const bounceCount = 2; // EXACT 2 bounces
+            const damping = 5.5;   // kills long wobble
 
             if (elapsed < duration) {
-                const progress = elapsed / duration;
-                const wave = Math.sin(progress * Math.PI * cycles);
-                bulbSqueezeRef.current = wave * 0.15; // Realistic rubber strength
+                const t = elapsed / duration;
+
+                // 🔥 DAMPED OSCILLATION (real rubber feel)
+                const oscillation = Math.sin(t * Math.PI * bounceCount);
+                const decay = Math.exp(-t * damping);
+
+                bulbSqueezeRef.current = oscillation * decay * 0.22;
             } else {
                 bulbSqueezeRef.current = 0;
                 squeezeStartRef.current = null;
@@ -263,10 +270,11 @@ export const Dropper: React.FC = () => {
 
         if (bulbGroupRef.current) {
             const s = bulbSqueezeRef.current;
+            // Squeeze Y, expand XZ slightly to conserve volume (look more rubbery)
             bulbGroupRef.current.scale.set(
-                1 + s * 0.04,
+                1 + s * 0.15, 
                 1 - s,
-                1 + s * 0.04
+                1 + s * 0.15
             );
         }
 

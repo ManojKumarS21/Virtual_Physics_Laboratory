@@ -112,11 +112,11 @@ const TOUR_STEPS = [
 ];
 
 export default function GuidedTour() {
-    const { 
-        state, 
-        setTourState, 
-        setLanguage, 
-        toggleVoice, 
+    const {
+        state,
+        setTourState,
+        setLanguage,
+        toggleVoice,
         resetLab,
         setApparatusPosition,
         pickSalt,
@@ -131,7 +131,7 @@ export default function GuidedTour() {
     } = useLabState();
     const { tourState, language, voiceEnabled } = state;
     const { isActive, stepIndex, isPaused } = tourState;
-    
+
     const [isLangOpen, setIsLangOpen] = useState(false);
     const [hasFinishedNarration, setHasFinishedNarration] = useState(false);
     const langRef = useRef<HTMLDivElement>(null);
@@ -207,7 +207,7 @@ export default function GuidedTour() {
         setTimeout(() => {
             if (speakId !== currentSpeakIdRef.current) return;
             const voices = window.speechSynthesis.getVoices();
-            
+
             // Map language to locale
             const localeMap: Record<string, string> = {
                 'hi': 'hi-IN',
@@ -216,13 +216,13 @@ export default function GuidedTour() {
                 'te': 'te-IN'
             };
             const targetLang = localeMap[language] || 'en-IN';
-            
+
             // Try to find the best voice for the language
             let langVoices = voices.filter(v => v.lang.replace('_', '-').startsWith(targetLang));
             if (langVoices.length === 0) langVoices = voices.filter(v => v.lang.startsWith(targetLang.split('-')[0]));
-            
+
             let selectedVoice = langVoices.find(v => v.name.toLowerCase().includes('google')) || langVoices[0];
-            
+
             // Cross-language fallback: Marathi uses Devnagari, so Hindi voices can read it well
             if (!selectedVoice && language === 'mr') {
                 const hiVoices = voices.filter(v => v.lang.startsWith('hi'));
@@ -255,23 +255,23 @@ export default function GuidedTour() {
     const moveArc = useCallback(async (id: string, target: [number, number, number], peakHeight = 0.3, duration = 1500) => {
         const start = stateRef.current.apparatus[id]?.position || [0, 0, 0];
         const startTime = performance.now();
-        
+
         return new Promise<void>((resolve) => {
             const animate = (now: number) => {
                 const elapsed = now - startTime;
                 const t = Math.min(elapsed / duration, 1);
                 // Ease quad
                 const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-                
+
                 // Parabolic arc for Y
                 const arcY = Math.sin(t * Math.PI) * peakHeight;
-                
+
                 const current: [number, number, number] = [
                     start[0] + (target[0] - start[0]) * eased,
                     start[1] + (target[1] - start[1]) * eased + arcY,
                     start[2] + (target[2] - start[2]) * eased
                 ];
-                
+
                 setApparatusPosition(id, current);
                 if (t < 1) requestAnimationFrame(animate);
                 else resolve();
@@ -290,9 +290,9 @@ export default function GuidedTour() {
                 const elapsed = now - startTime;
                 const t = Math.min(elapsed / duration, 1);
                 const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-                
+
                 const currentAngle = startRot + (targetAngle - startRot) * eased;
-                
+
                 // Compensate position to keep the anchor point stationary
                 // x' = x + cos(a)*r - cos(a_start)*r ... something like that
                 // Simplify: we calculate how much the anchor moves in local space and apply it in world
@@ -317,22 +317,22 @@ export default function GuidedTour() {
     const moveSmooth = useCallback(async (id: string, target: [number, number, number], duration = 1200) => {
         const start = stateRef.current.apparatus[id]?.position || [0, 0, 0];
         const startTime = performance.now();
-        
+
         return new Promise<void>((resolve) => {
             const animate = (now: number) => {
                 const elapsed = now - startTime;
                 const t = Math.min(elapsed / duration, 1);
                 const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-                
+
                 // Add subtle "carrying" sway in Z
                 const sway = Math.sin(t * Math.PI * 2) * 0.01;
-                
+
                 const current: [number, number, number] = [
                     start[0] + (target[0] - start[0]) * eased,
                     start[1] + (target[1] - start[1]) * eased,
                     start[2] + (target[2] - start[2]) * eased + sway
                 ];
-                
+
                 setApparatusPosition(id, current);
                 if (t < 1) requestAnimationFrame(animate);
                 else resolve();
@@ -360,7 +360,7 @@ export default function GuidedTour() {
 
             const salt = apparatus["salt_Cl"];
             const bottle = apparatus["bot_AgNO3"];
-            const SPATULA_TIP_X_OFFSET = -0.288;
+            const SPATULA_TIP_X_OFFSET = -0.264; // Corrected for -0.06 base shift
 
             switch (stepKey) {
                 case "cl_intro":
@@ -433,10 +433,10 @@ export default function GuidedTour() {
     }, [
         setApparatusPosition,
         setApparatusRotation,
-        pickSalt, 
-        addSalt, 
-        pickDropper, 
-        dropOneFromDropper, 
+        pickSalt,
+        addSalt,
+        pickDropper,
+        dropOneFromDropper,
         emptyDropper,
         attachHolder,
         openBottle,
@@ -453,21 +453,21 @@ export default function GuidedTour() {
             lastPerformedStepRef.current = stepIndex;
             setHasFinishedNarration(false);
             const step = TOUR_STEPS[stepIndex] as any;
-            
+
             // Immediately set highlights and zoom focus
-            setTourState({ 
+            setTourState({
                 highlightedIds: step.highlights,
                 cameraFocusId: step.focus || null
             });
-            
+
             const textKey = STEP_KEYS[stepIndex];
             const text = TOUR_CONTENT[language]?.[textKey] || TOUR_CONTENT['en'][textKey];
             speak(text);
-            
+
             // ⏱️ Delay action so user hears instruction first
             setTimeout(() => {
                 performAction(textKey);
-            }, 800); 
+            }, 800);
         }
     }, [isActive, stepIndex, language, speak, setTourState, performAction]);
 
@@ -544,9 +544,8 @@ export default function GuidedTour() {
                 <div className="relative" ref={langRef}>
                     <button
                         onClick={() => setIsLangOpen(!isLangOpen)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl transition-all ${
-                            isLangOpen ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl transition-all ${isLangOpen ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'
+                            }`}
                     >
                         <Languages className="w-4 h-4" />
                         <span className="text-sm font-bold w-6">{language.toUpperCase()}</span>
@@ -573,11 +572,10 @@ export default function GuidedTour() {
                                                 setLanguage(lang.id as any);
                                                 setIsLangOpen(false);
                                             }}
-                                            className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                                                language === lang.id 
-                                                ? 'bg-[#2F8D46] text-white' 
-                                                : 'text-white/70 hover:bg-white/5 hover:text-white'
-                                            }`}
+                                            className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${language === lang.id
+                                                    ? 'bg-[#2F8D46] text-white'
+                                                    : 'text-white/70 hover:bg-white/5 hover:text-white'
+                                                }`}
                                         >
                                             {lang.name}
                                             {language === lang.id && <Check className="w-4 h-4" />}
@@ -599,7 +597,7 @@ export default function GuidedTour() {
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </button>
-                    
+
                     <button
                         onClick={handleTogglePlay}
                         className="p-3 text-[#2F8D46] hover:scale-110 transition-all bg-white/5 rounded-full"
@@ -631,7 +629,7 @@ export default function GuidedTour() {
                     ))}
                 </div>
 
-                <button 
+                <button
                     onClick={stopTour}
                     className="p-2 text-white/30 hover:text-red-500 transition-all"
                 >
