@@ -7,12 +7,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ObservationSystem() {
     const observations = useLabStore(s => s.observations);
+    const trueValue = useLabStore(s => s.trueValue);
     const clearObservations = useLabStore(s => s.clearObservations);
     const [isOpen, setIsOpen] = useState(true);
 
-    const meanX = observations.length > 0
-        ? (observations.reduce((s, o) => s + o.X, 0) / observations.length).toFixed(2)
-        : '—';
+    const meanXVal = observations.length > 0
+        ? observations.reduce((s, o) => s + o.X, 0) / observations.length
+        : 0;
+    
+    const meanX = meanXVal > 0 ? meanXVal.toFixed(2) : '—';
+    
+    const percentageError = observations.length > 0
+        ? (Math.abs((meanXVal - trueValue) / trueValue) * 100).toFixed(2)
+        : null;
 
     return (
         <div className="mr-3 mt-2 pointer-events-auto">
@@ -64,11 +71,21 @@ export default function ObservationSystem() {
                                 )}
                             </div>
                             <div className="p-4 bg-black/10 border-t border-white/10 flex items-center justify-between">
-                                <div>
-                                    <p className="text-[10px] text-[#2F8D46]/50 uppercase tracking-widest font-bold">Mean X</p>
-                                    <p className="text-xl font-mono font-bold text-white">
-                                        {meanX !== '—' ? `${meanX} Ω` : '— Ω'}
-                                    </p>
+                                <div className="flex gap-6">
+                                    <div>
+                                        <p className="text-[10px] text-[#2F8D46]/50 uppercase tracking-widest font-bold">Mean X</p>
+                                        <p className="text-lg font-mono font-bold text-white">
+                                            {meanX !== '—' ? `${meanX} Ω` : '— Ω'}
+                                        </p>
+                                    </div>
+                                    {percentageError !== null && (
+                                        <div>
+                                            <p className="text-[10px] text-yellow-500/50 uppercase tracking-widest font-bold">Error</p>
+                                            <p className="text-lg font-mono font-bold text-yellow-500">
+                                                {percentageError}%
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                                 {observations.length > 0 && (
                                     <button onClick={clearObservations} className="text-[#2F8D46]/40 hover:text-red-400 hover:bg-red-400/10 transition-colors p-1.5 rounded-lg">

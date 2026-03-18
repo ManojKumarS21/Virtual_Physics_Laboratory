@@ -44,6 +44,8 @@ interface LabState {
     isLocked: boolean;
     isStaticMode: boolean;
     isHoldingWire: boolean;
+    trueValue: number; // For percentage error calculation
+    setTrueValue: (val: number) => void;
     heldInstrument: { id: string, type: string, name: string, terminals: any[] } | null;
     setHeldInstrument: (inst: { id: string, type: string, name: string, terminals: any[] } | null) => void;
     simulationError: string | null;
@@ -130,6 +132,8 @@ export const useLabStore = create<LabState>((set) => ({
     heldInstrument: null,
     setHeldInstrument: (inst) => set({ heldInstrument: inst }),
     simulationError: null,
+    trueValue: 5.0, 
+    setTrueValue: (val) => set({ trueValue: val }),
     setSimulationError: (error) => set({ simulationError: error }),
     setHoldingWire: (val) => set({ isHoldingWire: val }),
     toggleStaticMode: () => set((state) => ({ isStaticMode: !state.isStaticMode })),
